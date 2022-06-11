@@ -18,7 +18,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ericblois.dropthread",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "This app uses your photos."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -28,6 +32,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
-  }
+    },
+    "sdkVersion": "45.0.0",
+    "entryPoint": ".vscode/exponentIndex.js"
+  },
+  "name": "dropthread"
 }
