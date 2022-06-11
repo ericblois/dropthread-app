@@ -1,49 +1,77 @@
 import { httpsCallable } from "firebase/functions"
 import { ItemData, ItemFilter, ItemInfo } from "../HelperFiles/DataTypes"
 import { cloudRun, functions } from "./Constants"
+import { LocalCache } from "./LocalCache"
 import User from "./User"
 
 export default abstract class Item {
+
     // Retrieve items by their ID
     public static async getFromIDs(itemIDs: string[], withDistance = false) {
-        let coords = undefined
+        // Determine which item IDs should be refresh vs retrieved from cache
+        const cacheResult = LocalCache.getItems(itemIDs)
+        // Get items that need to be refreshed
+        let coords: object | undefined = undefined
         if (withDistance) {
             const userData = await User.get()
             coords = {lat: userData.lat, long: userData.long}
         }
-        const result = (await cloudRun('POST', "getItems", {
+        /* 
+            If there are no valid items returned,
+            this is an initial refresh and should
+            use itemIDs, otherwise just use refreshIDs
+        */
+        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getItems", {
             userID: User.getCurrent().uid,
-            itemIDs: itemIDs,
+            itemIDs: cacheResult.validItems.length === 0 ? itemIDs : cacheResult.refreshIDs,
             coords: coords
-        })) as ItemInfo[]
-        if (result.length === 0) {
-            throw new Error('Could not find items')
+        })) : []
+        // Cache refreshed items
+        if (result.length > 0) {
+            LocalCache.saveItems(itemIDs, result)
         }
-        return result
+        // Return valid items and refreshed items together
+        return result.concat(cacheResult.validItems)
     }
     // Retrieve all items from a specific user
     public static async getFromUser(userID?: string, withDistance = false) {
         const id = userID ? userID : User.getCurrent().uid
-        let coords = undefined
+        // Determine which item IDs should be refresh vs retrieved from cache
+        const cacheResult = LocalCache.getItems(id)
+        let coords: object | undefined = undefined
         if (withDistance) {
             const userData = await User.get()
             coords = {lat: userData.lat, long: userData.long}
         }
-        const result = (await cloudRun('POST', "getUserItems", {
+        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getUserItems", {
             requestingUserID: User.getCurrent().uid,
             targetUserID: id,
-            coords: coords})) as ItemInfo[]
-        return result
+            coords: coords
+        })) : []
+        // Cache refreshed items
+        if (result.length > 0) {
+            LocalCache.saveItems(id, result)
+        }
+        // Return valid items and refreshed items together
+        return result.concat(cacheResult.validItems)
     }
     // Get items using a filter
     public static async getFromFilter(filters: ItemFilter) {
+        // Determine which item IDs should be refresh vs retrieved from cache
+        const cacheResult = LocalCache.getItems(filters)
         const userData = await User.get()
         const coords = {lat: userData.lat, long: userData.long}
-        const result = (await cloudRun('POST', "getFilteredItems", {
+        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getFilteredItems", {
             userID: userData.userID,
             filters: filters,
-            coords: coords})) as ItemInfo[]
-        return result
+            coords: coords
+        })) : []
+        // Cache refreshed items
+        if (result.length > 0) {
+            LocalCache.saveItems(filters, result)
+        }
+        // Return valid items and refreshed items together
+        return result.concat(cacheResult.validItems)
     }
     // Create a new item
     public static async create(itemData: ItemData) {
@@ -99,6 +127,8 @@ export default abstract class Item {
                 // Replace the local URI with the download URL
                 itemData.images![itemIndex] = newDownloadURLs[newURLIndex]
             })
+            // Reload this item in cache
+            LocalCache.forceReloadItem(itemData.itemID)
         }
         // Update item
         await cloudRun('POST', "updateItem", {
@@ -118,6 +148,8 @@ export default abstract class Item {
         })
         //Delete images
         await User.deleteImages(itemData.images)
+        // Reload this item in cache
+        LocalCache.forceReloadItem(itemData.itemID)
     }
     // Like an item
     public static async like(itemID: string) {

@@ -3,6 +3,7 @@ import { httpsCallable } from "firebase/functions"
 import uuid from "react-native-uuid"
 import { ItemData, UserData } from "../HelperFiles/DataTypes"
 import { auth, cloudRun, functions } from "./Constants"
+import { LocalCache } from "./LocalCache"
 import ServerData from "./ServerData"
 
 export default abstract class User {
@@ -29,18 +30,27 @@ export default abstract class User {
 
     // Get the data of the current user
     static async get() {
+        const cacheResult = LocalCache.getUser(User.getCurrent().uid)
+        if (cacheResult) {
+            return cacheResult
+        }
         const result = await cloudRun('POST', "getUser", {
             userID: User.getCurrent().uid
-        })
-        const userData = result as UserData
-        return userData
+        }) as UserData
+        LocalCache.saveUser(User.getCurrent().uid, result)
+        return result
     }
 
     // Update fields in the user's document
     static async update(data: Partial<UserData>) {
+        if (!data.userID) {
+            throw new Error('No user ID provided for update')
+        }
         await cloudRun('POST', "updateUser", {
             userData: data
         })
+        // Reload this user in cache
+        LocalCache.forceReloadUser(data.userID)
         return
     }
     // Delete the current user
