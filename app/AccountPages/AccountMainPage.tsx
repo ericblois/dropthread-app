@@ -93,12 +93,12 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
             <MenuBar
                 buttonProps={[
                 {
-                    iconSource: icons.search,
-                    buttonFunc: () => this.props.navigation.navigate("search")
-                },
-                {
                     iconSource: icons.shoppingBag,
                     buttonFunc: () => this.props.navigation.navigate("browse")
+                },
+                {
+                    iconSource: icons.hollowHeart,
+                    buttonFunc: () => this.props.navigation.navigate("likes")
                 },
                 {
                     iconSource: icons.closet,

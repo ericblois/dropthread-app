@@ -1,15 +1,16 @@
 import React from "react";
-import { ActivityIndicator, Animated, GestureResponderEvent, Image, ImageStyle, Pressable, PressableProps, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { ActivityIndicator, Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, Text, View, ViewStyle } from "react-native";
+import FastImage, { FastImageProps, ImageStyle, Source } from "react-native-fast-image";
 import { colors, defaults, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type IconButtonProps = {
-  iconSource: number,
+  iconSource: Source,
   iconStyle?: ImageStyle,
   buttonStyle?: ViewStyle,
   buttonFunc?: (event?: GestureResponderEvent) => void | Promise<void>
   buttonProps?: PressableProps,
-  iconProps?: Partial<Image['props']>,
+  iconProps?: Partial<FastImageProps>,
   showLoading?: boolean,
   showBadge?: boolean,
   badgeNumber?: number,
@@ -105,12 +106,12 @@ export default class IconButton extends CustomComponent<IconButtonProps, State> 
           {...this.props.buttonProps}
         >
           {!this.state.showLoading ? 
-            <Image
+            <FastImage
               style={{
                 ...iconButtonStyles.defaultIcon,
                 ...this.props.iconStyle
               }}
-              resizeMethod={"scale"}
+              tintColor={this.props.iconStyle?.tintColor || colors.darkGrey}
               resizeMode={"contain"}
               source={this.props.iconSource}
               {...this.props.iconProps}

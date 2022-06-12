@@ -60,7 +60,7 @@ export async function accessPhotos(options?: ImagePicker.ImagePickerOptions) {
     }
 }
 // Get a smaller version of an image
-export async function getCompressedImage(uri: string, onSuccess?: (uri: string) => void) {
+export async function getCompressedImage(uri: string, onSuccess?: (uri: string, width: number, height: number) => void) {
     Image.getSize(uri, async (width, height) => {
         // Resize the image if it is too large
         let actions: ImageManipulator.Action[] = []
@@ -71,12 +71,12 @@ export async function getCompressedImage(uri: string, onSuccess?: (uri: string) 
         }
         // Compress the image
         const compressedImg = await ImageManipulator.manipulateAsync(uri, actions, {
-            compress: 0.6,
+            compress: 0.75,
             format: ImageManipulator.SaveFormat.JPEG
         })
         const result = compressedImg.uri
         if (onSuccess) {
-            onSuccess(result)
+            onSuccess(result, width, height)
         }
     })
 }

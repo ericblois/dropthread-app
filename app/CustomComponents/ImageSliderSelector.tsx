@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, ImageStyle, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
+import FastImage from "react-native-fast-image";
 import { accessPhotos, getCompressedImage } from "../HelperFiles/ClientFunctions";
 import { colors, icons, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
@@ -221,29 +222,26 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
     }
     // Append an image to the end of the selector
     addImage(uri: string) {
-        getCompressedImage(uri, (newURI) => {
-            // Create a new image component
-            Image.getSize(newURI, (height, width) => {
-                const ratio = height / width
-                const images = this.state.images
-                const newImages = this.state.newImages
-                images.push({uri: newURI, ratio: ratio})
-                newImages.push({uri: newURI, ratio: ratio})
-                // Update the URIs and images
-                this.setState({images: images, newImages: newImages}, () => {
-                    // Check if this is the first image to be added
-                    if (this.state.images.length === 1) {
-                        // Update the gallery height
-                        this.setGalleryHeight()
-                    }
-                    if (this.props.onChange) {
-                        this.props.onChange({
-                            all: this.state.images.map(({uri}) => uri),
-                            new: this.state.newImages.map(({uri}) => uri),
-                            deleted: this.state.deletedImages
-                        })
-                    }
-                })
+        getCompressedImage(uri, (newURI, width, height) => {
+            const ratio = height / width
+            const images = this.state.images
+            const newImages = this.state.newImages
+            images.push({uri: newURI, ratio: ratio})
+            newImages.push({uri: newURI, ratio: ratio})
+            // Update the URIs and images
+            this.setState({images: images, newImages: newImages}, () => {
+                // Check if this is the first image to be added
+                if (this.state.images.length === 1) {
+                    // Update the gallery height
+                    this.setGalleryHeight()
+                }
+                if (this.props.onChange) {
+                    this.props.onChange({
+                        all: this.state.images.map(({uri}) => uri),
+                        new: this.state.newImages.map(({uri}) => uri),
+                        deleted: this.state.deletedImages
+                    })
+                }
             })
         })
     }
@@ -349,14 +347,13 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                             ...this.props.placeHolderStyle
                         }}
                     >
-                        <Image
+                        <FastImage
                             source={icons.image}
                             style={{
                                 width: styleValues.iconSmallSize,
-                                height: styleValues.iconSmallSize,
-                                tintColor: colors.lightGrey
+                                height: styleValues.iconSmallSize
                             }}
-                            resizeMethod={"scale"}
+                            tintColor={colors.lightGrey}
                             resizeMode={"contain"}
                         />
                     </View>

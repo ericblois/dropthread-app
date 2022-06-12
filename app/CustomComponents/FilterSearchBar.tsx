@@ -555,6 +555,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                         width: styleValues.iconLargeSize,
                         marginRight: styleValues.mediumPadding,
                     }}
+                    iconStyle={{tintColor: colors.darkGrey}}
                     buttonFunc={() => {
                         if (this.state.showSearchBar) {
                             if (this.props.onSearchToggle) {

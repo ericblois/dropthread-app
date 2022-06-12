@@ -1,5 +1,6 @@
 import React from "react";
-import { Animated, GestureResponderEvent, Image, ImageStyle, Pressable, PressableProps, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
+import { Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
+import FastImage, { ImageStyle } from "react-native-fast-image";
 import { colors, defaults, fonts, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import LoadingCover from "./LoadingCover";
@@ -59,14 +60,13 @@ export default class TextButton extends CustomComponent<Props, State> {
         }
         if (this.props.leftIconSource) {
             return (
-                <Image
+                <FastImage
                     source={this.props.leftIconSource}
                     style = {{
                         ...defaultIconStyle,
-                        ...(this.props.textStyle?.color ? {tintColor: this.props.textStyle?.color} : undefined),
                         ...this.props.leftIconStyle,
                     }}
-                    resizeMethod={"scale"}
+                    tintColor={this.props.leftIconStyle?.tintColor || this.props.textStyle?.color?.toString()}
                     resizeMode={"contain"}
                 />
             )
@@ -84,14 +84,13 @@ export default class TextButton extends CustomComponent<Props, State> {
         }
         if (this.props.rightIconSource) {
             return (
-                <Image
+                <FastImage
                     source={this.props.rightIconSource}
                     style = {{
                         ...defaultIconStyle,
-                        ...(this.props.textStyle?.color ? {tintColor: this.props.textStyle?.color} : undefined),
                         ...this.props.rightIconStyle,
                     }}
-                    resizeMethod={"scale"}
+                    tintColor={this.props.rightIconStyle?.tintColor || this.props.textStyle?.color?.toString()}
                     resizeMode={"contain"}
                 />
             )

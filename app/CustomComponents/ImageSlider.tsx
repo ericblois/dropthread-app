@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, ImageStyle, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
+import FastImage from "react-native-fast-image";
 import { shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import GradientView from "./GradientView";

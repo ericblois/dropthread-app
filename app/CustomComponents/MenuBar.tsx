@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import { menuBarStyles, shadowStyles } from "../HelperFiles/StyleSheet";
+import { colors, menuBarStyles, shadowStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import IconButton from "./IconButton";
 
@@ -38,7 +38,7 @@ export default class MenuBar extends CustomComponent<Props, State> {
       >
         {
           this.props.buttonProps.map((props, index) => {
-            return <IconButton {...props} key={index}/>;
+            return <IconButton iconStyle={{tintColor: colors.darkGrey}} {...props} key={index}/>;
           })
         }
 

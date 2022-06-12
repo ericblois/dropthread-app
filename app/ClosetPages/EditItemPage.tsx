@@ -172,7 +172,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                     }}
                     textProps={{
                         onChangeText: (text) => {this.setState({priceChangeText: text})},
-                        placeholder: "Price"
+                        placeholder: "Minimum price"
                     }}
                 />
             )
@@ -308,7 +308,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
     }
 
     renderLoading() {
-        if (!this.state.userData || !this.state.imagesLoaded) {
+        if (!this.state.userData) {
             return (
               <LoadingCover
                 size={"large"}

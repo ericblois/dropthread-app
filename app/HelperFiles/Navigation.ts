@@ -10,13 +10,19 @@ export type RootStackParamList = {
 export const RootStack = createStackNavigator<RootStackParamList>();
 
 export type UserMainStackParamList = {
-    search: undefined,
     browse: undefined,
+    likes: undefined,
     closet: undefined,
     account: undefined
 }
 
 export const UserMainStack = createStackNavigator<UserMainStackParamList>();
+
+export type LikesStackParamList = {
+    main: undefined
+}
+
+export const LikesStack = createStackNavigator<LikesStackParamList>();
 
 export type ClosetStackParamList = {
     main: undefined,

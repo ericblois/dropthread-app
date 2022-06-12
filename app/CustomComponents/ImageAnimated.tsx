@@ -1,16 +1,17 @@
 import React from "react";
-import { Animated, GestureResponderEvent, Image, ImageProps, ImageSourcePropType, ImageStyle, Pressable, PressableProps, StyleSheet, ViewStyle } from "react-native";
+import { Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, ViewStyle } from "react-native";
+import FastImage, { FastImageProps, ImageStyle, Source } from "react-native-fast-image";
 import { colors, icons, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type ImageAnimatedProps = {
-  source: ImageSourcePropType,
+  source: Source,
   style?: ViewStyle,
   imageStyle?: ImageStyle,
   onPress?: (event?: GestureResponderEvent) => void,
   onLoad?: (width: number, height: number) => void
   pressableProps?: PressableProps,
-  imageProps?: Partial<ImageProps>
+  imageProps?: Partial<FastImageProps>
 }
 
 type State = {
@@ -18,6 +19,7 @@ type State = {
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
 
 export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, State> {
 
@@ -30,19 +32,19 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
 
   placeHolderOpacity = new Animated.Value(1)
   imageOpacity = new Animated.Value(0)
-  fadeTime = 200
+  fadeTime = 350
 
   showImage() {
       Animated.sequence([
           Animated.timing(this.placeHolderOpacity, {
               toValue: 0,
               duration: this.fadeTime/2,
-              useNativeDriver: false
+              useNativeDriver: true
           }),
           Animated.timing(this.imageOpacity, {
             toValue: 1,
             duration: this.fadeTime/2,
-            useNativeDriver: false
+            useNativeDriver: true
         })
       ]).start(() => this.setState({loaded: true}))
   }
@@ -58,20 +60,19 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
         onPress={this.props.onPress}
         {...this.props.pressableProps}
       >
-          <Animated.Image
+          <AnimatedFastImage
             source={this.props.source}
             style={{
-                ...imageAnimatedStyles.fillView,
-                opacity: this.imageOpacity,
-                ...this.props.imageStyle
+              ...imageAnimatedStyles.fillView,
+              opacity: this.imageOpacity,
+              ...this.props.imageStyle
             }}
-            resizeMethod={"scale"}
             resizeMode={"cover"}
             onLoad={(e) => {
-                this.showImage()
-                if (this.props.onLoad) {
-                    this.props.onLoad(e.nativeEvent.source.width, e.nativeEvent.source.height)
-                }
+              this.showImage()
+              if (this.props.onLoad) {
+                  this.props.onLoad(e.nativeEvent.width, e.nativeEvent.height)
+              }
             }}
             {...this.props.imageProps}
           />
@@ -86,14 +87,13 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
                     opacity: this.placeHolderOpacity
                 }}
             >
-                <Image
+                <FastImage
                     source={icons.image}
                     style={{
                         width: styleValues.iconSmallSize,
-                        height: styleValues.iconSmallSize,
-                        tintColor: colors.lightGrey
+                        height: styleValues.iconSmallSize
                     }}
-                    resizeMethod={"scale"}
+                    tintColor={colors.lightGrey}
                     resizeMode={"contain"}
                 />
             </Animated.View> : 

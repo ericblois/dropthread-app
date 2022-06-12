@@ -1,10 +1,11 @@
 
 import React from "react";
-import { GestureResponderEvent, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData } from "../HelperFiles/DataTypes";
 import { colors, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
+import ImageAnimated from "./ImageAnimated";
 import LoadingCover from "./LoadingCover";
 
 type Props = {
@@ -38,17 +39,18 @@ export default class SearchResultItem extends CustomComponent<Props, State> {
                 this.props.onPress();
             }
         }}>
-            <Image
+            <ImageAnimated
                 style={styles.productImage}
-                resizeMethod={"scale"}
-                resizeMode={"cover"}
                 source={{uri: this.props.itemData.images[0]}}
-                onLoadEnd={() => {
+                onLoad={() => {
                     this.setState({imageLoaded: true}, () => {
                         if (this.props.onLoadEnd) {
                             this.props.onLoadEnd();
                         }
                     })
+                }}
+                imageProps={{
+                    resizeMode: "cover"
                 }}
             />
             <View style={styles.productInfoArea}>

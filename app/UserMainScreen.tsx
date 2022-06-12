@@ -6,7 +6,8 @@ import AccountScreen from "./AccountScreen";
 import ClosetScreen from "./ClosetScreen";
 import CustomComponent from "./CustomComponents/CustomComponent";
 import { RootStackParamList, UserMainStack } from "./HelperFiles/Navigation";
-import { BrowsePage, SearchPage } from "./HelperFiles/PageIndex";
+import { BrowsePage } from "./HelperFiles/PageIndex";
+import LikesScreen from "./LikesScreen";
 
 type UserMainNavigationProp = StackNavigationProp<RootStackParamList, "userMain">;
 
@@ -39,12 +40,12 @@ export default class UserMainScreen extends CustomComponent<UserMainProps, State
                 initialRouteName={"browse"}
             >
                 <UserMainStack.Screen
-                    name={"search"}
-                    component={SearchPage}
-                />
-                <UserMainStack.Screen
                     name={"browse"}
                     component={BrowsePage}
+                />
+                <UserMainStack.Screen
+                    name={"likes"}
+                    component={LikesScreen}
                 />
                 <UserMainStack.Screen
                     name={"closet"}

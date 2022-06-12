@@ -76,6 +76,7 @@ export const styleValues = {
   iconLargeSize: screenUnit*1.8,
   iconLargerSize: screenUnit*2,
   iconLargestSize: screenUnit*5/2,
+  iconLargesterSize: screenUnit*3,
   largestTextSize: screenUnit*5/3,
   largerTextSize: screenUnit*5/4,
   largeTextSize: screenUnit*9/8,

@@ -7,20 +7,20 @@ import CustomComponent from "../CustomComponents/CustomComponent";
 import { ClosetItem, IconButton, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
 import { DefaultItemData, ItemData, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
-import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
+import { ClosetStackParamList, LikesStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
 import { bottomInset, colors, icons, menuBarStyles, styleValues } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
-type ClosetMainNavigationProp = CompositeNavigationProp<
-    StackNavigationProp<ClosetStackParamList, "main">,
+type LikesMainNavigationProp = CompositeNavigationProp<
+    StackNavigationProp<LikesStackParamList, "main">,
     StackNavigationProp<UserMainStackParamList>
 >
 
-type ClosetMainRouteProp = RouteProp<ClosetStackParamList, "main">;
+type LikesMainRouteProp = RouteProp<LikesStackParamList, "main">;
 
-type ClosetMainProps = {
-    navigation: ClosetMainNavigationProp,
-    route: ClosetMainRouteProp
+type LikesMainProps = {
+    navigation: LikesMainNavigationProp,
+    route: LikesMainRouteProp
 }
 
 type State = {
@@ -29,9 +29,9 @@ type State = {
     imagesLoaded: boolean
 }
 
-export default class ClosetMainPage extends CustomComponent<ClosetMainProps, State> {
+export default class LikesMainPage extends CustomComponent<LikesMainProps, State> {
 
-    constructor(props: ClosetMainProps) {
+    constructor(props: LikesMainProps) {
         super(props)
         const initialState = {
             userData: undefined,
@@ -75,12 +75,7 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
                 elevation: 100
             }}
             iconStyle={{tintColor: colors.main}}
-            buttonFunc={() => {
-                this.props.navigation.navigate("editItem", {
-                    itemID: '',
-                    isNew: true
-                })
-            }}
+            buttonFunc={() => {}}
           />
         )
       }
@@ -93,12 +88,7 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
                         return (
                             <ClosetItem
                                 itemData={itemInfo.item}
-                                onPress={() => {
-                                    this.props.navigation.navigate("itemInfo", {
-                                        itemID: itemInfo.item.itemID,
-                                        distance: itemInfo.distance!
-                                    })
-                                }}
+                                onPress={() => {}}
                                 key={index.toString()}
                             />
                         )
@@ -140,11 +130,11 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
                     },
                     {
                         iconSource: icons.hollowHeart,
-                        buttonFunc: () => this.props.navigation.navigate("likes")
+                        iconStyle: {tintColor: colors.main},
                     },
                     {
                         iconSource: icons.closet,
-                        iconStyle: {tintColor: colors.main},
+                        buttonFunc: () => this.props.navigation.navigate("closet")
                     },
                     {
                         iconSource: icons.profile,

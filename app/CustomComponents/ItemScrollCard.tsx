@@ -36,70 +36,33 @@ export default class ItemScrollCard extends CustomComponent<Props, State> {
         }
     }
 
-    renderLikeButtons() {
+    renderLikeButton() {
         return (
-            <View
-                style={{
-                    flexDirection: "row",
-                    width: "100%",
-                    padding: styleValues.mediumPadding
-                }}
-            >
-                <IconButton
-                    iconSource={icons.cross}
-                    buttonStyle={{
-                        ...styles.likeButton,
-                        borderColor: colors.invalid
-                    }}
-                    iconStyle={{tintColor: colors.invalid}}
-                    buttonFunc={() => {
-                        const previouslyLiked = this.state.isLiked
-                        this.setState({isLiked: false}, async () => {
-                            if (this.props.onPressLike) {
-                                this.props.onPressLike(false)
-                            }
-                            // Check if item was liked before
-                            if (previouslyLiked) {
+            <IconButton
+                iconSource={icons.hollowHeart}
+                buttonStyle={styles.likeButton}
+                iconStyle={{tintColor: this.state.isLiked ? colors.valid : colors.lightGrey}}
+                buttonFunc={() => {
+                    this.setState({isLiked: !this.state.isLiked}, async () => {
+                        if (this.props.onPressLike) {
+                            this.props.onPressLike(this.state.isLiked)
+                        }
+                        try {
+                            // Condition is flipped since state was just changed
+                            if (this.state.isLiked) {
+                                await Item.like(this.props.itemData.itemID)
+                            } else {
                                 await Item.unlike(this.props.itemData.itemID)
                             }
-                            if (this.props.onUpdateLike) {
-                                this.props.onUpdateLike(false)
-                            }
-                        })
-                    }}
-                />
-                <View style={{width: styleValues.mediumPadding}}/>
-                <IconButton
-                    iconSource={icons.hollowHeart}
-                    buttonStyle={{
-                        ...styles.likeButton,
-                        backgroundColor: this.state.isLiked ? colors.valid : undefined,
-                        borderColor: colors.valid
-                    }}
-                    iconStyle={{tintColor: this.state.isLiked ? colors.white : colors.valid}}
-                    buttonFunc={() => {
-                        this.setState({isLiked: !this.state.isLiked}, async () => {
-                            if (this.props.onPressLike) {
-                                this.props.onPressLike(this.state.isLiked)
-                            }
-                            try {
-                                // Condition is flipped since state was just changed
-                                if (this.state.isLiked) {
-                                    await Item.like(this.props.itemData.itemID)
-                                } else {
-                                    await Item.unlike(this.props.itemData.itemID)
-                                }
-                            } catch (e) {
-                                this.setState({isLiked: !this.state.isLiked})
-                            }
-                            if (this.props.onUpdateLike) {
-                                this.props.onUpdateLike(this.state.isLiked)
-                            }
-                        })
-                    }}
-                />
-
-            </View>
+                        } catch (e) {
+                            this.setState({isLiked: !this.state.isLiked})
+                        }
+                        if (this.props.onUpdateLike) {
+                            this.props.onUpdateLike(this.state.isLiked)
+                        }
+                    })
+                }}
+            />
         )
     }
 
@@ -110,7 +73,7 @@ export default class ItemScrollCard extends CustomComponent<Props, State> {
                 flexDirection: "column",
                 alignItems: "center",
                 height: "100%",
-                width: "100%",
+                width: "100%"
             }}
         >
             <ImageSlider
@@ -157,7 +120,7 @@ export default class ItemScrollCard extends CustomComponent<Props, State> {
                 <Text style={styles.majorText}>{`Fit: ${capitalizeWords(this.props.itemData.fit)}`}</Text>
                 : undefined}
             </View>
-            {this.renderLikeButtons()}
+            {this.renderLikeButton()}
         </View>
         );
     }
@@ -172,16 +135,23 @@ export default class ItemScrollCard extends CustomComponent<Props, State> {
 
     render() {
         return (
-            <Pressable style={({pressed}) => ({
-                ...styles.cardContainer,
-                ...(pressed ? shadowStyles.medium : shadowStyles.small),
-            })}
-                onPress={this.props.onPressCard}
-                pointerEvents={"box-none"}
+            <View
+                style={{
+                    width: styleValues.winWidth,
+                    paddingHorizontal: styleValues.mediumPadding
+                }}
             >
-                {this.renderUI()}
-                {this.renderLoading()}
-            </Pressable>
+                <Pressable style={({pressed}) => ({
+                    ...styles.cardContainer,
+                    ...(pressed ? shadowStyles.medium : shadowStyles.small),
+                })}
+                    onPress={this.props.onPressCard}
+                    pointerEvents={"box-none"}
+                >
+                    {this.renderUI()}
+                    {this.renderLoading()}
+                </Pressable>
+            </View>
         )
     }
 }
@@ -191,7 +161,7 @@ export const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: styleValues.mediumPadding,
         height: "100%",
-        width: styleValues.winWidth - styleValues.mediumPadding*2,
+        width: "100%",
         overflow: "hidden"
     },
     itemInfoContainer: {
@@ -216,10 +186,11 @@ export const styles = StyleSheet.create({
     },
     likeButton: {
         ...shadowStyles.small,
-        flex: 1,
-        padding: styleValues.mediumPadding,
-        borderRadius: styleValues.mediumPadding,
-        borderWidth: styleValues.mediumBorderWidth,
-        backgroundColor: colors.white
+        position: "absolute",
+        bottom: styleValues.mediumPadding*2,
+        right: styleValues.mediumPadding*2,
+        width: styleValues.iconLargesterSize,
+        height: styleValues.iconLargesterSize,
+        borderRadius: styleValues.majorPadding
     }
 })

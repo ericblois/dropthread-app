@@ -1,11 +1,12 @@
 
 import React from "react";
-import { GestureResponderEvent, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData } from "../HelperFiles/DataTypes";
 import { colors, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
+import ImageAnimated from "./ImageAnimated";
 import LoadingCover from "./LoadingCover";
 
 type Props = {
@@ -33,17 +34,22 @@ export default class ClosetItem extends CustomComponent<Props, State> {
             flexDirection: "row",
             alignItems: "center",
             height: "100%",
-            width: "100%"
+            width: "100%",
         }} onPress={() => {
             if (this.props.onPress) {
                 this.props.onPress();
             }
         }}>
-            <FastImage
-                style={styles.productImage}
-                resizeMode={"cover"}
+            <ImageAnimated
+                style={{
+                    ...styles.productImage,
+                    borderTopEndRadius: 5
+                }}
+                imageProps={{
+                    resizeMode: "cover"
+                }}
                 source={{uri: this.props.itemData.images[0]}}
-                onLoadEnd={() => {
+                onLoad={() => {
                     this.setState({imageLoaded: true}, () => {
                         if (this.props.onLoadEnd) {
                             this.props.onLoadEnd();

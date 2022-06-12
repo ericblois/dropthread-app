@@ -32,7 +32,7 @@ type State = {
 
 export default class BrowsePage extends CustomComponent<BrowseProps, State> {
 
-  flatListComp: FlatList<ItemData> | null = null
+  flatListComp: FlatList<ItemInfo> | null = null
 
     constructor(props: BrowseProps) {
         super(props)
@@ -144,23 +144,31 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
             keyExtractor={(_, index) => (index.toString())}
           />*/
           <FlatList
-                  data={this.state.itemsInfo}
-                  horizontal={true}
-                  pagingEnabled={true}
-                  renderItem={(listItem) => (
-                    <ItemScrollCard
-                        itemData={listItem.item.item}
-                        distance={listItem.item.distance}
-                        isLiked={!!listItem.item.likeTime}
-                        key={listItem.index.toString()}
-                        onPressLike={() => {
-                            //this.carouselComp?.snapToNext()
-                        }}
-                        onUpdateLike={(isLiked) => {
-                          console.log("liked item. *Need to implement this function")
-                        }}
-                    />
-                )}
+            ref={(flatList) => {this.flatListComp = flatList}}
+            data={this.state.itemsInfo}
+            style={{
+              width: styleValues.winWidth
+            }}
+            horizontal={true}
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={(listItem) => (
+              <ItemScrollCard
+                  itemData={listItem.item.item}
+                  distance={listItem.item.distance!}
+                  isLiked={!!listItem.item.likeTime}
+                  key={listItem.index.toString()}
+                  onPressLike={() => {
+                      //this.carouselComp?.snapToNext()
+                      if (this.flatListComp) {
+                        this.flatListComp.scrollToIndex({index: listItem.index + 1})
+                      }
+                  }}
+                  onUpdateLike={(isLiked) => {
+                    console.log("liked item. *Need to implement this function")
+                  }}
+              />
+            )}
           />
           /*<Carousel
               ref={(carousel) => {this.carouselComp = carousel}}
@@ -282,12 +290,12 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
               <MenuBar
                 buttonProps={[
                   {
-                    iconSource: icons.search,
-                    buttonFunc: () => this.props.navigation.navigate("search")
-                  },
-                  {
                     iconSource: icons.shoppingBag,
                     iconStyle: {tintColor: colors.main},
+                  },
+                  {
+                    iconSource: icons.hollowHeart,
+                    buttonFunc: () => this.props.navigation.navigate("likes")
                   },
                   {
                     iconSource: icons.closet,
