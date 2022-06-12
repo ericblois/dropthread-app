@@ -5,7 +5,7 @@ import React from "react";
 import { DeviceEventEmitter, StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { ClosetItem, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
-import { DefaultItemData, ItemData, UserData } from "../HelperFiles/DataTypes";
+import { DefaultItemData, ItemData, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
 import { colors, icons } from "../HelperFiles/StyleSheet";
@@ -25,8 +25,7 @@ type ClosetMainProps = {
 
 type State = {
     userData?: UserData,
-    itemsData?: ItemData[],
-    distances?: number[],
+    itemsInfo?: ItemInfo[],
     imagesLoaded: boolean
 }
 
@@ -36,7 +35,7 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
         super(props)
         const initialState = {
             userData: undefined,
-            itemsData: undefined,
+            itemsInfo: undefined,
             imagesLoaded: true
         }
         this.state =initialState
@@ -49,10 +48,8 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
 
     async refreshData() {
         const userData = await User.get()
-        const itemDatas = await Item.getFromUser(undefined, true)
-        const items = itemDatas.map(({item}) => item)
-        const distances = itemDatas.map(({distance}) => distance)
-        this.setState({userData: userData, itemsData: items, distances: distances})
+        const itemsInfo = await Item.getFromUser(undefined, true)
+        this.setState({userData: userData, itemsInfo: itemsInfo})
     }
 
     renderAddButton() {
@@ -70,20 +67,20 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
       }
     
     renderItems() {
-        if (this.state.itemsData) {
+        if (this.state.itemsInfo) {
             return (
                 <ScrollContainer>
-                    {this.state.itemsData.map((item, index) => {
+                    {this.state.itemsInfo.map((itemInfo, index) => {
                         return (
                             <ClosetItem
-                                itemData={item}
+                                itemData={itemInfo.item}
                                 onPress={() => {
                                     this.props.navigation.navigate("itemInfo", {
-                                        itemID: item.itemID,
-                                        distance: this.state.distances ? this.state.distances[index] : undefined
+                                        itemID: itemInfo.item.itemID,
+                                        distance: itemInfo.distance!
                                     })
                                 }}
-                                key={item.itemID}
+                                key={index.toString()}
                             />
                         )
                     })}
@@ -93,7 +90,7 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
     }
     
     renderUI() {
-        if (this.state.userData && this.state.itemsData) {
+        if (this.state.userData && this.state.itemsInfo) {
             return (
                 <>
                     {this.renderAddButton()}
@@ -104,7 +101,7 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
     }
 
     renderLoading() {
-        if (this.state.userData === undefined || this.state.itemsData === undefined || !this.state.imagesLoaded) {
+        if (this.state.userData === undefined || this.state.itemsInfo === undefined || !this.state.imagesLoaded) {
             return (
               <LoadingCover size={"large"}/>
             )

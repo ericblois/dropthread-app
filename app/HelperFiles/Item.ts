@@ -51,6 +51,7 @@ export default abstract class Item {
         // Cache refreshed items
         if (result.length > 0) {
             LocalCache.saveItems(id, result)
+            return result
         }
         // Return valid items and refreshed items together
         return result.concat(cacheResult.validItems)
@@ -127,14 +128,14 @@ export default abstract class Item {
                 // Replace the local URI with the download URL
                 itemData.images![itemIndex] = newDownloadURLs[newURLIndex]
             })
-            // Reload this item in cache
-            LocalCache.forceReloadItem(itemData.itemID)
         }
         // Update item
         await cloudRun('POST', "updateItem", {
             userID: itemData.userID,
             itemData: itemData
         })
+        // Reload this item in cache
+        LocalCache.forceReloadItem(itemData.itemID)
     }
     // Delete an item
     public static async delete(itemData: ItemData) {

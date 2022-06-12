@@ -11,7 +11,7 @@ type ItemCache = {
 }
 
 export abstract class LocalCache {
-    
+
     // Threshold to reload an item or user, in seconds
     private static userReloadTime = 300
     private static itemReloadTime = 300
@@ -80,6 +80,7 @@ export abstract class LocalCache {
             }
             refreshIDs.push(itemID)
         }
+        console.log({validItems: validItems.length, refreshIDs: refreshIDs.length})
         return {validItems: validItems, refreshIDs: refreshIDs}
     }
     public static saveItems(keyItem: string[] | string | ItemFilter, items: ItemInfo[]) {

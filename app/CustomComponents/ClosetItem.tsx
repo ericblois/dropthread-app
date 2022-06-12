@@ -1,6 +1,7 @@
 
 import React from "react";
 import { GestureResponderEvent, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import FastImage from "react-native-fast-image";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData } from "../HelperFiles/DataTypes";
 import { colors, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
@@ -38,9 +39,8 @@ export default class ClosetItem extends CustomComponent<Props, State> {
                 this.props.onPress();
             }
         }}>
-            <Image
+            <FastImage
                 style={styles.productImage}
-                resizeMethod={"scale"}
                 resizeMode={"cover"}
                 source={{uri: this.props.itemData.images[0]}}
                 onLoadEnd={() => {
