@@ -3,7 +3,7 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import { currencyFormatter } from "../HelperFiles/Constants";
-import { ItemData } from "../HelperFiles/DataTypes";
+import { ItemData, ItemInfo } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { colors, icons, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
@@ -12,13 +12,11 @@ import ImageSlider from "./ImageSlider";
 import LoadingCover from "./LoadingCover";
 
 type Props = {
-    itemData: ItemData,
-    distance: number,
-    isLiked: boolean,
+    itemInfo: ItemInfo,
     onLoadEnd?: () => void,
     onPressCard?: () => void,
     onPressLike?: (isLiked: boolean) => void,
-    onUpdateLike?: (isLiked: boolean) => void
+    onUpdateLike?: (isLiked: boolean, likeTime: number | null) => void
 }
 
 type State = {
@@ -31,7 +29,7 @@ export default class ItemScrollCard extends CustomComponent<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            isLiked: props.isLiked,
+            isLiked: !!props.itemInfo.likeTime,
             imageLoaded: false
         }
     }
@@ -43,22 +41,24 @@ export default class ItemScrollCard extends CustomComponent<Props, State> {
                 buttonStyle={styles.likeButton}
                 iconStyle={{tintColor: this.state.isLiked ? colors.valid : colors.lightGrey}}
                 buttonFunc={() => {
+                    // Update UI first
                     this.setState({isLiked: !this.state.isLiked}, async () => {
                         if (this.props.onPressLike) {
                             this.props.onPressLike(this.state.isLiked)
                         }
+                        let likeTime: number | null = null
                         try {
                             // Condition is flipped since state was just changed
                             if (this.state.isLiked) {
-                                await Item.like(this.props.itemData.itemID)
+                                likeTime = await Item.like(this.props.itemInfo.item.itemID)
                             } else {
-                                await Item.unlike(this.props.itemData.itemID)
+                                await Item.unlike(this.props.itemInfo.item.itemID)
                             }
                         } catch (e) {
                             this.setState({isLiked: !this.state.isLiked})
                         }
                         if (this.props.onUpdateLike) {
-                            this.props.onUpdateLike(this.state.isLiked)
+                            this.props.onUpdateLike(this.state.isLiked, likeTime)
                         }
                     })
                 }}
@@ -77,7 +77,7 @@ export default class ItemScrollCard extends CustomComponent<Props, State> {
             }}
         >
             <ImageSlider
-                uris={this.props.itemData.images}
+                uris={this.props.itemInfo.item.images}
                 minRatio={1}
                 maxRatio={1.5}
                 fadeColor={colors.white}
@@ -99,25 +99,25 @@ export default class ItemScrollCard extends CustomComponent<Props, State> {
                     <Text
                         style={{...styles.headerText, flex: 2/3}}
                         numberOfLines={2}
-                    >{this.props.itemData.name}</Text>
+                    >{this.props.itemInfo.item.name}</Text>
                     {/* Price, distance */}
                     <View style={{flexDirection: "column", flex: 1/3}}>
-                        <Text style={{...styles.headerText, textAlign: "right"}}>{this.props.itemData.minPrice >= 0 ? currencyFormatter.format(this.props.itemData.minPrice) : "$0.00"}</Text>
-                        <Text style={{...styles.minorText, textAlign: "right"}}>{`within ${this.props.distance}km`}</Text>
+                        <Text style={{...styles.headerText, textAlign: "right"}}>{currencyFormatter.format(this.props.itemInfo.item.recentPrice)}</Text>
+                        <Text style={{...styles.minorText, textAlign: "right"}}>{`within ${this.props.itemInfo.distance}km`}</Text>
                     </View>
                 </View>
                 <Text style={styles.headerText}>Information:</Text>
                 {/* Article */}
-                {this.props.itemData.category ? 
-                <Text style={styles.majorText}>{`Article: ${capitalizeWords(this.props.itemData.category)}`}</Text>
+                {this.props.itemInfo.item.category ? 
+                <Text style={styles.majorText}>{`Article: ${capitalizeWords(this.props.itemInfo.item.category)}`}</Text>
                 : undefined}
                 {/* Condition */}
-                {this.props.itemData.condition ? 
-                <Text style={styles.majorText}>{`Condition: ${capitalizeWords(this.props.itemData.condition)}`}</Text>
+                {this.props.itemInfo.item.condition ? 
+                <Text style={styles.majorText}>{`Condition: ${capitalizeWords(this.props.itemInfo.item.condition)}`}</Text>
                 : undefined}
                 {/* Fit */}
-                {this.props.itemData.fit ? 
-                <Text style={styles.majorText}>{`Fit: ${capitalizeWords(this.props.itemData.fit)}`}</Text>
+                {this.props.itemInfo.item.fit ? 
+                <Text style={styles.majorText}>{`Fit: ${capitalizeWords(this.props.itemInfo.item.fit)}`}</Text>
                 : undefined}
             </View>
             {this.renderLikeButton()}
@@ -126,7 +126,7 @@ export default class ItemScrollCard extends CustomComponent<Props, State> {
     }
 
     renderLoading() {
-        if (this.props.itemData === undefined || !this.state.imageLoaded) {
+        if (this.props.itemInfo.item === undefined || !this.state.imageLoaded) {
             return (
                 <LoadingCover style={{backgroundColor: colors.white}}/>
             )

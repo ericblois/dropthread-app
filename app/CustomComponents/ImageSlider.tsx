@@ -1,6 +1,5 @@
 import React from "react";
 import { Image, ImageStyle, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
-import FastImage from "react-native-fast-image";
 import { shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import GradientView from "./GradientView";
@@ -117,7 +116,7 @@ export default class ImageSlider extends CustomComponent<ImageSliderProps, Image
             }
             return (
                 <ImageAnimated
-                    source={{uri: item.uri}}
+                    source={{uri: item.uri, priority: index === 0 ? 'high' : 'normal'}}
                     style={{
                         ...shadowStyles.small,
                         width: ratio * (this.state.galleryHeight - styleValues.mediumPadding*2),

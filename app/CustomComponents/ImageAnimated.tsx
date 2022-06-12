@@ -32,7 +32,7 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
 
   placeHolderOpacity = new Animated.Value(1)
   imageOpacity = new Animated.Value(0)
-  fadeTime = 350
+  fadeTime = 500
 
   showImage() {
       Animated.sequence([

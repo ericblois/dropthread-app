@@ -21,7 +21,7 @@ export default abstract class Item {
             this is an initial refresh and should
             use itemIDs, otherwise just use refreshIDs
         */
-        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getItems", {
+        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getItemsFromIDs", {
             userID: User.getCurrent().uid,
             itemIDs: cacheResult.validItems.length === 0 ? itemIDs : cacheResult.refreshIDs,
             coords: coords
@@ -152,12 +152,12 @@ export default abstract class Item {
         // Reload this item in cache
         LocalCache.forceReloadItem(itemData.itemID)
     }
-    // Like an item
+    // Like an item, return like time
     public static async like(itemID: string) {
-        await cloudRun('POST', "likeItem", {
+        return (await cloudRun('POST', "likeItem", {
             userID: User.getCurrent().uid,
             itemID: itemID
-        })
+        })) as number
     }
     // Unlike an item
     public static async unlike(itemID: string) {

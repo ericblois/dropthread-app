@@ -154,17 +154,16 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
             showsHorizontalScrollIndicator={false}
             renderItem={(listItem) => (
               <ItemScrollCard
-                  itemData={listItem.item.item}
-                  distance={listItem.item.distance!}
-                  isLiked={!!listItem.item.likeTime}
+                  itemInfo={listItem.item}
                   key={listItem.index.toString()}
                   onPressLike={() => {
-                      //this.carouselComp?.snapToNext()
-                      if (this.flatListComp) {
-                        this.flatListComp.scrollToIndex({index: listItem.index + 1})
-                      }
+                      
                   }}
-                  onUpdateLike={(isLiked) => {
+                  onUpdateLike={(isLiked, likeTime) => {
+                    this.state.itemsInfo![listItem.index].likeTime = likeTime
+                    if (this.flatListComp && listItem.index + 1 < this.state.itemsInfo!.length) {
+                      this.flatListComp.scrollToIndex({index: listItem.index + 1})
+                    }
                     console.log("liked item. *Need to implement this function")
                   }}
               />

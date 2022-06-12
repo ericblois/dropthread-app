@@ -133,7 +133,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
             }
             return (
                 <ImageAnimated
-                    source={{uri: item.uri}}
+                    source={{uri: item.uri, priority: index === 0 ? 'high' : 'normal'}}
                     style={{
                         ...shadowStyles.small,
                         width: ratio * (this.state.galleryHeight - styleValues.mediumPadding*2),
