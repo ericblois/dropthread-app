@@ -19,7 +19,7 @@ type State = {
     imageLoaded: boolean
 }
 
-export default class ClosetItem extends CustomComponent<Props, State> {
+export default class ItemLikedCard extends CustomComponent<Props, State> {
 
     constructor(props: Props) {
         super(props);

@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { FilterSearchBar, ItemScrollCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
+import { FilterSearchBar, ItemBrowseCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
@@ -76,6 +76,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
         const results = await Item.getFromFilter(this.state.searchFilters)
         this.setState({itemsInfo: results})
       } catch (e) {
+        console.error(e)
         this.setState({errorDidOccur: true})
       }
     }
@@ -117,7 +118,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
             data={this.state.items}
             ItemSeparatorComponent={() => (<View style={{width: styleValues.mediumPadding}}/>)}
             renderItem={(listItem: ListRenderItemInfo<ItemData> | {item: ItemData, index: number}) => (
-              <ItemScrollCard
+              <ItemBrowseCard
                   itemData={listItem.item}
                   distance={this.state.distances![listItem.index]}
                   isLiked={this.state.userData!.likedItemIDs.includes(listItem.item.itemID)}
@@ -153,7 +154,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
             pagingEnabled={true}
             showsHorizontalScrollIndicator={false}
             renderItem={(listItem) => (
-              <ItemScrollCard
+              <ItemBrowseCard
                   itemInfo={listItem.item}
                   key={listItem.index.toString()}
                   onPressLike={() => {
@@ -179,7 +180,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
               scrollEnabled={false}
               //scrollEnabled={false}
               renderItem={(listItem: ListRenderItemInfo<ItemData> | {item: ItemData, index: number}) => (
-                    <ItemScrollCard
+                    <ItemBrowseCard
                         itemData={listItem.item}
                         distance={this.state.distances![listItem.index]}
                         key={listItem.index.toString()}
@@ -225,7 +226,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
               style={{top: styleValues.mediumPadding}}
               size={"large"}
               showError={this.state.errorDidOccur}
-              errorText={`Could not find items.`}
+              errorText={`An error occurred.`}
               onErrorRefresh={() => this.setState({errorDidOccur: false}, () => {
                 this.getUserData()
                 this.refreshSearchResults()

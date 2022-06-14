@@ -15,8 +15,9 @@ import LoadingCover from "../CustomComponents/LoadingCover";
 import TextInfoPopup from "../CustomComponents/TextInfoPopup";
 import ConfirmationPopup from "../CustomComponents/ConfirmationPopup";
 import TextDropdownAnimated from "../CustomComponents/TextDropdownAnimated";
-import ClosetItem from "../CustomComponents/ClosetItem";
-import ItemScrollCard from "../CustomComponents/ItemScrollCard";
+import ItemClosetCard from "../CustomComponents/ItemClosetCard";
+import ItemLikedCard from "../CustomComponents/ItemLikedCard";
+import ItemBrowseCard from "../CustomComponents/ItemBrowseCard";
 import FilterScrollBar from "../CustomComponents/FilterScrollBar";
 import FilterSearchBar from "../CustomComponents/FilterSearchBar";
 import SearchResultItem from "../CustomComponents/SearchResultItem";
@@ -41,8 +42,9 @@ export {
     TextInfoPopup,
     ConfirmationPopup,
     TextDropdownAnimated,
-    ClosetItem,
-    ItemScrollCard,
+    ItemClosetCard,
+    ItemLikedCard,
+    ItemBrowseCard,
     FilterScrollBar,
     FilterSearchBar,
     SearchResultItem,

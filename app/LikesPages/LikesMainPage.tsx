@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { DeviceEventEmitter, StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { ClosetItem, IconButton, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
+import { ItemClosetCard, IconButton, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
 import { DefaultItemData, ItemData, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, LikesStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
@@ -86,7 +86,7 @@ export default class LikesMainPage extends CustomComponent<LikesMainProps, State
                 <ScrollContainer>
                     {this.state.itemsInfo.map((itemInfo, index) => {
                         return (
-                            <ClosetItem
+                            <ItemClosetCard
                                 itemData={itemInfo.item}
                                 onPress={() => {}}
                                 key={index.toString()}

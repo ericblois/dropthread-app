@@ -24,7 +24,7 @@ type State = {
     imageLoaded: boolean
 }
 
-export default class ItemScrollCard extends CustomComponent<Props, State> {
+export default class ItemBrowseCard extends CustomComponent<Props, State> {
 
     constructor(props: Props) {
         super(props);

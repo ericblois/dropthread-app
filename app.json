@@ -21,13 +21,26 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.ericblois.dropthread",
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "This app uses your photos."
+        "NSPhotoLibraryUsageDescription": "This app uses your photos.",
+        "NSLocationAlwaysUsageDescription": "This app uses your location.",
+        "NSLocationWhenInUseUsageDescription": "This app uses your location.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location."
+      },
+      "permissions": {
+        "camera": "YES",
+        "photos": "YES",
+        "location": "YES"
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
+      },
+      "permissions": {
+        "camera": "YES",
+        "photos": "YES",
+        "location": "YES"
       }
     },
     "web": {

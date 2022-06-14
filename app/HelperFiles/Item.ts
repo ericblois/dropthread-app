@@ -7,15 +7,11 @@ import User from "./User"
 export default abstract class Item {
 
     // Retrieve items by their ID
-    public static async getFromIDs(itemIDs: string[], withDistance = false) {
+    public static async getFromIDs(itemIDs: string[]) {
         // Determine which item IDs should be refresh vs retrieved from cache
         const cacheResult = LocalCache.getItems(itemIDs)
         // Get items that need to be refreshed
-        let coords: object | undefined = undefined
-        if (withDistance) {
-            const userData = await User.get()
-            coords = {lat: userData.lat, long: userData.long}
-        }
+        const coords = await User.getLocation()
         /* 
             If there are no valid items returned,
             this is an initial refresh and should
@@ -34,15 +30,11 @@ export default abstract class Item {
         return result.concat(cacheResult.validItems)
     }
     // Retrieve all items from a specific user
-    public static async getFromUser(userID?: string, withDistance = false) {
+    public static async getFromUser(userID?: string) {
         const id = userID ? userID : User.getCurrent().uid
         // Determine which item IDs should be refresh vs retrieved from cache
         const cacheResult = LocalCache.getItems(id)
-        let coords: object | undefined = undefined
-        if (withDistance) {
-            const userData = await User.get()
-            coords = {lat: userData.lat, long: userData.long}
-        }
+        const coords = await User.getLocation()
         const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getUserItems", {
             requestingUserID: User.getCurrent().uid,
             targetUserID: id,
@@ -56,12 +48,29 @@ export default abstract class Item {
         // Return valid items and refreshed items together
         return result.concat(cacheResult.validItems)
     }
+    // Retrieve all items from a specific user
+    public static async getLiked() {
+        const userID = User.getCurrent().uid
+        // Determine which item IDs should be refresh vs retrieved from cache
+        /* 
+            IMPLEMENT CACHE GET
+        */
+        const coords = await User.getLocation()
+        const result: ItemInfo[] = await cloudRun('POST', "getLikedItems", {
+            userID: userID,
+            coords: coords
+        })
+        /*
+            IMPLEMENT CACHE SAVE
+        */
+        return result
+    }
     // Get items using a filter
     public static async getFromFilter(filters: ItemFilter) {
         // Determine which item IDs should be refresh vs retrieved from cache
         const cacheResult = LocalCache.getItems(filters)
         const userData = await User.get()
-        const coords = {lat: userData.lat, long: userData.long}
+        const coords = await User.getLocation()
         const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getFilteredItems", {
             userID: userData.userID,
             filters: filters,

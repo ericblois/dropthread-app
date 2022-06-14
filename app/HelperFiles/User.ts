@@ -1,10 +1,13 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { httpsCallable } from "firebase/functions"
 import uuid from "react-native-uuid"
-import { ItemData, UserData } from "../HelperFiles/DataTypes"
+import { Coords, ItemData, UserData } from "../HelperFiles/DataTypes"
 import { auth, cloudRun, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import ServerData from "./ServerData"
+import Geolocation from "react-native-geolocation-service"
+import Permissions from "react-native-permissions"
+import { Platform } from "react-native"
 
 export default abstract class User {
 
@@ -82,5 +85,33 @@ export default abstract class User {
             const serverPath = downloadURL.substring(downloadURL.lastIndexOf('/') + 1, downloadURL.indexOf('?')).replace(/\%2F/g, '/')
             return ServerData.deleteFile(serverPath)
         }))
+    }
+
+    public static getLocation(): Promise<Coords> {
+        return new Promise(async (resolve, reject) => {
+            // Check location permission
+            const perm = Platform.OS === 'ios' ? Permissions.PERMISSIONS.IOS.LOCATION_WHEN_IN_USE : Permissions.PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+            const auth = await Permissions.check(perm)
+            // Permission isn't given
+            if (auth !== 'granted' && auth !== 'limited') {
+                // Request permission
+                const newAuth = await Geolocation.requestAuthorization('whenInUse')
+                // Rejected
+                if (newAuth !== 'granted') {
+                    reject('Location permission rejected.')
+                }
+            }
+            // Get location
+            Geolocation.getCurrentPosition((pos) => {
+                console.log('got it')
+                resolve({
+                    lat: pos.coords.latitude,
+                    long: pos.coords.longitude
+                })
+            }, (e) => reject(e), {
+                enableHighAccuracy: true,
+                timeout: 10000
+            })
+        })
     }
 }

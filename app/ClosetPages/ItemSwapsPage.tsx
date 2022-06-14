@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { ListRenderItemInfo, StyleSheet, Text } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { ItemScrollCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
+import { ItemBrowseCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
 import { ItemData, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
@@ -75,7 +75,7 @@ export default class ItemSwapsPage extends CustomComponent<ItemSwapsProps, State
                     data={this.state.items}
                     renderItem={(listItem: ListRenderItemInfo<ItemData> | {item: ItemData, index: number}) => {
                         return (
-                            <ItemScrollCard
+                            <ItemBrowseCard
                                 itemData={listItem.item}
                                 key={listItem.index.toString()}
                                 distance={this.state.distances![listItem.index]}
@@ -86,11 +86,11 @@ export default class ItemSwapsPage extends CustomComponent<ItemSwapsProps, State
                     sliderWidth={styleValues.winWidth}
                 />*/}
                 {/*<ScrollContainer
-                    snapToInterval={itemScrollCardStyles.cardContainer.height}
+                    snapToInterval={ItemBrowseCardStyles.cardContainer.height}
                 >
                     {this.state.items.map((item, index) => {
                         return (
-                            <ItemScrollCard
+                            <ItemBrowseCard
                                 itemData={item}
                                 key={index.toString()}
                                 
