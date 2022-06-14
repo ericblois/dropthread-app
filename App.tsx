@@ -15,7 +15,6 @@ import { RootStack } from "./app/HelperFiles/Navigation";
 import StartPage from "./app/StartPage";
 import UserMainStackScreen from "./app/UserMainScreen";
 import UserSignupPage from "./app/UserSignupPage";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage"
 
 //LogBox.ignoreLogs(['Calling getNode()', 'VirtualizedLists should never be nested'])
 

@@ -25,11 +25,6 @@
         "NSLocationAlwaysUsageDescription": "This app uses your location.",
         "NSLocationWhenInUseUsageDescription": "This app uses your location.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location."
-      },
-      "permissions": {
-        "camera": "YES",
-        "photos": "YES",
-        "location": "YES"
       }
     },
     "android": {
@@ -37,11 +32,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions": {
-        "camera": "YES",
-        "photos": "YES",
-        "location": "YES"
-      }
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

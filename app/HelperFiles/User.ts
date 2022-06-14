@@ -5,9 +5,7 @@ import { Coords, ItemData, UserData } from "../HelperFiles/DataTypes"
 import { auth, cloudRun, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import ServerData from "./ServerData"
-import Geolocation from "react-native-geolocation-service"
-import Permissions from "react-native-permissions"
-import { Platform } from "react-native"
+import * as Location from "expo-location"
 
 export default abstract class User {
 
@@ -89,29 +87,29 @@ export default abstract class User {
 
     public static getLocation(): Promise<Coords> {
         return new Promise(async (resolve, reject) => {
-            // Check location permission
-            const perm = Platform.OS === 'ios' ? Permissions.PERMISSIONS.IOS.LOCATION_WHEN_IN_USE : Permissions.PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
-            const auth = await Permissions.check(perm)
-            // Permission isn't given
-            if (auth !== 'granted' && auth !== 'limited') {
-                // Request permission
-                const newAuth = await Geolocation.requestAuthorization('whenInUse')
-                // Rejected
-                if (newAuth !== 'granted') {
-                    reject('Location permission rejected.')
+            try {
+                // Check location permission
+                let auth = await Location.getForegroundPermissionsAsync()
+                // Permission isn't given
+                if (!auth.granted) {
+                    // Request permission
+                    auth = await Location.requestForegroundPermissionsAsync()
+                    // Rejected
+                    if (!auth.granted) {
+                        reject('Location permission rejected.')
+                    }
                 }
-            }
-            // Get location
-            Geolocation.getCurrentPosition((pos) => {
-                console.log('got it')
+                // Get location
+                const pos = await Location.getCurrentPositionAsync({
+                    accuracy: Location.LocationAccuracy.Balanced
+                })
                 resolve({
                     lat: pos.coords.latitude,
                     long: pos.coords.longitude
                 })
-            }, (e) => reject(e), {
-                enableHighAccuracy: true,
-                timeout: 10000
-            })
+            } catch (e) {
+                reject(e)
+            }
         })
     }
 }
