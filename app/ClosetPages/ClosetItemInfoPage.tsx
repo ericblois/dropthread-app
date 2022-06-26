@@ -10,7 +10,7 @@ import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
-import { colors, icons, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 
 type ItemInfoNavigationProp = CompositeNavigationProp<
     StackNavigationProp<ClosetStackParamList, "itemInfo">,
@@ -49,7 +49,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
         try {
             this.setState({errorOccurred: false})
             // Get data
-            const itemInfo = (await Item.getFromIDs([this.props.route.params.itemID], true))[0]
+            const itemInfo = (await Item.getFromIDs([this.props.route.params.itemID]))[0]
             this.setState({itemInfo: itemInfo})
         } catch {
             this.setState({errorOccurred: true})
@@ -91,7 +91,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                 <ScrollContainer>
                     <ImageSlider
                         uris={this.state.itemInfo.item.images}
-                        style={{width: styleValues.winWidth}}
+                        style={{width: screenWidth}}
                         minRatio={1}
                         maxRatio={2}
                     ></ImageSlider>

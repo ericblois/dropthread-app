@@ -3,7 +3,7 @@ import React from "react";
 import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData } from "../HelperFiles/DataTypes";
-import { colors, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import ImageAnimated from "./ImageAnimated";
 import LoadingCover from "./LoadingCover";
@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: "#fff",
         borderRadius: styleValues.mediumPadding,
-        height: styleValues.winWidth * 0.3,
-        width: styleValues.winWidth - styleValues.mediumPadding*2,
+        height: screenWidth * 0.3,
+        width: screenWidth - styleValues.mediumPadding*2,
         marginBottom: styleValues.mediumPadding,
         padding: styleValues.mediumPadding,
         flexDirection: "row",

@@ -3,7 +3,7 @@ import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import IconButton from "../CustomComponents/IconButton";
 import TextInputBox from "../CustomComponents/TextInputBox";
-import { colors, icons, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, icons, screenHeight, screenWidth, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type Props = {
@@ -78,8 +78,8 @@ export default class TextInputPopup extends CustomComponent<Props, State> {
 const styles = StyleSheet.create({
     container: {
         position: "absolute",
-        width: styleValues.winWidth,
-        height: styleValues.winHeight,
+        width: screenWidth,
+        height: screenHeight,
         padding: styleValues.mediumPadding,
         top: 0,
         left:  0,

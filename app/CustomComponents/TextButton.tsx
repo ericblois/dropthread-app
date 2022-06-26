@@ -1,7 +1,7 @@
 import React from "react";
 import { Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import FastImage, { ImageStyle } from "react-native-fast-image";
-import { colors, defaults, fonts, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, fonts, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import LoadingCover from "./LoadingCover";
 
@@ -99,7 +99,7 @@ export default class TextButton extends CustomComponent<Props, State> {
     }
 
     render() {
-        let defaultButtonStyle: ViewStyle = {...defaults.roundedBox, flexDirection: "row"}
+        let defaultButtonStyle: ViewStyle = {...defaultStyles.roundedBox, flexDirection: "row"}
         let defaultTextStyle = {...textStyles.small}
         // Color appearance
         if (this.props.appearance === "color") {

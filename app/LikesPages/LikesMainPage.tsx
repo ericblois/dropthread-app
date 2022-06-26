@@ -2,13 +2,13 @@ import { RouteProp } from "@react-navigation/core";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
-import { DeviceEventEmitter, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { ItemClosetCard, IconButton, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
-import { DefaultItemData, ItemData, ItemInfo, UserData } from "../HelperFiles/DataTypes";
+import { ItemLikedCard, LoadingCover, MenuBar, PageContainer, ScrollContainer } from "../HelperFiles/CompIndex";
+import { ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
-import { ClosetStackParamList, LikesStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
-import { bottomInset, colors, icons, menuBarStyles, styleValues } from "../HelperFiles/StyleSheet";
+import { LikesStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
+import { colors, icons } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type LikesMainNavigationProp = CompositeNavigationProp<
@@ -38,57 +38,29 @@ export default class LikesMainPage extends CustomComponent<LikesMainProps, State
             itemsInfo: undefined,
             imagesLoaded: true
         }
-        this.state =initialState
-        DeviceEventEmitter.addListener('refreshClosetItemData', () => {
-            this.setState(initialState, () => {
-                this.refreshData()
-            })
-        })
+        this.state = initialState
     }
 
     async refreshData() {
         const userData = await User.get()
-        const itemsInfo = await Item.getFromUser(undefined, true)
+        const itemsInfo = await Item.getLiked()
         this.setState({userData: userData, itemsInfo: itemsInfo})
     }
-
-    renderAddButton() {
-        return (
-          /*<TextButton
-            text={"Add a new item"}
-            buttonFunc={() => {
-                this.props.navigation.navigate("editItem", {
-                    itemID: '',
-                    isNew: true
-                })
-            }}
-          />*/
-          <IconButton
-            iconSource={icons.plus}
-            buttonStyle={{
-                position: "absolute",
-                bottom: menuBarStyles.lightHover.height + bottomInset + styleValues.mediumPadding*3,
-                right: styleValues.mediumPadding*2,
-                width: styleValues.iconLargesterSize,
-                height: styleValues.iconLargesterSize,
-                zIndex: 100,
-                elevation: 100
-            }}
-            iconStyle={{tintColor: colors.main}}
-            buttonFunc={() => {}}
-          />
-        )
-      }
     
     renderItems() {
         if (this.state.itemsInfo) {
             return (
-                <ScrollContainer>
+                <ScrollContainer
+                    fadeBottom={false}
+                    fadeTop={false}
+                >
                     {this.state.itemsInfo.map((itemInfo, index) => {
                         return (
-                            <ItemClosetCard
-                                itemData={itemInfo.item}
-                                onPress={() => {}}
+                            <ItemLikedCard
+                                itemInfo={itemInfo}
+                                onPress={() => {
+                                    console.log('anad')
+                                }}
                                 key={index.toString()}
                             />
                         )
@@ -103,7 +75,6 @@ export default class LikesMainPage extends CustomComponent<LikesMainProps, State
             return (
                 <>
                     {this.renderItems()}
-                    {this.renderAddButton()}
                 </>
             )
         }
@@ -119,7 +90,7 @@ export default class LikesMainPage extends CustomComponent<LikesMainProps, State
 
     render() {
         return (
-            <PageContainer headerText={"Your Closet"}>
+            <PageContainer headerText={"Liked Items"}>
                 {this.renderUI()}
                 {this.renderLoading()}
                 <MenuBar

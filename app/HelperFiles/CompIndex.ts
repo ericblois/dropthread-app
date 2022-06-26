@@ -23,6 +23,7 @@ import FilterSearchBar from "../CustomComponents/FilterSearchBar";
 import SearchResultItem from "../CustomComponents/SearchResultItem";
 import ImageAnimated from "../CustomComponents/ImageAnimated";
 import TagInputBox from "../CustomComponents/TagInputBox";
+import CustomPressable from "../CustomComponents/CustomPressable"
 
 export {
     MenuBar,
@@ -49,5 +50,6 @@ export {
     FilterSearchBar,
     SearchResultItem,
     ImageAnimated,
-    TagInputBox
+    TagInputBox,
+    CustomPressable
 };

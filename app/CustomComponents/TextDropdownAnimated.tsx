@@ -1,6 +1,6 @@
 import React from "react";
 import { Animated, TextStyle, View, ViewStyle } from "react-native";
-import { colors, defaults, fonts, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, fonts, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import TextButton from "./TextButton";
 
@@ -51,7 +51,7 @@ export default class TextDropdownAnimated extends CustomComponent<TextDropdownAn
     expand() {
         Animated.sequence([
             Animated.timing(this.dropdownHeight, {
-                toValue: styleValues.winWidth*0.1,
+                toValue: screenWidth*0.1,
                 duration: 100,
                 useNativeDriver: false
             }),
@@ -160,7 +160,7 @@ export default class TextDropdownAnimated extends CustomComponent<TextDropdownAn
                 <TextButton
                     text={mainText}
                     buttonStyle={{
-                        ...defaults.inputBox,
+                        ...defaultStyles.inputBox,
                         marginBottom: 0,
                         borderWidth: this.props.showValidSelection === true ? styleValues.minorBorderWidth : undefined,
                         borderColor: this.state.selections.length > 0 ? colors.valid : colors.invalid,

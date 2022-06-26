@@ -8,7 +8,7 @@ import { CurrencyInputBox, ImageSliderSelector, LoadingCover, MenuBar, PageConta
 import { DefaultItemData, ItemCategories, ItemConditions, ItemData, ItemFits, ItemGenders, UserData, validateItem } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList } from "../HelperFiles/Navigation";
-import { colors, icons, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, icons, screenWidth, styleValues } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type EditItemNavigationProp = StackNavigationProp<ClosetStackParamList, "editItem">
@@ -129,7 +129,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
         return (
             <ImageSliderSelector
                 uris={this.state.itemData!.images}
-                style={{width: styleValues.winWidth}}
+                style={{width: screenWidth}}
                 placeHolderStyle={{
                     borderWidth: styleValues.minorBorderWidth,
                     borderColor: colors.invalid

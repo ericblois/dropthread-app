@@ -1,6 +1,6 @@
 import React from "react"
 import { Keyboard, Text, TouchableWithoutFeedback, View, ViewStyle } from "react-native"
-import { defaults, styleValues, textStyles, topInset } from "../HelperFiles/StyleSheet"
+import { defaultStyles, styleValues, textStyles, topInset } from "../HelperFiles/StyleSheet"
 import CustomComponent from "./CustomComponent"
 
 type Props = {
@@ -8,24 +8,41 @@ type Props = {
     headerText?: string
 }
 
-type State = {}
+type State = {
+    headerHeight: number
+}
 
 export default class PageContainer extends CustomComponent<Props, State> {
+
+    constructor(props: Props) {
+        super(props)
+        this.state = {
+            headerHeight: 0
+        }
+    }
 
     render() {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View
                     style={{
-                        ...defaults.pageContainer,
-                        paddingTop: this.props.headerText ? defaults.headerBox.height + styleValues.mediumPadding : topInset + styleValues.mediumPadding,
+                        ...defaultStyles.pageContainer,
+                        paddingTop: this.state.headerHeight,
                         ...this.props.style
                     }}
                     onStartShouldSetResponder={() => (true)}
                 >
                     {this.props.children}
                     {this.props.headerText ?
-                        <View style={defaults.headerBox}>
+                        <View
+                            style={defaultStyles.headerBox}
+                            onLayout={(e) => {
+                                // Capture the height of the header to use as padding
+                                if (this.state.headerHeight == 0) {
+                                    this.setState({headerHeight: e.nativeEvent.layout.height})
+                                }
+                            }}
+                        >
                             <Text style={textStyles.large}>{this.props.headerText}</Text>
                         </View>
                     : undefined}

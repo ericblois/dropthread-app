@@ -1,5 +1,5 @@
 import { httpsCallable } from "firebase/functions"
-import { ItemData, ItemFilter, ItemInfo } from "../HelperFiles/DataTypes"
+import { ItemData, itemDollarIncrease, ItemFilter, ItemInfo, itemPercentIncrease } from "../HelperFiles/DataTypes"
 import { cloudRun, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import User from "./User"
@@ -161,18 +161,43 @@ export default abstract class Item {
         // Reload this item in cache
         LocalCache.forceReloadItem(itemData.itemID)
     }
-    // Like an item, return like time
-    public static async like(itemID: string) {
-        return (await cloudRun('POST', "likeItem", {
+    // Like an item, return like time, update local version and server version
+    public static like(itemInfo: ItemInfo) {
+        // Send like to server
+        cloudRun('POST', "likeItem", {
             userID: User.getCurrent().uid,
-            itemID: itemID
-        })) as number
-    }
-    // Unlike an item
-    public static async unlike(itemID: string) {
-        await cloudRun('POST', "unlikeItem", {
-            userID: User.getCurrent().uid,
-            itemID: itemID
+            itemID: itemInfo.item.itemID
+        }).then((likeTime) => {
+            itemInfo.likeTime = likeTime as number
         })
+        // Return updated local version
+        itemInfo.likeTime = Date.now()
+        itemInfo.likePrice = itemInfo.item.currentPrice
+        itemInfo.item.lastPrice = itemInfo.item.currentPrice
+        itemInfo.item.currentPrice = Math.max(itemInfo.item.currentPrice*itemPercentIncrease, itemInfo.item.currentPrice + itemDollarIncrease)
+        itemInfo.item.likeCount += 1
+    }
+    // Unlike an item, update local version and server version
+    public static unlike(itemInfo: ItemInfo) {
+        // Send like to server
+        cloudRun('POST', "unlikeItem", {
+            userID: User.getCurrent().uid,
+            itemID: itemInfo.item.itemID
+        })
+        // Update local version
+        itemInfo.likeTime = null
+        itemInfo.likePrice = null
+        itemInfo.item.currentPrice = itemInfo.item.lastPrice
+        // Revert lastPrice
+        if (itemInfo.item.lastPrice*(1 - 1/itemPercentIncrease) >= itemDollarIncrease) {
+            itemInfo.item.lastPrice /= 1.05
+        } else {
+            itemInfo.item.lastPrice -= 2.5
+        }
+        // Check if last price is now lower than the minimum prcie
+        if (itemInfo.item.lastPrice < itemInfo.item.minPrice) {
+            itemInfo.item.lastPrice = itemInfo.item.minPrice
+        }
+        itemInfo.item.likeCount -= 1
     }
 }

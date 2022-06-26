@@ -6,7 +6,7 @@ import { Animated, StyleSheet, Text, View, ViewStyle, TouchableWithoutFeedback }
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import { simpleCurrencyFormatter } from "../HelperFiles/Constants";
 import { countriesList, DefaultItemFilter, ItemCategories, ItemConditions, ItemFilter, ItemGenders } from "../HelperFiles/DataTypes";
-import { colors, icons, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import ScrollContainer from "./ScrollContainer";
 import TextButton from "./TextButton";
@@ -261,7 +261,7 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
             let values: number[] = []
             // Check if there is no current value for this filter field
             if (this.state.filters[filterKey] === undefined) {
-                // Set values to last used values or defaults
+                // Set values to last used values or defaultStyles
                 if (optional && this.state.prevFilterValues[filterKey] !== undefined) {
                     values = this.state.prevFilterValues[filterKey] as number[]
                 } else if (defaultValues !== undefined) {
@@ -302,7 +302,7 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
                         }}
                         selectedStyle={{backgroundColor: colors.main}}
                         unselectedStyle={{backgroundColor: colors.white}}
-                        sliderLength={(styleValues.winWidth - styleValues.mediumPadding*4)}
+                        sliderLength={(screenWidth - styleValues.mediumPadding*4)}
                         snapped={true}
                         values={values}
                         enabledOne={true}
@@ -408,14 +408,7 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
         if (this.state.showDropdown) {
             return (
                 <AnimatedBlurView
-                    style={{
-                        position: "absolute",
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        //opacity: 0.5
-                    }}
+                    style={defaultStyles.fill}
                     intensity={this.blurIntensity}
                     tint={"dark"}
                 >
@@ -438,7 +431,7 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
     render() {
         return (
             <View
-                style={styles.fillView}
+                style={defaultStyles.fill}
                 pointerEvents={"box-none"}
             >
                 {this.renderBlur()}
@@ -460,16 +453,9 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
 }
 
 const styles = StyleSheet.create({
-    fillView: {
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0
-    },
     barContainer: {
-        height: styleValues.winWidth * 0.15,
-        width: styleValues.winWidth,
+        height: screenWidth * 0.15,
+        width: screenWidth,
         zIndex: 10,
         elevation: 10
     },
@@ -486,7 +472,7 @@ const styles = StyleSheet.create({
     dropdownBackground: {
         ...shadowStyles.small,
         position: "absolute",
-        width: styleValues.winWidth - 2*styleValues.mediumPadding,
+        width: screenWidth - 2*styleValues.mediumPadding,
         top: styleValues.smallHeight + styleValues.mediumPadding,
         alignSelf: "center",
         padding: styleValues.mediumPadding,

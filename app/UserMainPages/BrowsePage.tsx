@@ -7,7 +7,7 @@ import { FilterSearchBar, ItemBrowseCard, LoadingCover, MenuBar, PageContainer }
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
-import { colors, icons, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type BrowseNavigationProp = StackNavigationProp<UserMainStackParamList, "browse">;
@@ -148,7 +148,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
             ref={(flatList) => {this.flatListComp = flatList}}
             data={this.state.itemsInfo}
             style={{
-              width: styleValues.winWidth
+              width: screenWidth
             }}
             horizontal={true}
             pagingEnabled={true}
@@ -159,13 +159,6 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
                   key={listItem.index.toString()}
                   onPressLike={() => {
                       
-                  }}
-                  onUpdateLike={(isLiked, likeTime) => {
-                    this.state.itemsInfo![listItem.index].likeTime = likeTime
-                    if (this.flatListComp && listItem.index + 1 < this.state.itemsInfo!.length) {
-                      this.flatListComp.scrollToIndex({index: listItem.index + 1})
-                    }
-                    console.log("liked item. *Need to implement this function")
                   }}
               />
             )}
@@ -212,8 +205,8 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
                   }
                 }
               }}
-              itemWidth={styleValues.winWidth - 2*styleValues.mediumPadding}
-              sliderWidth={styleValues.winWidth}
+              itemWidth={screenWidth - 2*styleValues.mediumPadding}
+              sliderWidth={screenWidth}
             />*/
         )
       }

@@ -2,7 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { View, ViewStyle } from "react-native";
 import { hexToRGBA } from "../HelperFiles/ClientFunctions";
-import { colors, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type GradientViewProps = {
@@ -70,11 +70,7 @@ export default class GradientView extends CustomComponent<GradientViewProps, Sta
         return (
             <View
                 style={{
-                    position: "absolute",
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                    ...defaultStyles.fill,
                     flexDirection: this.props.horizontal === true ? "row" : "column",
                     justifyContent: "space-between",
                     borderRightWidth: this.props.horizontal ? 0.5 : 0,

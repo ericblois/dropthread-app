@@ -6,7 +6,7 @@ import { Animated, Pressable, StyleSheet, Text, View, ViewStyle } from "react-na
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import { simpleCurrencyFormatter } from "../HelperFiles/Constants";
 import { countriesList, DefaultItemFilter, ItemCategories, ItemConditions, ItemFilter, ItemGenders } from "../HelperFiles/DataTypes";
-import { bottomInset, colors, icons, shadowStyles, styleValues, textStyles, topInset } from "../HelperFiles/StyleSheet";
+import { bottomInset, colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues, textStyles, topInset } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import IconButton from "./IconButton";
 import ScrollContainer from "./ScrollContainer";
@@ -358,7 +358,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
             let values: number[] = []
             // Check if there is no current value for this filter field
             if (this.state.filters[filterKey] === undefined) {
-                // Set values to last used values or defaults
+                // Set values to last used values or defaultStyles
                 if (optional && this.state.prevFilterValues[filterKey] !== undefined) {
                     values = this.state.prevFilterValues[filterKey] as number[]
                 } else if (defaultValues !== undefined) {
@@ -399,7 +399,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                         }}
                         selectedStyle={{backgroundColor: colors.main}}
                         unselectedStyle={{backgroundColor: colors.white}}
-                        sliderLength={(styleValues.winWidth - styleValues.mediumPadding*4)}
+                        sliderLength={(screenWidth - styleValues.mediumPadding*4)}
                         snapped={true}
                         values={values}
                         enabledOne={true}
@@ -515,7 +515,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
         if (this.state.showSearchBar && this.state.showDropdown) {
             return (
                 <AnimatedBlurView
-                    style={styles.fillView}
+                    style={defaultStyles.fill}
                     intensity={this.blurIntensity}
                     tint={"default"}
                 />
@@ -529,7 +529,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
             <Pressable
                 style={{
                     ...styles.elementContainer,
-                    ...styles.fillView,
+                    ...defaultStyles.fill,
                     elevation: this.state.showDropdown ? 100 : 0,
                     zIndex: this.state.showDropdown ? 100 : 0,
                     ...this.props.containerStyle
@@ -608,7 +608,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
         return (
             <View
                 style={{
-                    ...styles.fillView,
+                    ...defaultStyles.fill,
                     zIndex: this.state.showDropdown ? 90 : 0,
                     elevation: this.state.showDropdown ? 90 : 0
                 }}
@@ -635,13 +635,6 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
 }
 
 const styles = StyleSheet.create({
-    fillView: {
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0
-    },
     elementContainer: {
         flexDirection: "column",
         paddingTop: topInset + styleValues.mediumPadding,
@@ -649,7 +642,7 @@ const styles = StyleSheet.create({
     },
     dropdownBackground: {
         ...shadowStyles.small,
-        width: styleValues.winWidth - 2*styleValues.mediumPadding,
+        width: screenWidth - 2*styleValues.mediumPadding,
         alignSelf: "center",
         alignItems: "center",
     }

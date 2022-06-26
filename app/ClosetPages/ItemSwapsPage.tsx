@@ -82,8 +82,8 @@ export default class ItemSwapsPage extends CustomComponent<ItemSwapsProps, State
                             />
                         )
                     }}
-                    itemWidth={styleValues.winWidth - 2*styleValues.mediumPadding}
-                    sliderWidth={styleValues.winWidth}
+                    itemWidth={screenWidth - 2*styleValues.mediumPadding}
+                    sliderWidth={screenWidth}
                 />*/}
                 {/*<ScrollContainer
                     snapToInterval={ItemBrowseCardStyles.cardContainer.height}

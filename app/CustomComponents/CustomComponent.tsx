@@ -34,6 +34,12 @@ export default class CustomComponent<P = {}, S = {}, SS = any> extends Component
             this.waitingStateUpdate = state
         }
     }
+    
+    forceUpdate(callback?: (() => void) | undefined): void {
+        if (this.componentMounted) {
+            super.forceUpdate(callback)
+        }
+    }
 
     refreshData() {}
 }

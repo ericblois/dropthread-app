@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, TextStyle, View, ViewStyle, TouchableOpacity } from "react-native";
 import IconButton from "../CustomComponents/IconButton";
-import { colors, defaults, icons, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, screenHeight, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type Props = {
@@ -58,9 +58,9 @@ export default class TextInfoPopup extends CustomComponent<Props, State> {
                 }}>
                     <View
                         style={{
-                            ...defaults.inputBox,
+                            ...defaultStyles.inputBox,
                             height: undefined,
-                            maxWidth: styleValues.winWidth*0.8,
+                            maxWidth: screenWidth*0.8,
                             padding: styleValues.mediumPadding,
                             ...this.props.boxStyle
                         }}
@@ -76,7 +76,7 @@ export default class TextInfoPopup extends CustomComponent<Props, State> {
                         >{this.props.headerText}</Text>}
                         <Text
                             style={{
-                                ...defaults.inputText,
+                                ...defaultStyles.inputText,
                                 ...this.props.textStyle
                             }}
                             {...this.props.textProps}
@@ -91,16 +91,12 @@ export default class TextInfoPopup extends CustomComponent<Props, State> {
 
 const styles = StyleSheet.create({
     container: {
-        position: "absolute",
+        ...defaultStyles.fill,
         alignItems: "center",
         justifyContent: "center",
-        width: styleValues.winWidth,
-        height: styleValues.winHeight,
+        width: screenWidth,
+        height: screenHeight,
         padding: styleValues.mediumPadding,
-        top: 0,
-        bottom: 0,
-        left:  0,
-        right: 0,
         backgroundColor: "rgba(0,0,0,0.5)",
     },
     outsideTouchable: {

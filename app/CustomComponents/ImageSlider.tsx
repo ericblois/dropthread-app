@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, ImageStyle, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
-import { shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
+import { defaultStyles, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import GradientView from "./GradientView";
 import ImageAnimated from "./ImageAnimated";
@@ -182,13 +182,7 @@ export default class ImageSlider extends CustomComponent<ImageSliderProps, Image
                     }}
                 >
                 <ScrollView
-                    style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        right: 0
-                    }}
+                    style={defaultStyles.fill}
                     contentContainerStyle={{
                         paddingVertical: styleValues.mediumPadding,
                         paddingHorizontal: styleValues.mediumPadding/2,

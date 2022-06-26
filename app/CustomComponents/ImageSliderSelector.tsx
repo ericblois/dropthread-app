@@ -2,7 +2,7 @@ import React from "react";
 import { Image, ImageStyle, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
 import FastImage from "react-native-fast-image";
 import { accessPhotos, getCompressedImage } from "../HelperFiles/ClientFunctions";
-import { colors, icons, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import GradientView from "./GradientView";
 import IconButton from "./IconButton";
@@ -305,13 +305,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                 {this.props.uris.length > 0 ?
                     /* Image scroller */
                     <><ScrollView
-                        style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            bottom: 0,
-                            right: 0
-                        }}
+                        style={defaultStyles.fill}
                         contentContainerStyle={{
                             paddingVertical: styleValues.mediumPadding,
                             paddingHorizontal: styleValues.mediumPadding/2,
@@ -337,7 +331,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     <View
                         style={{
                             ...shadowStyles.medium,
-                            width: styleValues.winWidth - 2*styleValues.mediumPadding,
+                            width: screenWidth - 2*styleValues.mediumPadding,
                             height: styleValues.largestHeight*2,
                             borderRadius: styleValues.mediumPadding,
                             backgroundColor: colors.lightestGrey,

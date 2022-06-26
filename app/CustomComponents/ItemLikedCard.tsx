@@ -1,21 +1,26 @@
 
 import React from "react";
-import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { GestureResponderEvent, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import { currencyFormatter } from "../HelperFiles/Constants";
-import { ItemData } from "../HelperFiles/DataTypes";
-import { colors, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { ItemInfo } from "../HelperFiles/DataTypes";
+import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth, icons, defaultStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import ImageAnimated from "./ImageAnimated";
-import LoadingCover from "./LoadingCover";
+import CustomPressable from "./CustomPressable";
+import IconButton from "./IconButton";
+import Item from "../HelperFiles/Item";
 
 type Props = {
-    itemData: ItemData,
+    itemInfo: ItemInfo,
     onLoadEnd?: () => void,
-    onPress?: (event?: GestureResponderEvent) => void
+    onPress?: (event?: GestureResponderEvent) => void,
+    onPressLike?: (isLiked: boolean) => void
 }
 
 type State = {
+    status: "highestPrice" | "outbid" | "unliked",
+    statusText: string,
     imageLoaded: boolean
 }
 
@@ -24,31 +29,45 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            imageLoaded: props.itemData.images.length === 0
+            status: 'highestPrice',
+            statusText: '',
+            imageLoaded: props.itemInfo.item.images.length === 0
+        }
+    }
+    componentDidMount(): void {
+        super.componentDidMount()
+        this.updateStatus()
+    }
+
+    // Update the status of the like on this item
+    updateStatus = () => {
+        if (!this.props.itemInfo.likePrice) {
+            this.setState({status: 'unliked', statusText: 'Not liked'})
+        } else if (this.props.itemInfo.likePrice >= this.props.itemInfo.item.lastPrice) {
+            this.setState({status: 'highestPrice', statusText: 'Most recent like'})
+        } else {
+            this.setState({status: 'outbid', statusText: 'Liked by other shopper'})
         }
     }
 
     renderUI() {
+        const priceText = currencyFormatter.format(this.state.status === 'highestPrice' ? this.props.itemInfo.likePrice! : this.props.itemInfo.item.currentPrice )
+        const priceColor = this.state.status === 'outbid' ? colors.invalid : colors.black 
+        const statusColor = this.state.status === 'highestPrice' ? colors.valid : colors.invalid
         return (
-        <TouchableOpacity style={{
-            flexDirection: "row",
-            alignItems: "center",
-            height: "100%",
-            width: "100%",
-        }} onPress={() => {
-            if (this.props.onPress) {
-                this.props.onPress();
-            }
-        }}>
+        <CustomPressable
+            style={styles.cardContainer}
+            animationType={"shadow"}
+            onPress={this.props.onPress}
+        >
             <ImageAnimated
                 style={{
-                    ...styles.productImage,
-                    borderTopEndRadius: 5
+                    ...styles.productImage
                 }}
                 imageProps={{
                     resizeMode: "cover"
                 }}
-                source={{uri: this.props.itemData.images[0]}}
+                source={{uri: this.props.itemInfo.item.images[0]}}
                 onLoad={() => {
                     this.setState({imageLoaded: true}, () => {
                         if (this.props.onLoadEnd) {
@@ -57,36 +76,84 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
                     })
                 }}
             />
-            <View style={styles.productInfoArea}>
-                <Text
-                    style={styles.productName}
-                    numberOfLines={2}
-                >{this.props.itemData.name}</Text>
-                <View style={styles.productSubInfoArea}>
-                    <Text style={styles.productPrice}>{this.props.itemData.minPrice >= 0 ? currencyFormatter.format(this.props.itemData.minPrice) : "$0.00"}</Text>
+            {/* INFO AREA */}
+            <View style={{height: "100%", flex: 1}}>
+                {/* HEADER */}
+                <View style={{flexDirection: "row", marginBottom: styleValues.minorPadding}}>
+                    {/* ITEM NAME */}
+                    <Text
+                        style={{...styles.headerText, flex: 1, marginRight: styleValues.mediumPadding}}
+                        numberOfLines={1}
+                    >{this.props.itemInfo.item.name}</Text>
+                    {/* PRICE */}
+                    <View style={{flexDirection: "row", alignItems: "center"}}>
+                        {this.state.status === 'outbid' ?
+                        <FastImage
+                            source={icons.backArrow}
+                            resizeMode={"contain"}
+                            style={{
+                                width: styleValues.iconSmallestSize,
+                                aspectRatio: 1,
+                                marginRight: styleValues.minorPadding,
+                                transform: [{rotate: '90deg'}]
+                            }}
+                            tintColor={priceColor}
+                        /> : undefined
+                        }
+                        <Text
+                            style={styles.headerText}
+                            numberOfLines={1}
+                        >{priceText}</Text>
+                    </View>
+                </View>
+                <View style={{flexDirection: "row", flex: 1, alignItems: "flex-end"}}>
+                    {/* STATUS */}
+                    <View style={{flexDirection: "row", flex: 1}}>
+                        <FastImage
+                            source={icons.hollowHeart}
+                            resizeMode={"contain"}
+                            style={{
+                                width: styleValues.iconSmallerSize,
+                                aspectRatio: 1
+                            }}
+                            tintColor={statusColor}
+                        />
+                        <Text
+                            style={{...styles.statusText, color: statusColor}}
+                            numberOfLines={2}
+                        >{this.state.statusText}</Text>
+                    </View>
+                    {/* LIKE BUTTON */}
+                    <IconButton
+                        iconSource={icons.hollowHeart}
+                        buttonStyle={styles.likeButton}
+                        iconStyle={{tintColor: this.state.status === 'highestPrice' ? colors.valid : colors.grey}}
+                        buttonFunc={() => {
+                            // Unlike
+                            if (this.props.itemInfo.likePrice && this.props.itemInfo.likePrice >= this.props.itemInfo.item.lastPrice) {
+                                Item.unlike(this.props.itemInfo)
+                                if (this.props.onPressLike) {
+                                    this.props.onPressLike(false)
+                                }
+                            } // Like
+                            else {
+                                Item.like(this.props.itemInfo)
+                                if (this.props.onPressLike) {
+                                    this.props.onPressLike(true)
+                                }
+                            }
+                            this.updateStatus()
+                        }}
+                    />
                 </View>
             </View>
-        </TouchableOpacity>
+        </CustomPressable>
         );
-    }
-
-    renderLoading() {
-        if (this.props.itemData === undefined || !this.state.imageLoaded) {
-            return (
-                <LoadingCover style={{backgroundColor: colors.white}}/>
-            )
-        }
     }
 
     render() {
         return (
-            <View style={{
-                ...styles.cardContainer,
-                ...shadowStyles.small
-            }}>
-                {this.renderUI()}
-                {this.renderLoading()}
-            </View>
+            this.renderUI()
         )
     }
 }
@@ -95,41 +162,33 @@ const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: "#fff",
         borderRadius: styleValues.mediumPadding,
-        height: styleValues.winWidth * 0.3,
-        width: styleValues.winWidth - styleValues.mediumPadding*2,
+        height: screenUnit * 5,
+        width: screenWidth - styleValues.mediumPadding*2,
         marginBottom: styleValues.mediumPadding,
-        padding: styleValues.mediumPadding,
+        padding: styleValues.minorPadding,
         flexDirection: "row",
         alignItems: "center",
     },
     productImage: {
         height: "100%",
         aspectRatio: 1,
-        borderRadius: styleValues.mediumPadding,
+        borderRadius: styleValues.minorPadding,
         marginRight: styleValues.mediumPadding
     },
-    productInfoArea: {
-        height: "100%",
-        flex: 1,
-    },
-    productName: {
+    headerText: {
         ...textStyles.medium,
         textAlign: "left"
     },
-    productDescription: {
-        ...textStyles.smaller,
+    statusText: {
+        ...textStyles.small,
         textAlign: "left",
-        color: colors.minorTextColor,
+        marginHorizontal: styleValues.minorPadding,
+        flex: 1
     },
-    productPrice: {
-        ...textStyles.medium
-    },
-    productSubInfoArea: {
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-        position: "absolute",
-        bottom: 0
+    likeButton: {
+        ...shadowStyles.small,
+        width: styleValues.iconLargerSize,
+        aspectRatio: 1,
+        borderRadius: styleValues.majorPadding
     }
 })

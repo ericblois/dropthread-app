@@ -7,7 +7,7 @@ import CustomComponent from "./CustomComponents/CustomComponent";
 import { IconButton, PageContainer, TextButton } from "./HelperFiles/CompIndex";
 import { auth } from "./HelperFiles/Constants";
 import { RootStackParamList } from "./HelperFiles/Navigation";
-import { icons, styleValues, textStyles } from "./HelperFiles/StyleSheet";
+import { icons, screenWidth, styleValues, textStyles } from "./HelperFiles/StyleSheet";
 
 type StartNavigationProp = StackNavigationProp<RootStackParamList, "start">;
 
@@ -130,12 +130,12 @@ const styles = StyleSheet.create({
     signinContainer: {
         position: "absolute",
         bottom: "10%",
-        width: styleValues.winWidth*2/3,
+        width: screenWidth*2/3,
         alignItems: "center"
     },
     signinElement: {
-        width: styleValues.winWidth*0.75,
-        height: styleValues.winWidth/8,
+        width: screenWidth*0.75,
+        height: screenWidth/8,
         backgroundColor: "#fff",
         borderWidth: 2,
         borderColor: "#e34f4f",
@@ -153,9 +153,9 @@ const styles = StyleSheet.create({
     logo: {
         position: "absolute",
         top: "20%",
-        left: styleValues.winWidth*3/8,
-        height: styleValues.winWidth/4,
-        width: styleValues.winWidth/4,
+        left: screenWidth*3/8,
+        height: screenWidth/4,
+        width: screenWidth/4,
         tintColor: "#fff"
     },
     background: {

@@ -245,6 +245,8 @@ export const ItemCategories = [
   "other"
 ] as const
 
+export const itemPercentIncrease = 1.05
+export const itemDollarIncrease = 2.5
 
 export type ItemCategory = (typeof ItemCategories)[number] | ""
 
@@ -266,7 +268,8 @@ export type ItemData = {
   name: string,
   description: string,
   minPrice: number,
-  recentPrice: number,
+  lastPrice: number,
+  currentPrice: number,
   category: ItemCategory,
   gender: ItemGender,
   size: string,
@@ -290,7 +293,8 @@ export const DefaultItemData: Readonly<ItemData> = {
   name: "",
   description: "",
   minPrice: 0,
-  recentPrice: 0,
+  lastPrice: 0,
+  currentPrice: 0,
   category: "",
   gender: "",
   size: "",
@@ -313,7 +317,8 @@ export type ItemInfo = {
   distance: number | null,
   viewTime: number | null,
   likeTime: number | null,
-  favTime: number | null
+  favTime: number | null,
+  likePrice: number | null
 }
 
 export type ItemFilter = {

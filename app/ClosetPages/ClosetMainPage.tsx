@@ -48,7 +48,7 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
 
     async refreshData() {
         const userData = await User.get()
-        const itemsInfo = await Item.getFromUser(undefined, true)
+        const itemsInfo = await Item.getFromUser()
         this.setState({userData: userData, itemsInfo: itemsInfo})
     }
 
@@ -92,7 +92,7 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
                     {this.state.itemsInfo.map((itemInfo, index) => {
                         return (
                             <ItemClosetCard
-                                itemData={itemInfo.item}
+                                itemInfo={itemInfo}
                                 onPress={() => {
                                     this.props.navigation.navigate("itemInfo", {
                                         itemID: itemInfo.item.itemID,

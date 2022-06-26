@@ -1,7 +1,7 @@
 import React from "react"
 import { KeyboardAvoidingView, ScrollView, ScrollViewProps, StyleSheet, View, ViewStyle } from "react-native"
 import GradientView from "../CustomComponents/GradientView"
-import { styleValues } from "../HelperFiles/StyleSheet"
+import { defaultStyles, screenWidth, styleValues } from "../HelperFiles/StyleSheet"
 import CustomComponent from "./CustomComponent"
 
 type Props = ScrollViewProps & {
@@ -25,14 +25,10 @@ export default class ScrollContainer extends CustomComponent<Props, State> {
 
     render() {
         return (
-            <View style={{flex: 1, width: styleValues.winWidth, ...this.props.containerStyle}}>
+            <View style={{flex: 1, width: screenWidth, ...this.props.containerStyle}}>
                 <KeyboardAvoidingView
                     style={{
-                        position: "absolute",
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
+                        ...defaultStyles.fill,
                         overflow: "hidden"
                     }}
                     behavior={"position"}
@@ -58,13 +54,7 @@ export default class ScrollContainer extends CustomComponent<Props, State> {
                         )}
                     >
                         <View
-                            style={{
-                                position: "absolute",
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0
-                            }}
+                            style={defaultStyles.fill}
                             onStartShouldSetResponder={() => (true)}
                         />
                         <View

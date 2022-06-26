@@ -5,7 +5,7 @@ import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
-import { colors, icons, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, icons, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import IconButton from "./IconButton";
 import ImageSlider from "./ImageSlider";
@@ -15,12 +15,10 @@ type Props = {
     itemInfo: ItemInfo,
     onLoadEnd?: () => void,
     onPressCard?: () => void,
-    onPressLike?: (isLiked: boolean) => void,
-    onUpdateLike?: (isLiked: boolean, likeTime: number | null) => void
+    onPressLike?: (isLiked: boolean) => void
 }
 
 type State = {
-    isLiked: boolean,
     imageLoaded: boolean
 }
 
@@ -29,7 +27,6 @@ export default class ItemBrowseCard extends CustomComponent<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            isLiked: !!props.itemInfo.likeTime,
             imageLoaded: false
         }
     }
@@ -39,28 +36,23 @@ export default class ItemBrowseCard extends CustomComponent<Props, State> {
             <IconButton
                 iconSource={icons.hollowHeart}
                 buttonStyle={styles.likeButton}
-                iconStyle={{tintColor: this.state.isLiked ? colors.valid : colors.lightGrey}}
+                iconStyle={{tintColor: this.props.itemInfo.likePrice ? colors.valid : colors.lightGrey}}
                 buttonFunc={() => {
-                    // Update UI first
-                    this.setState({isLiked: !this.state.isLiked}, async () => {
+                    // Unlike
+                    if (this.props.itemInfo.likePrice && this.props.itemInfo.likePrice >= this.props.itemInfo.item.lastPrice) {
+                        Item.unlike(this.props.itemInfo)
                         if (this.props.onPressLike) {
-                            this.props.onPressLike(this.state.isLiked)
+                            this.props.onPressLike(false)
                         }
-                        let likeTime: number | null = null
-                        try {
-                            // Condition is flipped since state was just changed
-                            if (this.state.isLiked) {
-                                likeTime = await Item.like(this.props.itemInfo.item.itemID)
-                            } else {
-                                await Item.unlike(this.props.itemInfo.item.itemID)
-                            }
-                        } catch (e) {
-                            this.setState({isLiked: !this.state.isLiked})
+                    } // Like
+                    else {
+                        Item.like(this.props.itemInfo)
+                        if (this.props.onPressLike) {
+                            this.props.onPressLike(true)
                         }
-                        if (this.props.onUpdateLike) {
-                            this.props.onUpdateLike(this.state.isLiked, likeTime)
-                        }
-                    })
+                    }
+                    console.log(this.props.itemInfo)
+                    this.forceUpdate()
                 }}
             />
         )
@@ -102,7 +94,7 @@ export default class ItemBrowseCard extends CustomComponent<Props, State> {
                     >{this.props.itemInfo.item.name}</Text>
                     {/* Price, distance */}
                     <View style={{flexDirection: "column", flex: 1/3}}>
-                        <Text style={{...styles.headerText, textAlign: "right"}}>{currencyFormatter.format(this.props.itemInfo.item.recentPrice)}</Text>
+                        <Text style={{...styles.headerText, textAlign: "right"}}>{currencyFormatter.format(this.props.itemInfo.item.currentPrice)}</Text>
                         <Text style={{...styles.minorText, textAlign: "right"}}>{`within ${this.props.itemInfo.distance}km`}</Text>
                     </View>
                 </View>
@@ -137,7 +129,7 @@ export default class ItemBrowseCard extends CustomComponent<Props, State> {
         return (
             <View
                 style={{
-                    width: styleValues.winWidth,
+                    width: screenWidth,
                     paddingHorizontal: styleValues.mediumPadding
                 }}
             >

@@ -8,10 +8,10 @@ const displayHeight = initialWindowMetrics
   ? initialWindowMetrics.frame.height
   : Dimensions.get("window").height;
 
-const winWidth = initialWindowMetrics
+export const screenWidth = initialWindowMetrics
   ? displayWidth - initialWindowMetrics.insets.left - initialWindowMetrics.insets.right
   : displayWidth;
-const winHeight = initialWindowMetrics
+export const screenHeight = initialWindowMetrics
   ? displayHeight - initialWindowMetrics.insets.bottom - initialWindowMetrics.insets.top
   : displayHeight;
 
@@ -19,8 +19,8 @@ export const topInset = initialWindowMetrics?.insets.top ? initialWindowMetrics!
 export const bottomInset = initialWindowMetrics?.insets.bottom ? initialWindowMetrics!.insets.bottom : 0
 
 //Calculate standard unit of screen size
-const winRatio = winWidth / (winHeight - topInset - bottomInset)
-const screenUnit = winRatio > 9/16 ? ((9/16)/winRatio) * winWidth / 20 : winWidth / 10
+export const winRatio = screenWidth / (screenHeight - topInset - bottomInset)
+export const screenUnit = winRatio > 9/16 ? ((9/16)/winRatio) * screenWidth / 20 : screenWidth / 10
 
 // --- Load fonts ---
 
@@ -32,6 +32,7 @@ export const fonts = {
 }
 
 export const colors = {
+  transparent: "rgba(255,255,255,0)",
   lightestMain: "#e3fff1",
   lightMain: "#8ee6a6",
   main: "#61c97d",
@@ -54,8 +55,8 @@ export const colors = {
 }
 
 export const styleValues = {
-  winHeight: winHeight,
-  winWidth: winWidth,
+  screenHeight: screenHeight,
+  screenWidth: screenWidth,
   smallestHeight: screenUnit/2,
   smallerHeight: screenUnit,
   smallHeight: screenUnit*2,
@@ -95,7 +96,7 @@ const defaultTemplates = StyleSheet.create({
     color: colors.majorTextColor
   },
   menuBar: {
-    width: styleValues.winWidth - styleValues.mediumPadding*2,
+    width: screenWidth - styleValues.mediumPadding*2,
     height: styleValues.mediumHeight,
     position: "absolute",
     flexDirection: "row",
@@ -169,7 +170,7 @@ export const textStyles = StyleSheet.create({
 export const menuBarStyles = StyleSheet.create({
   lightBox: {
     ...defaultTemplates.menuBar,
-    width: styleValues.winWidth,
+    width: screenWidth,
     borderRadius: 0,
     bottom: 0,
   },
@@ -205,13 +206,13 @@ export const shadowStyles = StyleSheet.create({
       width: 0,
       height: 0,
     },
-    shadowOpacity: 0.75,
+    shadowOpacity: 0.8,
     shadowRadius: styleValues.minorPadding,
     elevation: 15,
   },
 })
 
-export const defaults = StyleSheet.create({
+export const defaultStyles = StyleSheet.create({
   pageContainer: {
     alignItems: "center",
     justifyContent: "flex-start",
@@ -226,8 +227,7 @@ export const defaults = StyleSheet.create({
     backgroundColor: colors.background,
   },
   headerBox: {
-    ...shadowStyles.small,
-    height: topInset + styleValues.mediumPadding*2 + styleValues.largeTextSize*4/3,
+    ...shadowStyles.medium,
     position: "absolute",
     top: 0,
     left: 0,
@@ -271,6 +271,13 @@ export const defaults = StyleSheet.create({
     borderRadius: styleValues.mediumPadding,
     color: colors.majorTextColor,
   },
+  fill: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0
+  }
 });
 
 export const icons = {

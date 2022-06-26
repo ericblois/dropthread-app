@@ -1,7 +1,7 @@
 
 import React from "react";
 import { ActivityIndicator, ActivityIndicatorProps, StyleSheet, Text, View, ViewStyle } from "react-native";
-import { colors, icons, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import IconButton from "./IconButton";
 
@@ -24,11 +24,7 @@ export default class LoadingCover extends CustomComponent<Props, State> {
         return (
             <View
                 style={{
-                    position: "absolute",
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                    ...defaultStyles.fill,
                     alignItems: "center",
                     justifyContent: "center",
                     borderRadius: styleValues.mediumPadding,
@@ -68,7 +64,7 @@ const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: "#fff",
         borderRadius: styleValues.mediumPadding,
-        minHeight: styleValues.winWidth * 0.25,
+        minHeight: screenWidth * 0.25,
         width: "100%",
         padding: styleValues.mediumPadding,
         marginBottom: styleValues.mediumPadding,
@@ -76,7 +72,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     profileImage: {
-        width: styleValues.winWidth * 0.15,
+        width: screenWidth * 0.15,
         aspectRatio: 1,
         borderRadius: styleValues.minorPadding,
         marginRight: styleValues.mediumPadding

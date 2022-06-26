@@ -1,7 +1,7 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import React from "react";
 import { View, ViewStyle } from "react-native";
-import { defaults, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
+import { defaultStyles, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type DateScrollPickerProps = {
@@ -36,7 +36,7 @@ export default class DateScrollPicker extends CustomComponent<DateScrollPickerPr
             >
                 <DateTimePicker
                     style={{
-                        ...defaults.roundedBox,
+                        ...defaultStyles.roundedBox,
                         height: styleValues.largerHeight,
                         overflow: "hidden",
                         ...this.props.pickerStyle

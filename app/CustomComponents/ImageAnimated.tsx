@@ -1,7 +1,7 @@
 import React from "react";
 import { Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, ViewStyle } from "react-native";
 import FastImage, { FastImageProps, ImageStyle, Source } from "react-native-fast-image";
-import { colors, icons, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type ImageAnimatedProps = {
@@ -53,6 +53,7 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
     return (
       <Pressable
         style={({pressed}) => ({
+          overflow: "hidden",
             ...imageAnimatedStyles.container,
             ...this.props.style
         })}
@@ -61,12 +62,15 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
         {...this.props.pressableProps}
       >
           <AnimatedFastImage
+            {...this.props.imageProps}
             source={this.props.source}
             style={{
-              ...imageAnimatedStyles.fillView,
+              ...defaultStyles.fill,
               opacity: this.imageOpacity,
-              ...this.props.imageStyle
+              ...this.props.imageStyle,
+              tintColor: undefined
             }}
+            tintColor={this.props.imageStyle?.tintColor}
             resizeMode={"cover"}
             onLoad={(e) => {
               this.showImage()
@@ -74,12 +78,11 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
                   this.props.onLoad(e.nativeEvent.width, e.nativeEvent.height)
               }
             }}
-            {...this.props.imageProps}
           />
           {!this.state.loaded ? 
             <Animated.View
                 style={{
-                    ...imageAnimatedStyles.fillView,
+                    ...defaultStyles.fill,
                     borderRadius: this.props.style?.borderRadius,
                     backgroundColor: colors.lightestGrey,
                     alignItems: "center",
@@ -107,12 +110,5 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
 export const imageAnimatedStyles = StyleSheet.create({
     container: {
 
-    },
-    fillView: {
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0
     }
 })

@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-import { colors, defaults, fonts, icons, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, fonts, icons, screenHeight, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import IconButton from "./IconButton";
 import TextButton from "./TextButton";
@@ -38,9 +38,9 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
             this.descriptionText = "You have unsaved changes. Would you like to save before continuing?"
             this.denyText = "Don't save"
             this.confirmText = "Save"
-            this.denyButtonStyle = {...defaults.roundedBox}
+            this.denyButtonStyle = {...defaultStyles.roundedBox}
             this.denyTextStyle = {color: colors.invalid}
-            this.confirmButtonStyle = {...defaults.roundedBox, backgroundColor: colors.main}
+            this.confirmButtonStyle = {...defaultStyles.roundedBox, backgroundColor: colors.main}
             this.confirmTextStyle = {
                 color: colors.white,
                 fontFamily: fonts.medium
@@ -50,9 +50,9 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
             this.descriptionText = "Are you sure you would like to delete?"
             this.denyText = "Cancel"
             this.confirmText = "Delete"
-            this.denyButtonStyle = {...defaults.roundedBox}
+            this.denyButtonStyle = {...defaultStyles.roundedBox}
             this.denyTextStyle = {color: colors.black}
-            this.confirmButtonStyle = {...defaults.roundedBox}
+            this.confirmButtonStyle = {...defaultStyles.roundedBox}
             this.confirmTextStyle = {
                 color: colors.invalid,
                 fontFamily: fonts.medium
@@ -129,11 +129,11 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                     position: "absolute",
                     padding: styleValues.iconSmallSize,
                     paddingBottom: styleValues.iconSmallSize + styleValues.mediumHeight,
-                    maxWidth: styleValues.winWidth*0.8
+                    maxWidth: screenWidth*0.8
                 }}>
                     <View
                         style={{
-                            ...defaults.inputBox,
+                            ...defaultStyles.inputBox,
                             height: undefined,
                             width: "100%",
                             padding: styleValues.mediumPadding,
@@ -147,7 +147,7 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                         >{this.headerText}</Text>
                         <Text
                             style={{
-                                ...defaults.inputText,
+                                ...defaultStyles.inputText,
                             }}
                         >{this.descriptionText}</Text>
                     </View>
@@ -172,16 +172,12 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
 
 const styles = StyleSheet.create({
     container: {
-        position: "absolute",
+        ...defaultStyles.fill,
         alignItems: "center",
         justifyContent: "center",
-        width: styleValues.winWidth,
-        height: styleValues.winHeight,
+        width: screenWidth,
+        height: screenHeight,
         padding: styleValues.mediumPadding,
-        top: 0,
-        bottom: 0,
-        left:  0,
-        right: 0,
         backgroundColor: "rgba(0,0,0,0.5)",
     },
     outsideTouchable: {

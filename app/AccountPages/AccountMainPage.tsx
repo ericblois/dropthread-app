@@ -53,7 +53,7 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
             buttonFunc={() => {
                 const newItemData: ItemData = {...DefaultItemData}
                 this.props.navigation.navigate("editItem", {
-                    itemData: newItemData,
+                    itemID: newItemData.itemID,
                     isNew: true
                 })
             }}

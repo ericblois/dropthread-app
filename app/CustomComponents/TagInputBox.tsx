@@ -1,6 +1,6 @@
 import React from "react";
 import { KeyboardAvoidingView, Text, TextInput, TextStyle, View, ViewStyle } from "react-native";
-import { colors, defaults, icons, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import IconButton from "./IconButton";
 import ScrollContainer from "./ScrollContainer";
@@ -95,7 +95,7 @@ export default class TagInputBox extends CustomComponent<TagInputBoxProps, State
                 {...this.props.boxProps}
                 style={{width: "100%"}}
                 contentContainerStyle={{
-                    ...defaults.roundedBox,
+                    ...defaultStyles.roundedBox,
                     height: undefined,
                     ...(this.props.shadow !== false ? shadowStyles.small : undefined),
                     borderColor: this.props.validateFunc ? (this.props.validateFunc(this.state.tags) ? colors.valid : colors.invalid) : colors.lighterGrey,
@@ -121,7 +121,7 @@ export default class TagInputBox extends CustomComponent<TagInputBoxProps, State
                     </ScrollContainer>
                 : undefined}
                 <TextInput
-                    style={[defaults.inputText, this.props.textStyle]}
+                    style={[defaultStyles.inputText, this.props.textStyle]}
                     disableFullscreenUI={true}
                     focusable={true}
                     textAlign={"center"}

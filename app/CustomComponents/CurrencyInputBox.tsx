@@ -1,7 +1,7 @@
 import React from "react";
 import { KeyboardAvoidingView, TextInput, TextStyle, ViewStyle } from "react-native";
 import { currencyFormatter } from "../HelperFiles/Constants";
-import { colors, defaults, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type CurrencyInputBoxProps = {
@@ -42,7 +42,7 @@ export default class CurrencyInputBox extends CustomComponent<CurrencyInputBoxPr
                 {...this.props.boxProps}
                 style={{width: "100%"}}
                 contentContainerStyle={{
-                    ...defaults.roundedBox,
+                    ...defaultStyles.roundedBox,
                     ...(this.props.shadow !== false ? shadowStyles.small : undefined),
                     borderColor: this.props.validateFunc ? (this.props.validateFunc(this.state.value) ? colors.valid : colors.invalid) : colors.lighterGrey,
                     borderWidth: styleValues.minorBorderWidth,
@@ -52,7 +52,7 @@ export default class CurrencyInputBox extends CustomComponent<CurrencyInputBoxPr
                 enabled={this.state.shouldAvoid && this.props.avoidKeyboard === true}
             >
                 <TextInput
-                    style={[defaults.inputText, this.props.textStyle]}
+                    style={[defaultStyles.inputText, this.props.textStyle]}
                     disableFullscreenUI={true}
                     focusable={true}
                     keyboardType={"numeric"}

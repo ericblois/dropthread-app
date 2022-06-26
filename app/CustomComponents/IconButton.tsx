@@ -1,7 +1,7 @@
 import React from "react";
 import { ActivityIndicator, Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, Text, View, ViewStyle } from "react-native";
 import FastImage, { FastImageProps, ImageStyle, Source } from "react-native-fast-image";
-import { colors, defaults, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type IconButtonProps = {
@@ -60,7 +60,7 @@ export default class IconButton extends CustomComponent<IconButtonProps, State> 
       return (
         <View
           style={{
-            ...defaults.roundedBox,
+            ...defaultStyles.roundedBox,
             ...shadowStyles.small,
             position: "absolute",
             width: width,
@@ -118,11 +118,7 @@ export default class IconButton extends CustomComponent<IconButtonProps, State> 
             /> :
             <View
                 style={{
-                    position: "absolute",
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
+                    ...defaultStyles.fill,
                     alignItems: "center",
                     justifyContent: "center",
                     borderRadius: styleValues.mediumPadding,

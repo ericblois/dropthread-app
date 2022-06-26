@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TextStyle, View, ViewStyle, Switch } from "react-native";
-import { colors, defaults, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type ToggleSwitchProps = {
@@ -43,7 +43,7 @@ export default class ToggleSwitch extends CustomComponent<ToggleSwitchProps, Sta
     return (
         <View
             style={{
-                ...defaults.roundedBox,
+                ...defaultStyles.roundedBox,
                 ...shadowStyles.small,
                 ...styles.container,
                 ...(this.props.shadow === true ? shadowStyles.small : undefined),
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         width: "100%",
-        height: styleValues.winWidth*0.125,
+        height: screenWidth*0.125,
         padding: styleValues.minorPadding,
         paddingHorizontal: styleValues.mediumPadding,
         borderRadius: styleValues.mediumPadding,
