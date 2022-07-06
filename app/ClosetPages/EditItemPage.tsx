@@ -4,7 +4,7 @@ import React from "react";
 import { DeviceEventEmitter, StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
-import { CurrencyInputBox, ImageSliderSelector, LoadingCover, MenuBar, PageContainer, ScrollContainer, TagInputBox, TextDropdownAnimated, TextInputBox, ToggleSwitch } from "../HelperFiles/CompIndex";
+import { CurrencyInputBox, ImageSliderSelector, LoadingCover, MenuBar, PageContainer, ScrollContainer, TagInputBox, TextDropdownAnimated, CustomTextInput, ToggleSwitch } from "../HelperFiles/CompIndex";
 import { DefaultItemData, ItemCategories, ItemConditions, ItemData, ItemFits, ItemGenders, UserData, validateItem } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList } from "../HelperFiles/Navigation";
@@ -146,13 +146,12 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
 
     renderNameInput() {
         return (
-            <TextInputBox
+            <CustomTextInput
                 validateFunc={(text) => (text.length > 0)}
-                textProps={{
-                    placeholder: "Name",
-                    defaultValue: this.state.itemChanges.name || this.state.itemData!.name,
-                    onChangeText: (text) => {this.updateItem({name: text})},
-                }}
+                indicatorType={'shadowSmall'}
+                placeholder={"Name"}
+                defaultValue={this.state.itemChanges.name || this.state.itemData!.name}
+                onChangeText={(text) => {this.updateItem({name: text})}}
             />
         )
     }
@@ -181,13 +180,12 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
 
     renderSizeInput() {
         return (
-            <TextInputBox
+            <CustomTextInput
                 validateFunc={(text) => (text.length > 0)}
-                textProps={{
-                    placeholder: "Size",
-                    defaultValue: capitalizeWords(this.state.itemChanges.size || this.state.itemData!.size),
-                    onChangeText: (text) => {this.updateItem({size: text.toLowerCase()})},
-                }}
+                indicatorType={'shadowSmall'}
+                placeholder={"Size"}
+                defaultValue={capitalizeWords(this.state.itemChanges.size || this.state.itemData!.size)}
+                onChangeText={(text) => {this.updateItem({size: text.toLowerCase()})}}
             />
         )
     }
@@ -293,8 +291,8 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                 >
                     {this.renderImageSelector()}
                     {this.renderNameInput()}
-                    {this.renderPriceInput()}
                     {this.renderSizeInput()}
+                    {this.renderPriceInput()}
                     {this.renderCategoryDropdown()}
                     {this.renderGenderDropdown()}
                     {this.renderConditionDropdown()}
@@ -329,13 +327,13 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                     buttonProps={[
                     {
                         iconSource: icons.chevron,
-                        buttonFunc: () => {this.props.navigation.goBack()}
+                        onPress: () => {this.props.navigation.goBack()}
                     },
                     {
                         iconSource: icons.checkBox,
                         iconStyle: {tintColor: this.state.itemData && validateItem(this.state.itemData) ? colors.darkGrey : colors.lightestGrey},
                         buttonProps: {disabled: !this.state.itemData || !validateItem(this.state.itemData)},
-                        buttonFunc: async () => await this.saveItem(),
+                        onPress: async () => await this.saveItem(),
                         showLoading: true
                     },
                     ]}

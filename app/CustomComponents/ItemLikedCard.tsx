@@ -6,9 +6,9 @@ import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemInfo } from "../HelperFiles/DataTypes";
 import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth, icons, defaultStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
-import ImageAnimated from "./ImageAnimated";
+import CustomImage from "./CustomImage";
 import CustomPressable from "./CustomPressable";
-import IconButton from "./IconButton";
+import CustomImageButton from "./CustomImageButton";
 import Item from "../HelperFiles/Item";
 
 type Props = {
@@ -60,7 +60,7 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
             animationType={"shadow"}
             onPress={this.props.onPress}
         >
-            <ImageAnimated
+            <CustomImage
                 style={{
                     ...styles.productImage
                 }}
@@ -124,11 +124,11 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
                         >{this.state.statusText}</Text>
                     </View>
                     {/* LIKE BUTTON */}
-                    <IconButton
+                    <CustomImageButton
                         iconSource={icons.hollowHeart}
                         buttonStyle={styles.likeButton}
                         iconStyle={{tintColor: this.state.status === 'highestPrice' ? colors.valid : colors.grey}}
-                        buttonFunc={() => {
+                        onPress={() => {
                             // Unlike
                             if (this.props.itemInfo.likePrice && this.props.itemInfo.likePrice >= this.props.itemInfo.item.lastPrice) {
                                 Item.unlike(this.props.itemInfo)

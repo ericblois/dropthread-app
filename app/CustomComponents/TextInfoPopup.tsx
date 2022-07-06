@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TextStyle, View, ViewStyle, TouchableOpacity } from "react-native";
-import IconButton from "../CustomComponents/IconButton";
+import CustomImageButton from "../CustomComponents/CustomImageButton";
 import { colors, defaultStyles, icons, screenHeight, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
@@ -25,11 +25,11 @@ export default class TextInfoPopup extends CustomComponent<Props, State> {
 
     renderExitButton() {
         return (
-            <IconButton
+            <CustomImageButton
                 iconSource={icons.cross}
                 buttonStyle={styles.exitButton}
                 iconStyle={{tintColor: colors.white}}
-                buttonFunc={() => {
+                onPress={() => {
                     if (this.props.onExit) {
                         this.props.onExit()
                     }

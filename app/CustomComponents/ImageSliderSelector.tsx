@@ -5,8 +5,8 @@ import { accessPhotos, getCompressedImage } from "../HelperFiles/ClientFunctions
 import { colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import GradientView from "./GradientView";
-import IconButton from "./IconButton";
-import ImageAnimated from "./ImageAnimated";
+import CustomImageButton from "./CustomImageButton";
+import CustomImage from "./CustomImage";
 
 type ImageInfo = {
     uri: string,
@@ -132,7 +132,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                 ratio = (this.state.galleryWidth - styleValues.mediumPadding*2) / (this.state.galleryHeight - styleValues.mediumPadding*2)
             }
             return (
-                <ImageAnimated
+                <CustomImage
                     source={{uri: item.uri, priority: index === 0 ? 'high' : 'normal'}}
                     style={{
                         ...shadowStyles.small,
@@ -172,7 +172,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     key={index.toString()}
                 >
                     {/* Add a delete button */}
-                    <IconButton
+                    <CustomImageButton
                         iconSource={icons.minus}
                         buttonStyle={{
                             position: "absolute",
@@ -185,7 +185,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                         iconStyle={{
                             tintColor: colors.white
                         }}
-                        buttonFunc={() => {
+                        onPress={() => {
                             this.removeImage(item.uri)
                         }}
                         infoProps={{
@@ -194,7 +194,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                             positionVertical: "beside"
                         }}
                     />
-                </ImageAnimated>
+                </CustomImage>
             )
         } else {
             return (<View key={index.toString()}/>)
@@ -203,11 +203,11 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
     // Render a button to add an image
     renderAddButton() {
         return (
-            <IconButton
+            <CustomImageButton
                 iconSource={icons.plus}
                 buttonStyle={styles.addImageButton}
                 iconStyle={{tintColor: colors.white}}
-                buttonFunc={async () => {
+                onPress={async () => {
                     const result = await accessPhotos()
                     if (result) {
                         this.addImage(result)

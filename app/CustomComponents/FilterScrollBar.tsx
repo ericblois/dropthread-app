@@ -125,7 +125,7 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
                 touchableProps={{
                     disabled: this.props.disabled !== false ? true : false
                 }}
-                buttonFunc={() => {
+                onPress={() => {
                     // Check if no dropdown is currently shown
                     if (!this.state.showDropdown) {
                         // Show dropdown
@@ -183,7 +183,7 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
                                 appearance={buttonState ? "color" : "no-color"}
                                 buttonStyle={{height: styleValues.smallHeight}}
                                 textStyle={textStyles.small}
-                                buttonFunc={() => {
+                                onPress={() => {
                                     let newFilters = {} as ItemFilter
                                     if (isMultiselect) {
                                         // Array fields
@@ -351,7 +351,7 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
                             text="Use filter"
                             appearance={this.state.filters[filterKey] === undefined ? "no-color" : "light"}
                             rightIconSource={this.state.filters[filterKey] === undefined ? icons.uncheckedBox : icons.checkBox}
-                            buttonFunc={() => {
+                            onPress={() => {
                                 let newValues = undefined
                                 // Check if button is being toggled on
                                 if (this.state.filters[filterKey] === undefined) {

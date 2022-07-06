@@ -48,6 +48,7 @@ export const colors = {
   valid: "#2CB557",
   invalid: "#DD404B",
   yellow: "#FFCF56",
+  flame: '#FF6933',
   background: "#eee",
   majorTextColor: "#000",
   mediumTextColor: "#555",
@@ -105,7 +106,7 @@ const defaultTemplates = StyleSheet.create({
     alignSelf: "center",
     borderRadius: styleValues.mediumPadding,
     padding: styleValues.mediumPadding,
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
     bottom: bottomInset + styleValues.mediumPadding,
   }
 })
@@ -309,5 +310,7 @@ export const icons = {
   shoppingBag: require("../../assets/shoppingBagIcon.png"),
   closet: require("../../assets/closetIcon.png"),
   hollowHeart: require("../../assets/hollowHeartIcon.png"),
-  refresh: require("../../assets/refreshIcon.png")
+  refresh: require("../../assets/refreshIcon.png"),
+  hangers: require("../../assets/hangersIcon.png")
+
 }

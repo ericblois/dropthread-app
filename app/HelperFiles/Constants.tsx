@@ -3,7 +3,7 @@ import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage'
 import { getFunctions } from 'firebase/functions';
 import * as geofireSource from 'geofire-common';
-import { IconButton } from './CompIndex';
+import { CustomImageButton } from './CompIndex';
 import firebaseConfig from './firebase-config.json';
 import { icons } from './StyleSheet';
 

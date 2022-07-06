@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from "react-native";
 import CustomComponent from "./CustomComponents/CustomComponent";
-import { IconButton, PageContainer, TextButton } from "./HelperFiles/CompIndex";
+import { CustomImageButton, PageContainer, TextButton } from "./HelperFiles/CompIndex";
 import { auth } from "./HelperFiles/Constants";
 import { RootStackParamList } from "./HelperFiles/Navigation";
 import { icons, screenWidth, styleValues, textStyles } from "./HelperFiles/StyleSheet";
@@ -83,22 +83,22 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                             {this.state.passText}
                         </TextInput>
                         <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
-                            <IconButton
+                            <CustomImageButton
                                 iconSource={icons.chevron}
                                 iconStyle={{tintColor: "#fff"}}
                                 buttonStyle={{marginBottom: styleValues.mediumPadding}}
-                                buttonFunc={() => this.setState({showLogin: false, responseText: ""})}
+                                onPress={() => this.setState({showLogin: false, responseText: ""})}
                             />
                             <Text
                                 style={{...textStyles.small, ...styles.responseText}}
                             >
                                 {this.state.responseText}
                             </Text>
-                            <IconButton
+                            <CustomImageButton
                                 iconSource={icons.enter}
                                 iconStyle={{tintColor: "#fff"}}
                                 buttonStyle={{marginBottom: styleValues.mediumPadding}}
-                                buttonFunc={() => this.attemptSignin()}
+                                onPress={() => this.attemptSignin()}
                             />
                         </View>
                 </KeyboardAvoidingView>
@@ -110,13 +110,13 @@ export default class StartPage extends CustomComponent<StartProps, State> {
         <PageContainer>
             <TextButton
                 text={"Go to main page"}
-                buttonFunc={() => {
+                onPress={() => {
                     this.props.navigation.navigate("userMain")
                 }}
             />
             <TextButton
                 text={"Go to signup page"}
-                buttonFunc={() => {
+                onPress={() => {
                     this.props.navigation.navigate("userSignup")
                 }}
             />

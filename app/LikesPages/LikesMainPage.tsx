@@ -97,7 +97,7 @@ export default class LikesMainPage extends CustomComponent<LikesMainProps, State
                     buttonProps={[
                     {
                         iconSource: icons.shoppingBag,
-                        buttonFunc: () => this.props.navigation.navigate("browse")
+                        onPress: () => this.props.navigation.navigate("browse")
                     },
                     {
                         iconSource: icons.hollowHeart,
@@ -105,11 +105,11 @@ export default class LikesMainPage extends CustomComponent<LikesMainProps, State
                     },
                     {
                         iconSource: icons.closet,
-                        buttonFunc: () => this.props.navigation.navigate("closet")
+                        onPress: () => this.props.navigation.navigate("closet")
                     },
                     {
                         iconSource: icons.profile,
-                        buttonFunc: () => this.props.navigation.navigate("account")
+                        onPress: () => this.props.navigation.navigate("account")
                     },
                     ]}
                 

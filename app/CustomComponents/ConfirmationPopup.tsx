@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import { colors, defaultStyles, fonts, icons, screenHeight, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
-import IconButton from "./IconButton";
+import CustomImageButton from "./CustomImageButton";
 import TextButton from "./TextButton";
 
 type Props = {
@@ -72,7 +72,7 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                     ...textStyles.medium,
                     ...this.confirmTextStyle
                 }}
-                buttonFunc={async () => {
+                onPress={async () => {
                     if (this.props.onConfirm) {
                         await this.props.onConfirm()
                     }
@@ -94,7 +94,7 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                     flex: 1,
                     ...this.denyButtonStyle
                 }}
-                buttonFunc={async () => {
+                onPress={async () => {
                     if (this.props.onDeny) {
                         await this.props.onDeny()
                     }
@@ -107,11 +107,11 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
     renderExitButton() {
         if (this.props.onExit) {
             return (
-                <IconButton
+                <CustomImageButton
                     iconSource={icons.cross}
                     buttonStyle={styles.exitButton}
                     iconStyle={{tintColor: colors.white}}
-                    buttonFunc={() => this.props.onExit!()}
+                    onPress={() => this.props.onExit!()}
                 />
             )
         }

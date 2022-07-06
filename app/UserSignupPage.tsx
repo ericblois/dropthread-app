@@ -4,7 +4,7 @@ import React from "react";
 import { StyleSheet, Text, TextInput } from "react-native";
 import CustomComponent from "./CustomComponents/CustomComponent";
 import { capitalizeWords } from "./HelperFiles/ClientFunctions";
-import { DateScrollPicker, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton, TextDropdownAnimated, TextInputBox } from "./HelperFiles/CompIndex";
+import { DateScrollPicker, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton, TextDropdownAnimated, CustomTextInput } from "./HelperFiles/CompIndex";
 import { geofire } from "./HelperFiles/Constants";
 import { countriesList, Country, DefaultUserData, UserData, UserGender, UserGenders } from "./HelperFiles/DataTypes";
 import { RootStackParamList } from "./HelperFiles/Navigation";
@@ -144,7 +144,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
         return (
             <ScrollContainer>
                 {/* Name */}
-                <TextInputBox
+                <CustomTextInput
                     validateFunc={() => this.validateName()}
                     textProps={{...this.defaultTextProps, ...{
                         onChangeText: async (text) => this.setState({userData: {...this.state.userData, name: text} as UserData}),
@@ -155,7 +155,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     }}}
                 />
                 {/* Email */}
-                <TextInputBox
+                <CustomTextInput
                     validateFunc={() => this.validateEmail()}
                     textProps={{...this.defaultTextProps, ...{
                         onChangeText: (text) => this.setState({userData: {...this.state.userData, email: text} as UserData}),
@@ -168,7 +168,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     Use at least 6 characters in your password.
                 </Text>
                 {/* Password */}
-                <TextInputBox
+                <CustomTextInput
                     validateFunc={() => this.validatePass()}
                     textProps={{...this.defaultTextProps, ...{
                         onChangeText: (text) => this.setState({password: text}),
@@ -178,7 +178,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     }}}
                 />
                 {/* Confirm password */}
-                <TextInputBox
+                <CustomTextInput
                     validateFunc={() => this.validateConfirm()}
                     textProps={{...this.defaultTextProps, ...{
                         onChangeText: (text) => this.setState({passwordConfirm: text}),
@@ -236,7 +236,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     rightIconStyle={{
                         tintColor: this.validateCoords() ? colors.valid : colors.invalid
                     }}
-                    buttonFunc={() => this.refreshData()}
+                    onPress={() => this.refreshData()}
                 />
                 <Text style={styles.inputDescription}>Terms of Service</Text>
             </ScrollContainer>
@@ -263,13 +263,13 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                 buttonProps={[
                     {
                         iconSource: icons.chevron,
-                        buttonFunc: () => this.props.navigation.goBack(),
+                        onPress: () => this.props.navigation.goBack(),
                     },
                     {
                         iconSource: icons.enter,
                         iconStyle: {tintColor: this.validateInputs() ? colors.darkGrey : colors.lighterGrey},
                         showLoading: true,
-                        buttonFunc: () => this.enter(),
+                        onPress: () => this.enter(),
                         buttonProps: {
                             // When enter is disabled, don't change opacity when pressed
                             disabled: !this.validateInputs(),

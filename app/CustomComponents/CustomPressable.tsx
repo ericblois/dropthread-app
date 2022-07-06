@@ -1,13 +1,12 @@
-import { Animated, Pressable, PressableProps, StyleProp, StyleSheet, ViewStyle } from "react-native"
-import { colors, defaultStyles, shadowStyles, styleValues } from "../HelperFiles/StyleSheet"
+import { Animated, Pressable, PressableProps, StyleSheet, ViewStyle } from "react-native"
+import { colors, shadowStyles, styleValues } from "../HelperFiles/StyleSheet"
 import CustomComponent from "./CustomComponent"
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type CustomPressableProps = PressableProps & {
-    style: Animated.AnimatedProps<ViewStyle>,
-    containerStyle?: PressableProps['style'],
-    animationType?: "opacity" | "shadow" | "outline",
+    style?: Animated.AnimatedProps<ViewStyle>,
+    animationType?: "opacity" | "shadowSmall" | "shadow" | "outline",
     animationTime?: number
 }
 
@@ -26,7 +25,7 @@ export default class LikesMainPage extends CustomComponent<CustomPressableProps,
                 outputRange: [1, 0.6]
             })
         },
-        shadow: {
+        shadowSmall: {
             shadowOffset: {
                 width: 0,
                 height: 0,
@@ -50,7 +49,33 @@ export default class LikesMainPage extends CustomComponent<CustomPressableProps,
                 })
             }]
         },
+        shadow: {
+            shadowOffset: {
+                width: 0,
+                height: 0,
+            },
+            shadowOpacity: this.progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [shadowStyles.medium.shadowOpacity, shadowStyles.large.shadowOpacity]
+            }),
+            elevation: this.progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [shadowStyles.medium.elevation, shadowStyles.medium.elevation - 1]
+            }),
+            shadowRadius: this.progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [shadowStyles.medium.shadowRadius, shadowStyles.medium.shadowRadius*0.5]
+            }),
+            transform: [{
+                scale: this.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, 0.99]
+                })
+            }]
+        },
         outline: {
+            borderWidth: styleValues.mediumBorderWidth,
+            borderRadius: styleValues.mediumPadding,
             borderColor: this.progress.interpolate({
                 inputRange: [0, 1],
                 outputRange: [colors.transparent, colors.main]
@@ -82,9 +107,9 @@ export default class LikesMainPage extends CustomComponent<CustomPressableProps,
 
     render() {
         return (
-            <Pressable
+            <AnimatedPressable
                 {...this.props}
-                style={this.props.containerStyle}
+                style={[animatedPressableStyle.container, this.animatedStyles[this.props.animationType || "opacity"], this.props.style]}
                 onPressIn={(e) => {
                     this.animatePressIn();
                     if (this.props.onPressIn) {
@@ -93,25 +118,20 @@ export default class LikesMainPage extends CustomComponent<CustomPressableProps,
                 }}
                 onPressOut={(e) => {
                     this.animatePressOut()
-                    if (this.props.onPressIn) {
-                        this.props.onPressIn(e)
+                    if (this.props.onPressOut) {
+                        this.props.onPressOut(e)
                     }
                 }}
             >
-                <Animated.View
-                    style={[animatedPressableStyle.container, this.animatedStyles[this.props.animationType || "opacity"], this.props.style]}
-                >
                 {this.props.children}
-                </Animated.View>
-            </Pressable>
+            </AnimatedPressable>
         )
     }
 }
 
 export const animatedPressableStyle = StyleSheet.create({
     container: {
-        ...defaultStyles.roundedBox,
-        borderWidth: styleValues.mediumBorderWidth,
-        borderColor: colors.transparent
+        alignItems: "center",
+        justifyContent: "center",
     }
 })

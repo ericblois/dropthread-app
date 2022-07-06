@@ -107,7 +107,7 @@ export default class TextDropdownAnimated extends CustomComponent<TextDropdownAn
                                 fontFamily: selectedNames.includes(text) ? fonts.medium : fonts.regular,
                                 ...this.props.textStyle
                             }}
-                            buttonFunc={() => {
+                            onPress={() => {
                                 if (this.props.enableMultiple !== true) {
                                     this.collapse()
                                     this.setState({
@@ -169,7 +169,7 @@ export default class TextDropdownAnimated extends CustomComponent<TextDropdownAn
                         ...textStyles.small,
                         ...this.props.textStyle,
                     }}
-                    buttonFunc={() => {
+                    onPress={() => {
                         if (this.state.expanded) {
                             this.collapse()
                         } else {

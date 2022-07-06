@@ -1,13 +1,13 @@
 import { RouteProp } from "@react-navigation/core";
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { FilterSearchBar, ItemBrowseCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
+import { FilterSearchBar, ItemLargeCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
-import { colors, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { bottomInset, colors, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type BrowseNavigationProp = StackNavigationProp<UserMainStackParamList, "browse">;
@@ -99,115 +99,36 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
           )
         }
         return (
-          /*<FlatList
-            style={{
-              position: "absolute",
-              left: styleValues.mediumPadding,
-              right: 0,
-              top: 0,
-              bottom: 0,
-              overflow: "visible"
-            }}
-            ref={(list) => {this.flatListComp = list}}
-            nestedScrollEnabled
-            //scrollEnabled={false}
-            pointerEvents="box-none"
-            contentContainerStyle={{paddingRight: styleValues.mediumPadding}}
-            pagingEnabled
-            horizontal
-            data={this.state.items}
-            ItemSeparatorComponent={() => (<View style={{width: styleValues.mediumPadding}}/>)}
-            renderItem={(listItem: ListRenderItemInfo<ItemData> | {item: ItemData, index: number}) => (
-              <ItemBrowseCard
-                  itemData={listItem.item}
-                  distance={this.state.distances![listItem.index]}
-                  isLiked={this.state.userData!.likedItemIDs.includes(listItem.item.itemID)}
-                  key={listItem.index.toString()}
-                  onPressLike={() => {
-                      this.flatListComp?.scrollToIndex({index: listItem.index + 1})
-                      this.carouselComp?.snapToNext()
-                  }}
-                  onUpdateLike={(isLiked) => {
-                    const newUserData = this.state.userData!
-                    const newLikedItems = newUserData.likedItemIDs
-                    // Check if user has liked this item
-                    if (isLiked && !newLikedItems.includes(listItem.item.itemID)) {
-                      newLikedItems.push(listItem.item.itemID)
-                    } else if (!isLiked && newLikedItems.includes(listItem.item.itemID)) {
-                      newLikedItems.splice(newLikedItems.indexOf(listItem.item.itemID), 1)
-                    }
-                    // Update user data
-                    newUserData.likedItemIDs = newLikedItems
-                    this.setState({userData: newUserData})
-                  }}
-              />
-            )}
-            keyExtractor={(_, index) => (index.toString())}
-          />*/
           <FlatList
             ref={(flatList) => {this.flatListComp = flatList}}
             data={this.state.itemsInfo}
             style={{
               width: screenWidth
             }}
+            contentContainerStyle={{
+              paddingVertical: styleValues.mediumPadding
+            }}
             horizontal={true}
             pagingEnabled={true}
-            showsHorizontalScrollIndicator={false}
+            showsHorizontalScrollIndicator={true}
             renderItem={(listItem) => (
-              <ItemBrowseCard
-                  itemInfo={listItem.item}
-                  key={listItem.index.toString()}
-                  onPressLike={() => {
-                      
-                  }}
-              />
+              <Pressable
+                style={{
+                    width: screenWidth,
+                    paddingHorizontal: styleValues.mediumPadding,
+                }}
+              >
+                <ItemLargeCard
+                    itemInfo={listItem.item}
+                    key={listItem.index.toString()}
+                    onPressLike={() => {
+                        
+                    }}
+                    navigation={this.props.navigation}
+                />
+              </Pressable>
             )}
           />
-          /*<Carousel
-              ref={(carousel) => {this.carouselComp = carousel}}
-              data={this.state.items}
-              containerCustomStyle={{
-                paddingVertical: styleValues.mediumPadding
-              }}
-              nestedScrollEnabled={true}
-              scrollEnabled={false}
-              //scrollEnabled={false}
-              renderItem={(listItem: ListRenderItemInfo<ItemData> | {item: ItemData, index: number}) => (
-                    <ItemBrowseCard
-                        itemData={listItem.item}
-                        distance={this.state.distances![listItem.index]}
-                        key={listItem.index.toString()}
-                        onPressLike={() => {
-                            this.carouselComp?.snapToNext()
-                        }}
-                        onUpdateLike={(isLiked) => {
-                          const newUserData = this.state.userData!
-                          const newLikedItems = newUserData.likedItemIDs
-                          // Check if user has liked this item
-                          if (isLiked && !newLikedItems.includes(listItem.item.itemID)) {
-                            newLikedItems.push(listItem.item.itemID)
-                          } else if (!isLiked && newLikedItems.includes(listItem.item.itemID)) {
-                            newLikedItems.splice(newLikedItems.indexOf(listItem.item.itemID), 1)
-                          }
-                          // Update user data
-                          newUserData.likedItemIDs = newLikedItems
-                          this.setState({userData: newUserData})
-                        }}
-                    />
-                )
-              }
-              onSnapToItem={(index) => {
-                // Update item views every time they are passed
-                if (index > 0) {
-                  const itemID = this.state.items![index - 1].itemID
-                  if (!this.state.unupdatedViews.includes(itemID)) {
-                    this.setState({unupdatedViews: this.state.unupdatedViews.concat([itemID])})
-                  }
-                }
-              }}
-              itemWidth={screenWidth - 2*styleValues.mediumPadding}
-              sliderWidth={screenWidth}
-            />*/
         )
       }
     }
@@ -235,6 +156,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
             <PageContainer>
               <FilterSearchBar
                 initialFilter={this.state.searchFilters}
+                contentContainerStyle={{bottom: bottomInset + styleValues.mediumHeight + styleValues.mediumPadding*2}}
                 onSearchSubmit={(text) => {
                   // Check if no keywords are given
                   if (text == "" && this.state.searchFilters.keywords === undefined) {
@@ -288,15 +210,15 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
                   },
                   {
                     iconSource: icons.hollowHeart,
-                    buttonFunc: () => this.props.navigation.navigate("likes")
+                    onPress: () => this.props.navigation.navigate("likes")
                   },
                   {
                     iconSource: icons.closet,
-                    buttonFunc: () => this.props.navigation.navigate("closet")
+                    onPress: () => this.props.navigation.navigate("closet")
                   },
                   {
                     iconSource: icons.profile,
-                    buttonFunc: () => this.props.navigation.navigate("account")
+                    onPress: () => this.props.navigation.navigate("account")
                   },
                 ]}
               

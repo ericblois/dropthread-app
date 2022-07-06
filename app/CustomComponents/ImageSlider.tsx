@@ -3,7 +3,7 @@ import { Image, ImageStyle, ScrollView, StyleSheet, View, ViewStyle } from "reac
 import { defaultStyles, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import GradientView from "./GradientView";
-import ImageAnimated from "./ImageAnimated";
+import CustomImage from "./CustomImage";
 
 type ImageInfo = {
     uri: string,
@@ -115,7 +115,7 @@ export default class ImageSlider extends CustomComponent<ImageSliderProps, Image
                 ratio = (this.state.galleryWidth - styleValues.mediumPadding*2) / (this.state.galleryHeight - styleValues.mediumPadding*2)
             }
             return (
-                <ImageAnimated
+                <CustomImage
                     source={{uri: item.uri, priority: index === 0 ? 'high' : 'normal'}}
                     style={{
                         ...shadowStyles.small,

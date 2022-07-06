@@ -8,10 +8,10 @@ import { simpleCurrencyFormatter } from "../HelperFiles/Constants";
 import { countriesList, DefaultItemFilter, ItemCategories, ItemConditions, ItemFilter, ItemGenders } from "../HelperFiles/DataTypes";
 import { bottomInset, colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues, textStyles, topInset } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
-import IconButton from "./IconButton";
+import CustomImageButton from "./CustomImageButton";
 import ScrollContainer from "./ScrollContainer";
 import TextButton from "./TextButton";
-import TextInputBox from "./TextInputBox";
+import CustomTextInput from "./CustomTextInput";
 
 type Props = {
     style?: ViewStyle,
@@ -222,7 +222,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                 touchableProps={{
                     disabled: !this.state.showSearchBar
                 }}
-                buttonFunc={() => {
+                onPress={() => {
                     // Check if no dropdown is currently shown
                     if (!this.state.showDropdown) {
                         // Show dropdown
@@ -280,7 +280,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                                 appearance={buttonState ? "color" : "no-color"}
                                 buttonStyle={{height: styleValues.smallHeight}}
                                 textStyle={textStyles.small}
-                                buttonFunc={() => {
+                                onPress={() => {
                                     let newFilters = {} as ItemFilter
                                     if (isMultiselect) {
                                         // Array fields
@@ -448,7 +448,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                             text="Use filter"
                             appearance={this.state.filters[filterKey] === undefined ? "no-color" : "light"}
                             rightIconSource={this.state.filters[filterKey] === undefined ? icons.uncheckedBox : icons.checkBox}
-                            buttonFunc={() => {
+                            onPress={() => {
                                 let newValues = undefined
                                 // Check if button is being toggled on
                                 if (this.state.filters[filterKey] === undefined) {
@@ -548,7 +548,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                     flexDirection: "row",
                     alignItems: "center"
                 }}>
-                    <IconButton
+                    <CustomImageButton
                     iconSource={icons.search}
                     buttonStyle={{
                         height: styleValues.iconLargeSize,
@@ -556,7 +556,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                         marginRight: styleValues.mediumPadding,
                     }}
                     iconStyle={{tintColor: colors.darkGrey}}
-                    buttonFunc={() => {
+                    onPress={() => {
                         if (this.state.showSearchBar) {
                             if (this.props.onSearchToggle) {
                                 this.props.onSearchToggle(false)
@@ -575,7 +575,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                             flex: this.searchBarFlex,
                             opacity: this.searchBarOpacity
                     }}>
-                        <TextInputBox
+                        <CustomTextInput
                             boxStyle={{marginBottom: undefined}}
                             textProps={{
                                 textAlign: "left",
@@ -619,7 +619,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                     style={{
                         position: "absolute",
                         top: this.contentTopPos,
-                        bottom: bottomInset + styleValues.mediumHeight + styleValues.mediumPadding*2,
+                        bottom: 0,
                         left: 0,
                         right: 0,
                         ...this.props.contentContainerStyle

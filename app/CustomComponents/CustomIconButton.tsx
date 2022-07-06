@@ -1,16 +1,49 @@
 import React from "react";
-import { ActivityIndicator, Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { ActivityIndicator, Animated, GestureResponderEvent, Pressable, PressableProps, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import FastImage, { FastImageProps, ImageStyle, Source } from "react-native-fast-image";
 import { colors, defaultStyles, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
+import CustomPressable from "./CustomPressable"
+import * as Icons from "@expo/vector-icons"
+import { Icon, GlyphMap, IconButtonProps, IconProps } from "@expo/vector-icons/build/createIconSet";
 
-type IconButtonProps = {
-  iconSource: Source,
-  iconStyle?: ImageStyle,
+type IconName = keyof typeof Icons.AntDesign.glyphMap
+  | keyof typeof Icons.Entypo.glyphMap
+  | keyof typeof Icons.EvilIcons.glyphMap
+  | keyof typeof Icons.Feather.glyphMap
+  | keyof typeof Icons.FontAwesome.glyphMap
+  | keyof typeof Icons.Fontisto.glyphMap
+  | keyof typeof Icons.Foundation.glyphMap
+  | keyof typeof Icons.Ionicons.glyphMap
+  | keyof typeof Icons.MaterialCommunityIcons.glyphMap
+  | keyof typeof Icons.MaterialIcons.glyphMap
+  | keyof typeof Icons.Octicons.glyphMap
+  | keyof typeof Icons.SimpleLineIcons.glyphMap
+  | keyof typeof Icons.Zocial.glyphMap;
+
+type IconType = "FontAwesome"
+ | "Fontisto"
+ | "AntDesign"
+ | "Entypo"
+ | "EvilIcons"
+ | "Feather"
+ | "FontAwesome5"
+ | "Foundation"
+ | "Ionicons"
+ | "MaterialCommunityIcons"
+ | "MaterialIcons"
+ | "Octicons"
+ | "SimpleLineIcons"
+ | "Zocial"
+
+type CustomIconButtonProps = {
+  name: IconName,
+  type: IconType,
+  iconStyle?: StyleProp<TextStyle>,
   buttonStyle?: ViewStyle,
-  buttonFunc?: (event?: GestureResponderEvent) => void | Promise<void>
-  buttonProps?: PressableProps,
-  iconProps?: Partial<FastImageProps>,
+  onPress?: (event: GestureResponderEvent) => void | Promise<void>
+  buttonProps?: CustomPressable['props'],
+  iconProps?: Partial<IconProps<IconName>>,
   showLoading?: boolean,
   showBadge?: boolean,
   badgeNumber?: number,
@@ -29,21 +62,14 @@ type State = {
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export default class IconButton extends CustomComponent<IconButtonProps, State> {
+export default class CustomIconButton extends CustomComponent<CustomIconButtonProps, State> {
 
-  constructor(props: IconButtonProps) {
+  constructor(props: CustomIconButtonProps) {
     super(props)
     this.state = {
       showLoading: false,
       showInfo: false
     }
-  }
-
-  static createButtons(buttonData: IconButtonProps[]) {
-    const buttons = buttonData.map((button, index) => {
-      return <IconButton iconSource={button.iconSource} buttonFunc={button.buttonFunc} key={index}/>;
-    })
-    return buttons;
   }
 
   renderInfo() {
@@ -80,16 +106,17 @@ export default class IconButton extends CustomComponent<IconButtonProps, State> 
   }
 
   render() {
+    const Icon = Icons[this.props.type] as Icon<IconName, IconType>
     return (
-      <View style={[iconButtonStyles.defaultButton, this.props.buttonStyle]}>
-        <Pressable
-          onPress={async () => {
-            if (this.props.buttonFunc) {
+        <CustomPressable
+          style={[CustomIconButtonStyles.defaultButton, this.props.buttonStyle]}
+          onPress={async (e) => {
+            if (this.props.onPress) {
               if (this.props.showLoading === true) {
                 this.setState({showLoading: true})
               }
               try {
-                await this.props.buttonFunc()
+                await this.props.onPress(e)
               } catch (e) {
                 console.error(e)
               }
@@ -100,21 +127,22 @@ export default class IconButton extends CustomComponent<IconButtonProps, State> 
           }}
           onLongPress={() => this.setState({showInfo: true})}
           onPressOut={() => this.setState({showInfo: false})}
-          style={({pressed}) => ({
-            opacity: pressed ? 0.5 : 1
-          })}
+          animationType={'opacity'}
           {...this.props.buttonProps}
         >
           {!this.state.showLoading ? 
-            <FastImage
-              style={{
-                ...iconButtonStyles.defaultIcon,
-                ...this.props.iconStyle
-              }}
-              tintColor={this.props.iconStyle?.tintColor || colors.darkGrey}
-              resizeMode={"contain"}
-              source={this.props.iconSource}
+            <Icon
+              adjustsFontSizeToFit
               {...this.props.iconProps}
+              name={this.props.name}
+              type={this.props.type}
+              style={[
+                CustomIconButtonStyles.defaultIcon,
+                {
+                  fontSize: (this.props.buttonStyle?.width as number) | (this.props.buttonStyle?.height as number) | styleValues.iconLargeSize
+                },
+                this.props.iconStyle
+              ]}
             /> :
             <View
                 style={{
@@ -130,39 +158,43 @@ export default class IconButton extends CustomComponent<IconButtonProps, State> 
                   />
               </View>
           }
-        </Pressable>
-        {/* Icon Badge */}
-        {this.props.showBadge === true ? 
-          <View style={{
-            position: "absolute",
-            height: styleValues.smallTextSize*4/3,
-            minWidth: styleValues.smallTextSize*4/3,
-            borderRadius: styleValues.smallTextSize*4/3,
-            top: -styleValues.minorPadding,
-            right: -styleValues.minorPadding,
-            backgroundColor: colors.main,
-            alignItems: "center",
-            justifyContent: "center"
-          }}>
-            <Text style={{...textStyles.smaller, color: colors.white, marginHorizontal: styleValues.minorPadding}}>{`${this.props.badgeNumber}`}</Text>
-          </View> : undefined
-        }
-        {this.renderInfo()}
-      </View>
+          {/* Icon Badge */}
+          {this.props.showBadge === true ? 
+            <View style={{
+              position: "absolute",
+              height: styleValues.smallTextSize*4/3,
+              minWidth: styleValues.smallTextSize*4/3,
+              borderRadius: styleValues.smallTextSize*4/3,
+              top: -styleValues.minorPadding,
+              right: -styleValues.minorPadding,
+              backgroundColor: colors.main,
+              alignItems: "center",
+              justifyContent: "center"
+            }}>
+              <Text style={{...textStyles.smaller, color: colors.white, marginHorizontal: styleValues.minorPadding}}>{`${this.props.badgeNumber}`}</Text>
+            </View> : undefined
+          }
+          {this.renderInfo()}
+        </CustomPressable>
     )
   }
 }
 
-export const iconButtonStyles = StyleSheet.create({
+export const CustomIconButtonStyles = StyleSheet.create({
   defaultButton: {
     alignContent: "center",
     justifyContent: "center",
-    height: styleValues.iconLargerSize,
-    width: styleValues.iconLargerSize,
+    padding: undefined,
+    marginBottom: undefined,
+    aspectRatio: 1
   },
   defaultIcon: {
     height: "100%",
     width: "100%",
-    tintColor: colors.darkGrey,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: colors.darkGrey,
+    fontSize: styleValues.iconLargeSize,
+    aspectRatio: 1
   }
 })

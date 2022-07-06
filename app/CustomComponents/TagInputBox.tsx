@@ -2,7 +2,7 @@ import React from "react";
 import { KeyboardAvoidingView, Text, TextInput, TextStyle, View, ViewStyle } from "react-native";
 import { colors, defaultStyles, icons, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
-import IconButton from "./IconButton";
+import CustomImageButton from "./CustomImageButton";
 import ScrollContainer from "./ScrollContainer";
 
 type TagInputBoxProps = {
@@ -57,14 +57,14 @@ export default class TagInputBox extends CustomComponent<TagInputBoxProps, State
                         ...this.props.textStyle
                     }}
                 >{text}</Text>
-                <IconButton
+                <CustomImageButton
                     iconSource={icons.cross}
                     buttonStyle={{
                         width: styleValues.iconSmallestSize,
                         height: styleValues.iconSmallestSize,
                         marginHorizontal: styleValues.minorPadding
                     }}
-                    buttonFunc={() => this.removeTag(text)}
+                    onPress={() => this.removeTag(text)}
                 />
             </View>
         )

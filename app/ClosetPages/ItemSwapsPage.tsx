@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { ListRenderItemInfo, StyleSheet, Text } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { ItemBrowseCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
+import { ItemLargeCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
 import { ItemData, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
@@ -75,7 +75,7 @@ export default class ItemSwapsPage extends CustomComponent<ItemSwapsProps, State
                     data={this.state.items}
                     renderItem={(listItem: ListRenderItemInfo<ItemData> | {item: ItemData, index: number}) => {
                         return (
-                            <ItemBrowseCard
+                            <ItemLargeCard
                                 itemData={listItem.item}
                                 key={listItem.index.toString()}
                                 distance={this.state.distances![listItem.index]}
@@ -90,7 +90,7 @@ export default class ItemSwapsPage extends CustomComponent<ItemSwapsProps, State
                 >
                     {this.state.items.map((item, index) => {
                         return (
-                            <ItemBrowseCard
+                            <ItemLargeCard
                                 itemData={item}
                                 key={index.toString()}
                                 
@@ -120,7 +120,7 @@ export default class ItemSwapsPage extends CustomComponent<ItemSwapsProps, State
                 buttonProps={[
                 {
                     iconSource: icons.chevron,
-                    buttonFunc: () => this.props.navigation.goBack()
+                    onPress: () => this.props.navigation.goBack()
                 },
                 ]}
             

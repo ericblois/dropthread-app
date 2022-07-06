@@ -4,7 +4,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { DeviceEventEmitter, StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { ItemClosetCard, IconButton, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
+import CustomIconButton from "../CustomComponents/CustomIconButton";
+import { ItemSmallCard, CustomImageButton, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
 import { DefaultItemData, ItemData, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
@@ -56,26 +57,27 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
         return (
           /*<TextButton
             text={"Add a new item"}
-            buttonFunc={() => {
+            onPress={() => {
                 this.props.navigation.navigate("editItem", {
                     itemID: '',
                     isNew: true
                 })
             }}
           />*/
-          <IconButton
-            iconSource={icons.plus}
+          <CustomIconButton
+            name="pluscircleo"
+            type="AntDesign"
             buttonStyle={{
-                position: "absolute",
-                bottom: menuBarStyles.lightHover.height + bottomInset + styleValues.mediumPadding*3,
-                right: styleValues.mediumPadding*2,
-                width: styleValues.iconLargesterSize,
-                height: styleValues.iconLargesterSize,
-                zIndex: 100,
-                elevation: 100
+                position: 'absolute',
+                bottom: bottomInset + styleValues.mediumHeight + styleValues.mediumPadding*3,
+                right: styleValues.mediumPadding,
+                width: styleValues.iconLargerSize + styleValues.mediumPadding*2,
+                padding: styleValues.mediumPadding,
+                borderRadius: styleValues.mediumPadding,
+                backgroundColor: colors.background,
             }}
-            iconStyle={{tintColor: colors.main}}
-            buttonFunc={() => {
+            buttonProps={{animationType: 'shadow'}}
+            onPress={() => {
                 this.props.navigation.navigate("editItem", {
                     itemID: '',
                     isNew: true
@@ -91,7 +93,7 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
                 <ScrollContainer>
                     {this.state.itemsInfo.map((itemInfo, index) => {
                         return (
-                            <ItemClosetCard
+                            <ItemSmallCard
                                 itemInfo={itemInfo}
                                 onPress={() => {
                                     this.props.navigation.navigate("itemInfo", {
@@ -136,11 +138,11 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
                     buttonProps={[
                     {
                         iconSource: icons.shoppingBag,
-                        buttonFunc: () => this.props.navigation.navigate("browse")
+                        onPress: () => this.props.navigation.navigate("browse")
                     },
                     {
                         iconSource: icons.hollowHeart,
-                        buttonFunc: () => this.props.navigation.navigate("likes")
+                        onPress: () => this.props.navigation.navigate("likes")
                     },
                     {
                         iconSource: icons.closet,
@@ -148,7 +150,7 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
                     },
                     {
                         iconSource: icons.profile,
-                        buttonFunc: () => this.props.navigation.navigate("account")
+                        onPress: () => this.props.navigation.navigate("account")
                     },
                     ]}
                 

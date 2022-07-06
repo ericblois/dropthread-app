@@ -27,7 +27,7 @@ export default class PageContainer extends CustomComponent<Props, State> {
                 <View
                     style={{
                         ...defaultStyles.pageContainer,
-                        paddingTop: this.state.headerHeight,
+                        paddingTop: this.props.headerText ? this.state.headerHeight : defaultStyles.pageContainer.paddingTop,
                         ...this.props.style
                     }}
                     onStartShouldSetResponder={() => (true)}

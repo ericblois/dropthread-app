@@ -4,10 +4,11 @@ import FastImage, { FastImageProps, ImageStyle, Source } from "react-native-fast
 import { colors, defaultStyles, icons, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
-type ImageAnimatedProps = {
+type CustomImageProps = {
   source: Source,
   style?: ViewStyle,
   imageStyle?: ImageStyle,
+  animated?: boolean,
   onPress?: (event?: GestureResponderEvent) => void,
   onLoad?: (width: number, height: number) => void
   pressableProps?: PressableProps,
@@ -18,12 +19,11 @@ type State = {
     loaded: boolean
 }
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
 
-export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, State> {
+export default class CustomImage extends CustomComponent<CustomImageProps, State> {
 
-  constructor(props: ImageAnimatedProps) {
+  constructor(props: CustomImageProps) {
     super(props)
     this.state = {
         loaded: false
@@ -53,8 +53,6 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
     return (
       <Pressable
         style={({pressed}) => ({
-          overflow: "hidden",
-            ...imageAnimatedStyles.container,
             ...this.props.style
         })}
         disabled={!this.state.loaded}
@@ -66,6 +64,7 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
             source={this.props.source}
             style={{
               ...defaultStyles.fill,
+              borderRadius: this.props.style?.borderRadius! | styleValues.minorPadding,
               opacity: this.imageOpacity,
               ...this.props.imageStyle,
               tintColor: undefined
@@ -73,7 +72,13 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
             tintColor={this.props.imageStyle?.tintColor}
             resizeMode={"cover"}
             onLoad={(e) => {
-              this.showImage()
+              if (this.props.animated) {
+                this.showImage()
+              } else {
+                this.imageOpacity.setValue(1);
+                this.placeHolderOpacity.setValue(0);
+                this.setState({loaded: true})
+              }
               if (this.props.onLoad) {
                   this.props.onLoad(e.nativeEvent.width, e.nativeEvent.height)
               }
@@ -108,7 +113,5 @@ export default class ImageAnimated extends CustomComponent<ImageAnimatedProps, S
 }
 
 export const imageAnimatedStyles = StyleSheet.create({
-    container: {
 
-    }
 })

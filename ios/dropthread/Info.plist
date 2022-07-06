@@ -58,6 +58,11 @@
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>This app uses your photos.</string>
+    <key>UIBackgroundModes</key>
+    <array>
+      <string>location</string>
+      <string>notification</string>
+    </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>

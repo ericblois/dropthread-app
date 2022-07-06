@@ -17,7 +17,7 @@ type Props = {
     rightIconSource?: number,
     rightIconStyle?: ImageStyle,
     buttonStyle?: ViewStyle,
-    buttonFunc?: (event?: GestureResponderEvent) => void,
+    onPress?: (event?: GestureResponderEvent) => void,
     textProps?: Text['props'],
     subtextProps?: Text['props'],
     touchableProps?: PressableProps,
@@ -124,12 +124,12 @@ export default class TextButton extends CustomComponent<Props, State> {
                 opacity: pressed ? 0.5 : 1
             }})}
             onPress={async () => {
-                if (this.props.buttonFunc) {
+                if (this.props.onPress) {
                   if (this.props.showLoading === true) {
                     this.setState({loading: true})
                   }
                   try {
-                    await this.props.buttonFunc()
+                    await this.props.onPress()
                   } catch (e) {
                       console.error(e)
                   }

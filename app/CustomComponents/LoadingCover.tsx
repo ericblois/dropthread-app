@@ -3,7 +3,7 @@ import React from "react";
 import { ActivityIndicator, ActivityIndicatorProps, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { colors, defaultStyles, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
-import IconButton from "./IconButton";
+import CustomImageButton from "./CustomImageButton";
 
 
 type Props = {
@@ -41,14 +41,14 @@ export default class LoadingCover extends CustomComponent<Props, State> {
                             color: colors.grey
                         }}
                     >{this.props.errorText ? this.props.errorText : `An error occurred.`}</Text>
-                    <IconButton
+                    <CustomImageButton
                         iconSource={icons.refresh}
                         buttonStyle={{
                             height: styleValues.iconMediumSize,
                             width: styleValues.iconMediumSize
                         }}
                         iconStyle={{tintColor: colors.lightGrey}}
-                        buttonFunc={this.props.onErrorRefresh}
+                        onPress={this.props.onErrorRefresh}
                     />
                 </> :
                 <ActivityIndicator

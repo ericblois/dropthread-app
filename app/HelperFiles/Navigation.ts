@@ -1,5 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { ItemData } from "../HelperFiles/DataTypes";
+import { ItemData, ItemInfo } from "../HelperFiles/DataTypes";
 
 export type RootStackParamList = {
     start: undefined,
@@ -13,7 +13,11 @@ export type UserMainStackParamList = {
     browse: undefined,
     likes: undefined,
     closet: undefined,
-    account: undefined
+    account: undefined,
+    viewItems: {
+        items: ItemInfo[],
+        header?: string
+    }
 }
 
 export const UserMainStack = createStackNavigator<UserMainStackParamList>();

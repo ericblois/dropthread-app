@@ -1,8 +1,8 @@
 import { BlurView } from "expo-blur";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import IconButton from "../CustomComponents/IconButton";
-import TextInputBox from "../CustomComponents/TextInputBox";
+import CustomImageButton from "../CustomComponents/CustomImageButton";
+import CustomTextInput from "../CustomComponents/CustomTextInput";
 import { colors, icons, screenHeight, screenWidth, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
@@ -10,7 +10,7 @@ type Props = {
     initialText?: string,
     onTapAway?: () => void,
     onSaveText?: (text: string) => void,
-    textInputProps?: TextInputBox['props']
+    textInputProps?: CustomTextInput['props']
 }
 
 type State = {
@@ -28,11 +28,11 @@ export default class TextInputPopup extends CustomComponent<Props, State> {
 
     renderSaveButton() {
         return (
-            <IconButton
+            <CustomImageButton
                 iconSource={icons.checkBox}
                 buttonStyle={styles.saveButton}
                 iconStyle={{tintColor: colors.white}}
-                buttonFunc={() => {
+                onPress={() => {
                     if (this.props.onSaveText) {
                         this.props.onSaveText(this.state.currentText)
                     }
@@ -52,7 +52,7 @@ export default class TextInputPopup extends CustomComponent<Props, State> {
                     style={styles.outsideTouchable}
                     onPress={this.props.onTapAway}
                 >
-                    <TextInputBox
+                    <CustomTextInput
                         boxStyle={{...buttonStyles.noColor, ...styles.textInput}}
                         focusOnStart={true}
                         {...this.props.textInputProps}

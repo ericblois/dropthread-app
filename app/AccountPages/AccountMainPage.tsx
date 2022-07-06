@@ -50,7 +50,7 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
         return (
           <TextButton
             text={"View liked items"}
-            buttonFunc={() => {
+            onPress={() => {
                 const newItemData: ItemData = {...DefaultItemData}
                 this.props.navigation.navigate("editItem", {
                     itemID: newItemData.itemID,
@@ -70,7 +70,7 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
                     <TextButton
                         text={"signout"}
                         showLoading
-                        buttonFunc={async () => await auth.signOut()}
+                        onPress={async () => await auth.signOut()}
                     />
                 </>
             )
@@ -94,15 +94,15 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
                 buttonProps={[
                 {
                     iconSource: icons.shoppingBag,
-                    buttonFunc: () => this.props.navigation.navigate("browse")
+                    onPress: () => this.props.navigation.navigate("browse")
                 },
                 {
                     iconSource: icons.hollowHeart,
-                    buttonFunc: () => this.props.navigation.navigate("likes")
+                    onPress: () => this.props.navigation.navigate("likes")
                 },
                 {
                     iconSource: icons.closet,
-                    buttonFunc: () => this.props.navigation.navigate("closet")
+                    onPress: () => this.props.navigation.navigate("closet")
                 },
                 {
                     iconSource: icons.profile,

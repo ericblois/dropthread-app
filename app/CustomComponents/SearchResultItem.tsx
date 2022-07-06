@@ -5,7 +5,7 @@ import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData } from "../HelperFiles/DataTypes";
 import { colors, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
-import ImageAnimated from "./ImageAnimated";
+import CustomImage from "./CustomImage";
 import LoadingCover from "./LoadingCover";
 
 type Props = {
@@ -39,7 +39,7 @@ export default class SearchResultItem extends CustomComponent<Props, State> {
                 this.props.onPress();
             }
         }}>
-            <ImageAnimated
+            <CustomImage
                 style={styles.productImage}
                 source={{uri: this.props.itemData.images[0]}}
                 onLoad={() => {

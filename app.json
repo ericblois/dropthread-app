@@ -24,7 +24,11 @@
         "NSPhotoLibraryUsageDescription": "This app uses your photos.",
         "NSLocationAlwaysUsageDescription": "This app uses your location.",
         "NSLocationWhenInUseUsageDescription": "This app uses your location.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location."
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location.",
+        "UIBackgroundModes": [
+          "location",
+          "notification"
+        ]
       }
     },
     "android": {
@@ -35,7 +39,8 @@
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.READ_EXTERNAL_STORAGE"
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.NOTIFICATIONS"
       ],
       "package": "com.ericblois.dropthread"
     },

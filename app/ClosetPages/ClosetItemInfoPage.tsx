@@ -101,18 +101,18 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                         text={"View matches"}
                         rightIconSource={icons.chevron}
                         rightIconStyle={{transform: [{scaleX: -1}]}}
-                        buttonFunc={() => {this.props.navigation.navigate("itemSwaps", {likedUserIDs: ["B9m6149WWAZoaVOpomSgcy2riyD3"]})}}
+                        onPress={() => {this.props.navigation.navigate("itemSwaps", {likedUserIDs: ["B9m6149WWAZoaVOpomSgcy2riyD3"]})}}
                     />
                     <TextButton
                         text={"Update location"}
                         rightIconSource={icons.crosshair}
-                        buttonFunc={() => {}}
+                        onPress={() => {}}
                     />
                     <TextButton
                         text={"Delete item"}
                         textStyle={{color: colors.invalid}}
                         showLoading={true}
-                        buttonFunc={async () => {await Item.delete(this.state.itemInfo!.item)}}
+                        onPress={async () => {await Item.delete(this.state.itemInfo!.item)}}
                     />
                 </ScrollContainer>
                 </>
@@ -142,7 +142,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                 buttonProps={[
                     {
                         iconSource: icons.chevron,
-                        buttonFunc: () => this.props.navigation.goBack()
+                        onPress: () => this.props.navigation.goBack()
                     },
                     {
                         iconSource: icons.edit,
@@ -152,7 +152,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                         buttonProps: {
                             disabled: this.state.itemInfo === undefined
                         },
-                        buttonFunc: () => this.props.navigation.navigate("editItem", {
+                        onPress: () => this.props.navigation.navigate("editItem", {
                             itemID: this.state.itemInfo!.item.itemID,
                             isNew: false
                         })
