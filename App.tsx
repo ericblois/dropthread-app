@@ -1,4 +1,5 @@
 import { Lato_400Regular, Lato_400Regular_Italic, Lato_700Bold } from '@expo-google-fonts/lato';
+import { Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { Montserrat_400Regular, Montserrat_400Regular_Italic, Montserrat_500Medium, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { Nunito_400Regular, Nunito_400Regular_Italic, Nunito_700Bold } from '@expo-google-fonts/nunito';
 import { Roboto_400Regular, Roboto_400Regular_Italic, Roboto_700Bold } from '@expo-google-fonts/roboto';
@@ -64,6 +65,10 @@ export default class App extends Component<Props, State> {
         MontserratBold: Montserrat_700Bold,
         RobotoSlabRegular: RobotoSlab_400Regular,
         RobotoSlabBold: RobotoSlab_700Bold,
+        PoppinsRegular: Poppins_400Regular,
+        PoppinsItalic: Poppins_400Regular_Italic,
+        PoppinsMedium: Poppins_500Medium,
+        PoppinsBold: Poppins_700Bold 
       })
       this.setState({fontsLoaded: true})
     } catch (e) {

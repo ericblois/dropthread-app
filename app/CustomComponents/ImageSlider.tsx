@@ -197,13 +197,6 @@ export default class ImageSlider extends CustomComponent<ImageSliderProps, Image
                 >
                     {this.state.images.map((item, index) => this.renderImage(item, index))}
                 </ScrollView>
-                <GradientView
-                    fadeStartColor={this.props.fadeColor}
-                    fadeEndColor={this.props.fadeColor}
-                    backgroundStartColor={this.props.fadeColor}
-                    backgroundEndColor={this.props.fadeColor}
-                    horizontal
-                />
                 </View>
             );
         } else {

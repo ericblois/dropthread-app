@@ -2,13 +2,14 @@ import { RouteProp } from "@react-navigation/core";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
+import CustomIconButton from "../CustomComponents/CustomIconButton";
 import { LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { auth } from "../HelperFiles/Constants";
 import { DefaultItemData, ItemData, UserData } from "../HelperFiles/DataTypes";
 import { ClosetStackParamList, RootStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
-import { colors, icons } from "../HelperFiles/StyleSheet";
+import { colors, icons, styleValues } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type AccountMainNavigationProp = CompositeNavigationProp<
@@ -71,6 +72,37 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
                         text={"signout"}
                         showLoading
                         onPress={async () => await auth.signOut()}
+                    />
+                    <View
+                        style={{
+                            width: 200,
+                            height: 200,
+                            backgroundColor: colors.lightGrey,
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
+                    <CustomIconButton
+                        name={"plus"}
+                        type={"MaterialCommunityIcons"}
+                        buttonStyle={{
+                            backgroundColor: colors.lightGrey,
+                            width: styleValues.iconLargerSize,
+                            borderRadius: styleValues.mediumPadding
+                        }}
+                        animationType={'shadowSmall'}
+                    />
+                    </View>
+                    <CustomIconButton
+                        name={"plus"}
+                        type={"MaterialCommunityIcons"}
+                        buttonStyle={{
+                            marginTop: styleValues.mediumPadding,
+                            backgroundColor: colors.background,
+                            width: styleValues.iconLargerSize,
+                            borderRadius: styleValues.mediumPadding
+                        }}
+                        animationType={'shadowSmall'}
                     />
                 </>
             )

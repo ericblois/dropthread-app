@@ -10,7 +10,7 @@ import ImageSliderSelector from "../CustomComponents/ImageSliderSelector"
 import ToggleSwitch from "../CustomComponents/ToggleSwitch"
 import PageContainer from "../CustomComponents/PageContainer"
 import ScrollContainer from "../CustomComponents/ScrollContainer"
-import CurrencyInputBox from "../CustomComponents/CurrencyInputBox";
+import CustomCurrencyInput from "../CustomComponents/CustomCurrencyInput";
 import GradientView from "../CustomComponents/GradientView";
 import LoadingCover from "../CustomComponents/LoadingCover";
 import TextInfoPopup from "../CustomComponents/TextInfoPopup";
@@ -26,6 +26,8 @@ import CustomImage from "../CustomComponents/CustomImage";
 import TagInputBox from "../CustomComponents/TagInputBox";
 import CustomPressable from "../CustomComponents/CustomPressable"
 import CustomModal from "../CustomComponents/CustomModal"
+import CustomBadge from "../CustomComponents/CustomBadge"
+import CustomTextButton from "../CustomComponents/CustomTextButton"
 
 export {
     MenuBar,
@@ -39,7 +41,7 @@ export {
     ToggleSwitch,
     PageContainer,
     ScrollContainer,
-    CurrencyInputBox,
+    CustomCurrencyInput,
     GradientView,
     LoadingCover,
     TextInfoPopup,
@@ -55,5 +57,7 @@ export {
     TagInputBox,
     CustomPressable,
     CustomScrollView,
-    CustomModal
+    CustomModal,
+    CustomBadge,
+    CustomTextButton
 };

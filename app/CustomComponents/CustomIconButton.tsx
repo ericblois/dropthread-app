@@ -47,6 +47,7 @@ type CustomIconButtonProps = {
   showLoading?: boolean,
   showBadge?: boolean,
   badgeNumber?: number,
+  animationType?: CustomPressable['props']['animationType'],
   infoProps?: {
     text: string,
     positionHorizontal?: "center" | "left" | "right",
@@ -127,7 +128,7 @@ export default class CustomIconButton extends CustomComponent<CustomIconButtonPr
           }}
           onLongPress={() => this.setState({showInfo: true})}
           onPressOut={() => this.setState({showInfo: false})}
-          animationType={'opacity'}
+          animationType={this.props.animationType || 'opacity'}
           {...this.props.buttonProps}
         >
           {!this.state.showLoading ? 
@@ -149,7 +150,7 @@ export default class CustomIconButton extends CustomComponent<CustomIconButtonPr
                     ...defaultStyles.fill,
                     alignItems: "center",
                     justifyContent: "center",
-                    borderRadius: styleValues.mediumPadding,
+                    borderRadius: this.props.buttonStyle?.borderRadius,
                     backgroundColor: "transparent",
                 }}
               >

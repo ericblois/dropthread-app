@@ -1,9 +1,10 @@
 import React from "react";
 import { Animated, KeyboardAvoidingView, Text, TextInput, TextInputProps, TextStyle, View, ViewStyle } from "react-native";
+import { currencyFormatter, simpleCurrencyFormatter } from "../HelperFiles/Constants";
 import { colors, defaultStyles, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
-type CustomTextInputProps = TextInputProps & {
+type CustomTextInputProps = Omit<TextInputProps, 'defaultValue'> & {
     boxStyle?: ViewStyle,
     boxProps?: KeyboardAvoidingView['props'],
     focusOnStart?: boolean,
@@ -11,11 +12,13 @@ type CustomTextInputProps = TextInputProps & {
     initialValidity?: boolean,
     animationTime?: number,
     prefix?: string,
-    validateFunc?: (text: string) => boolean
+    defaultValue?: number | null,
+    onChangeValue?: (value: number | null) => void,
+    validateFunc?: (value: number | null) => boolean
 }
 
 type State = {
-    text: string,
+    value: number | null,
 }
 
 export default class CustomTextInput extends CustomComponent<CustomTextInputProps, State> {
@@ -36,7 +39,7 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
             }
         }
         this.state = {
-            text: props.defaultValue !== undefined ? props.defaultValue : "",
+            value: props.defaultValue || null
         }
         this.progress = new Animated.Value(props.initialValidity ? 
             isValid ? 1 : 0
@@ -108,8 +111,8 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
                 {this.props.placeholder ?
                     <Text style={{...textStyles.smaller, color: colors.grey, marginRight: styleValues.mediumPadding}}>{this.props.placeholder}</Text>    
                 : undefined}
-                {this.props.prefix ?
-                    <Text style={[textStyles.small, this.props.style]}>{this.props.prefix}</Text>    
+                {this.state.value ?
+                    <Text style={[textStyles.small, this.props.style]}>$</Text>
                 : undefined}
                 <TextInput
                     style={[textStyles.small, {flex: 1}, this.props.style]}
@@ -126,20 +129,48 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
                         }
                     }}
                     {...this.props}
-                    placeholder={undefined}
-                    value={this.state.text}
-
+                    defaultValue={undefined}
+                    placeholder={'$0'}
+                    keyboardType={'number-pad'}
+                    value={this.state.value?.toString()}
+                    onFocus={(e) => {
+                        this.setState({shouldAvoid: true})
+                        if (this.props.onFocus) {
+                            this.props.onFocus(e)
+                        }
+                    }}
+                    onEndEditing={(e) => {
+                        this.setState({text: this.state.value !== null ? this.state.value : ''})
+                        if (this.props.onEndEditing) {
+                            this.props.onEndEditing(e)
+                        }
+                    }}
                     onChangeText={(text) => {
-                        this.setState({text: text})
+                        let parsedText = text.replaceAll(/[^0-9|.]/g, '')
+                        let parsedValue: number | null = parseFloat(parsedText)
+                        if (isNaN(parsedValue) || parsedValue < 0) {
+                            parsedValue = null
+                            parsedText = ''
+                        } else {
+                            parsedValue = Math.round(parsedValue * 100) / 100
+                            // Remove potential second period
+                            if (parsedText.indexOf('.') !== parsedText.lastIndexOf('.')) {
+                                parsedText = parsedText.substring(0, parsedText.lastIndexOf('.'))
+                            }
+                        }
                         if (this.props.validateFunc) {
-                            if (this.props.validateFunc(text)) {
+                            if (this.props.validateFunc(parsedValue)) {
                                 this.animateValidate()
                             } else {
                                 this.animateInvalidate()
                             }
                         }
+                        this.setState({text: parsedText, value: parsedValue})
                         if (this.props.onChangeText) {
                             this.props.onChangeText(text)
+                        }
+                        if (this.props.onChangeValue) {
+                            this.props.onChangeValue(parsedValue)
                         }
                     }}
                 />

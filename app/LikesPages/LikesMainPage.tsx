@@ -4,11 +4,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { ItemLikedCard, LoadingCover, MenuBar, PageContainer, ScrollContainer } from "../HelperFiles/CompIndex";
+import { CustomModal, ItemLargeCard, ItemLikedCard, LoadingCover, MenuBar, PageContainer, ScrollContainer } from "../HelperFiles/CompIndex";
 import { ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { LikesStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
-import { colors, icons } from "../HelperFiles/StyleSheet";
+import { colors, icons, screenHeight } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type LikesMainNavigationProp = CompositeNavigationProp<
@@ -26,6 +26,7 @@ type LikesMainProps = {
 type State = {
     userData?: UserData,
     itemsInfo?: ItemInfo[],
+    showDetailCard?: ItemInfo,
     imagesLoaded: boolean
 }
 
@@ -36,6 +37,7 @@ export default class LikesMainPage extends CustomComponent<LikesMainProps, State
         const initialState = {
             userData: undefined,
             itemsInfo: undefined,
+            showDetailCard: undefined,
             imagesLoaded: true
         }
         this.state = initialState
@@ -59,7 +61,7 @@ export default class LikesMainPage extends CustomComponent<LikesMainProps, State
                             <ItemLikedCard
                                 itemInfo={itemInfo}
                                 onPress={() => {
-                                    console.log('anad')
+                                    this.setState({showDetailCard: itemInfo})
                                 }}
                                 key={index.toString()}
                             />
@@ -91,6 +93,20 @@ export default class LikesMainPage extends CustomComponent<LikesMainProps, State
     render() {
         return (
             <PageContainer headerText={"Liked Items"}>
+                <CustomModal
+                    visible={!!this.state.showDetailCard}
+                    onClose={() => this.setState({showDetailCard: undefined})}
+                >
+                    {this.state.showDetailCard ?
+                    <ItemLargeCard
+                        itemInfo={this.state.showDetailCard}
+                        style={{
+                            //width: '50%',
+                            height: screenHeight*0.7
+                        }}
+                    />
+                    : undefined}
+                </CustomModal>
                 {this.renderUI()}
                 {this.renderLoading()}
                 <MenuBar

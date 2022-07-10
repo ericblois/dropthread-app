@@ -65,8 +65,8 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
             }}
           />*/
           <CustomIconButton
-            name="pluscircleo"
-            type="AntDesign"
+            name="tag-plus-outline"
+            type="MaterialCommunityIcons"
             buttonStyle={{
                 position: 'absolute',
                 bottom: bottomInset + styleValues.mediumHeight + styleValues.mediumPadding*3,

@@ -11,6 +11,7 @@ import CustomImage from "./CustomImage";
 import LoadingCover from "./LoadingCover";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import * as Icons from "@expo/vector-icons"
+import CustomBadge from "./CustomBadge";
 
 
 type Props = {
@@ -39,22 +40,8 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
             animationType={"shadow"}
             onPress={this.props.onPress}
         >
-            <CustomImage
-                style={styles.productImage}
-                imageProps={{
-                    resizeMode: "cover"
-                }}
-                source={{uri: this.props.itemInfo.item.images[0]}}
-                onLoad={() => {
-                    this.setState({imageLoaded: true}, () => {
-                        if (this.props.onLoadEnd) {
-                            this.props.onLoadEnd();
-                        }
-                    })
-                }}
-            />
             <View style={{flex: 1, height: '100%', justifyContent: 'space-between'}}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
                     {/* Popular item? */}
                     {this.props.itemInfo.item.likeCount >= 0 ?
                         <Icons.MaterialCommunityIcons
@@ -62,7 +49,6 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
                             style={{
                                 fontSize: styleValues.iconSmallSize,
                                 color: colors.flame,
-                                //borderWidth: 1,
                                 marginLeft: -styleValues.minorPadding,
                                 height: styleValues.largerTextSize
                             }}
@@ -87,6 +73,21 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
                     <Text style={{...styles.minorText, textAlign: "right"}}>{`${this.props.itemInfo.distance} km`}</Text>
                 </View>
             </View>
+            <CustomImage
+                style={styles.productImage}
+                imageProps={{
+                    resizeMode: "cover"
+                }}
+                source={{uri: this.props.itemInfo.item.images[0]}}
+                onLoad={() => {
+                    this.setState({imageLoaded: true}, () => {
+                        if (this.props.onLoadEnd) {
+                            this.props.onLoadEnd();
+                        }
+                    })
+                }}
+            />
+            <CustomBadge number={7}/>
         </CustomPressable>
         );
     }
@@ -106,6 +107,7 @@ const styles = StyleSheet.create({
         width: screenWidth - styleValues.mediumPadding*2,
         marginBottom: styleValues.mediumPadding,
         padding: styleValues.minorPadding,
+        paddingLeft: styleValues.mediumPadding,
         flexDirection: "row",
         alignItems: "center"
     },
@@ -113,7 +115,7 @@ const styles = StyleSheet.create({
         height: "100%",
         aspectRatio: 1,
         borderRadius: styleValues.minorPadding,
-        marginRight: styleValues.mediumPadding
+        marginLeft: styleValues.mediumPadding
     },
     productSubInfoArea: {
         width: "100%",

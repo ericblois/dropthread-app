@@ -25,10 +25,10 @@ export const screenUnit = winRatio > 9/16 ? ((9/16)/winRatio) * screenWidth / 20
 // --- Load fonts ---
 
 export const fonts = {
-  regular: "MontserratRegular",
-  medium: "MontserratMedium",
-  italic: "RubikItalic",
-  bold: "RubikBold",
+  regular: "PoppinsRegular",
+  medium: "PoppinsMedium",
+  italic: "PoppinsItalic",
+  bold: "PoppinsBold",
 }
 
 export const colors = {
@@ -242,9 +242,8 @@ export const defaultStyles = StyleSheet.create({
   },
   roundedBox: {
     width: "100%",
-    height: styleValues.smallHeight,
     borderRadius: styleValues.mediumPadding,
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
     padding: styleValues.mediumPadding,
     alignItems: "center",
     justifyContent: "center",

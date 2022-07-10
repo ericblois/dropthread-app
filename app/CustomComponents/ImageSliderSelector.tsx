@@ -1,12 +1,14 @@
 import React from "react";
 import { Image, ImageStyle, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
 import FastImage from "react-native-fast-image";
-import { accessPhotos, getCompressedImage } from "../HelperFiles/ClientFunctions";
+import { accessCamera, accessPhotos, getCompressedImage } from "../HelperFiles/ClientFunctions";
 import { colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import GradientView from "./GradientView";
 import CustomImageButton from "./CustomImageButton";
 import CustomImage from "./CustomImage";
+import CustomIconButton from "./CustomIconButton";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 type ImageInfo = {
     uri: string,
@@ -17,11 +19,9 @@ type Props = {
     uris: string[],
     style?: ViewStyle,
     imageStyle?: ImageStyle,
-    placeHolderStyle?: ViewStyle,
     minRatio?: number,
     maxRatio?: number,
     fadeColor?: string,
-    showWarning?: boolean,
     onChange?: (uris: {
         all: string[],
         new: string[],
@@ -123,6 +123,67 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
         let galleryHeight = ((this.state.galleryWidth - 2*styleValues.mediumPadding) / ratio) + styleValues.mediumPadding*2
         this.setState({galleryHeight: galleryHeight})
     }
+    // Append an image to the end of the selector
+    addImage(uri: string) {
+        getCompressedImage(uri, (newURI, width, height) => {
+            const ratio = height / width
+            const images = this.state.images
+            const newImages = this.state.newImages
+            images.push({uri: newURI, ratio: ratio})
+            newImages.push({uri: newURI, ratio: ratio})
+            // Update the URIs and images
+            this.setState({images: images, newImages: newImages}, () => {
+                // Check if this is the first image to be added
+                if (this.state.images.length === 1) {
+                    // Update the gallery height
+                    this.setGalleryHeight()
+                }
+                if (this.props.onChange) {
+                    this.props.onChange({
+                        all: this.state.images.map(({uri}) => uri),
+                        new: this.state.newImages.map(({uri}) => uri),
+                        deleted: this.state.deletedImages
+                    })
+                }
+            })
+        })
+    }
+    // Remove an image based on its index
+    removeImage(uri: string) {
+        // Check if gallery's height should be updated
+        let updateHeight = false
+        // Check gallery images for change
+        let currentURIs = this.state.images.map(({uri}) => uri)
+        let currentImages = this.state.images
+        // Get deleted images
+        let deleted = this.state.deletedImages
+        let index = currentURIs.indexOf(uri)
+        if (index > -1) {
+            deleted.push(uri)
+            // Update images
+            currentImages.splice(index, 1)
+        }
+        updateHeight = index === 0
+        // Check if deleted image is in newImages
+        index = this.state.newImages.map(({uri}) => uri).indexOf(uri)
+        let newImages = this.state.newImages
+        if (index > -1) {
+            newImages.splice(index, 1)
+        }
+        // Update gallery height
+        this.setState({images: currentImages, newImages: newImages, deletedImages: deleted}, () => {
+            if (updateHeight) {
+                this.setGalleryHeight()
+            }
+            if (this.props.onChange) {
+                this.props.onChange({
+                    all: this.state.images.map(({uri}) => uri),
+                    new: this.state.newImages.map(({uri}) => uri),
+                    deleted: this.state.deletedImages
+                })
+            }
+        })
+    }
 
     renderImage(item: ImageInfo, index: number) {
         if (item.uri !== "" && this.state.galleryWidth && this.state.galleryHeight) {
@@ -200,86 +261,59 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
             return (<View key={index.toString()}/>)
         }
     }
+    renderPlaceholder() {
+        return (
+            /* Placeholder */
+            <View
+            style={{
+                ...shadowStyles.small,
+                width: screenWidth - 2*styleValues.mediumPadding,
+                height: styleValues.largestHeight*2,
+                borderRadius: styleValues.mediumPadding,
+                backgroundColor: colors.background,
+                margin: styleValues.mediumPadding,
+                alignItems: "center",
+                justifyContent: "center"
+            }}
+        >
+            <MaterialCommunityIcons
+                name={'image-outline'}
+                style={{
+                    fontSize: styleValues.largestTextSize,
+                    color: colors.grey
+                }}
+            />
+        </View>
+        )
+    }
     // Render a button to add an image
     renderAddButton() {
         return (
-            <CustomImageButton
-                iconSource={icons.plus}
-                buttonStyle={styles.addImageButton}
-                iconStyle={{tintColor: colors.white}}
+            <CustomIconButton
+                name="camera-plus-outline"
+                type="MaterialCommunityIcons"
+                buttonStyle={{
+                    position: 'absolute',
+                    bottom: styleValues.mediumPadding*2,
+                    right: styleValues.mediumPadding*2,
+                    width: styleValues.iconMediumSize + styleValues.mediumPadding*2,
+                    padding: styleValues.mediumPadding,
+                    borderRadius: styleValues.mediumPadding,
+                    backgroundColor: colors.background,
+                }}
+                buttonProps={{animationType: 'shadowSmall'}}
                 onPress={async () => {
-                    const result = await accessPhotos()
+                    const result = await accessCamera({aspect: [1, 1]})
                     if (result) {
                         this.addImage(result)
                     }
                 }}
                 infoProps={{
                     text: "Add new image",
-                    positionHorizontal: "right"
+                    positionHorizontal: "left"
                 }}
             />
         )
-    }
-    // Append an image to the end of the selector
-    addImage(uri: string) {
-        getCompressedImage(uri, (newURI, width, height) => {
-            const ratio = height / width
-            const images = this.state.images
-            const newImages = this.state.newImages
-            images.push({uri: newURI, ratio: ratio})
-            newImages.push({uri: newURI, ratio: ratio})
-            // Update the URIs and images
-            this.setState({images: images, newImages: newImages}, () => {
-                // Check if this is the first image to be added
-                if (this.state.images.length === 1) {
-                    // Update the gallery height
-                    this.setGalleryHeight()
-                }
-                if (this.props.onChange) {
-                    this.props.onChange({
-                        all: this.state.images.map(({uri}) => uri),
-                        new: this.state.newImages.map(({uri}) => uri),
-                        deleted: this.state.deletedImages
-                    })
-                }
-            })
-        })
-    }
-    // Remove an image based on its index
-    removeImage(uri: string) {
-        // Check if gallery's height should be updated
-        let updateHeight = false
-        // Check gallery images for change
-        let currentURIs = this.state.images.map(({uri}) => uri)
-        let currentImages = this.state.images
-        // Get deleted images
-        let deleted = this.state.deletedImages
-        let index = currentURIs.indexOf(uri)
-        if (index > -1) {
-            deleted.push(uri)
-            // Update images
-            currentImages.splice(index, 1)
-        }
-        updateHeight = index === 0
-        // Check if deleted image is in newImages
-        index = this.state.newImages.map(({uri}) => uri).indexOf(uri)
-        let newImages = this.state.newImages
-        if (index > -1) {
-          newImages.splice(index, 1)
-        }
-        // Update gallery height
-        this.setState({images: currentImages, newImages: newImages, deletedImages: deleted}, () => {
-            if (updateHeight) {
-                this.setGalleryHeight()
-            }
-            if (this.props.onChange) {
-                this.props.onChange({
-                    all: this.state.images.map(({uri}) => uri),
-                    new: this.state.newImages.map(({uri}) => uri),
-                    deleted: this.state.deletedImages
-                })
-            }
-        })
     }
 
     render() {
@@ -302,9 +336,9 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     }
                 }}
             >
-                {this.props.uris.length > 0 ?
+                {this.state.images.length > 0 ?
                     /* Image scroller */
-                    <><ScrollView
+                    <ScrollView
                         style={defaultStyles.fill}
                         contentContainerStyle={{
                             paddingVertical: styleValues.mediumPadding,
@@ -319,38 +353,8 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                         scrollEnabled={this.state.images.length > 1}
                     >
                         {this.state.images.map((item, index) => this.renderImage(item, index))}
-                    </ScrollView>
-                    <GradientView
-                        fadeStartColor={this.props.fadeColor}
-                        fadeEndColor={this.props.fadeColor}
-                        backgroundStartColor={this.props.fadeColor}
-                        backgroundEndColor={this.props.fadeColor}
-                        horizontal
-                    /></> : 
-                    /* Placeholder */
-                    <View
-                        style={{
-                            ...shadowStyles.medium,
-                            width: screenWidth - 2*styleValues.mediumPadding,
-                            height: styleValues.largestHeight*2,
-                            borderRadius: styleValues.mediumPadding,
-                            backgroundColor: colors.lightestGrey,
-                            margin: styleValues.mediumPadding,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            ...this.props.placeHolderStyle
-                        }}
-                    >
-                        <FastImage
-                            source={icons.image}
-                            style={{
-                                width: styleValues.iconSmallSize,
-                                height: styleValues.iconSmallSize
-                            }}
-                            tintColor={colors.lightGrey}
-                            resizeMode={"contain"}
-                        />
-                    </View>
+                    </ScrollView> : 
+                    this.renderPlaceholder()
                 }
             {this.renderAddButton()}
             </View>

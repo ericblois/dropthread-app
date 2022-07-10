@@ -1,8 +1,11 @@
 import { cloudRun } from './Constants';
 import * as Notifications from 'expo-notifications';
+import * as TaskManager from 'expo-task-manager'
 import { Platform } from 'react-native';
 import User from './User';
-
+/*
+    Functions to subscribe / unsubscribe from notifications
+*/
 export async function subscribeNotifications() {
     let status = await Notifications.getPermissionsAsync()
     if (!status.granted) {
@@ -36,11 +39,25 @@ export async function disableNotifications() {
         token: null
     })
 }
+/*
+    Configuration for notifications
+*/
 
+// Notification received in foreground
 Notifications.setNotificationHandler({
-    handleNotification: async (notif) => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true
-    })
+    handleNotification: async (notif) => {
+        if (notif.request.content.data.hasOwnProperty('imgURL')) {
+
+        }
+        return {
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: true
+        }
+    }
 })
+// Notification received in background
+TaskManager.defineTask('backgroundNotification', ({data, error, executionInfo}) => {
+    console.log('Received notification in background');
+})
+Notifications.registerTaskAsync('backgroundNotification')

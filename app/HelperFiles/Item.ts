@@ -1,5 +1,5 @@
 import { httpsCallable } from "firebase/functions"
-import { ItemData, itemDollarIncrease, ItemFilter, ItemInfo, itemPercentIncrease } from "../HelperFiles/DataTypes"
+import { ItemData, itemDollarIncrease, ItemFilter, ItemInfo, ItemInteraction, itemPercentIncrease } from "../HelperFiles/DataTypes"
 import { cloudRun, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import User from "./User"
@@ -18,7 +18,6 @@ export default abstract class Item {
             use itemIDs, otherwise just use refreshIDs
         */
         const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getItemsFromIDs", {
-            userID: User.getCurrent().uid,
             itemIDs: cacheResult.validItems.length === 0 ? itemIDs : cacheResult.refreshIDs,
             coords: coords
         })) : []
@@ -50,14 +49,12 @@ export default abstract class Item {
     }
     // Retrieve all items from a specific user
     public static async getLiked() {
-        const userID = User.getCurrent().uid
         // Determine which item IDs should be refresh vs retrieved from cache
         /* 
             IMPLEMENT CACHE GET
         */
         const coords = await User.getLocation()
         const result: ItemInfo[] = await cloudRun('POST', "getLikedItems", {
-            userID: userID,
             coords: coords
         })
         /*
@@ -69,10 +66,8 @@ export default abstract class Item {
     public static async getFromFilter(filters: ItemFilter) {
         // Determine which item IDs should be refresh vs retrieved from cache
         const cacheResult = LocalCache.getItems(filters)
-        const userData = await User.get()
         const coords = await User.getLocation()
         const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getFilteredItems", {
-            userID: userData.userID,
             filters: filters,
             coords: coords
         })) : []
@@ -91,7 +86,6 @@ export default abstract class Item {
         }
         // Upload item data
         const newItemID = (await cloudRun('POST', "createItem", {
-            userID: itemData.userID,
             itemData: itemData
         })) as string
         // Upload images after item ID is generated
@@ -140,7 +134,6 @@ export default abstract class Item {
         }
         // Update item
         await cloudRun('POST', "updateItem", {
-            userID: itemData.userID,
             itemData: itemData
         })
         // Reload this item in cache
@@ -153,7 +146,6 @@ export default abstract class Item {
         }
         // Delete item
         await cloudRun('POST', "deleteItem", {
-            userID: itemData.userID,
             itemData: itemData
         })
         //Delete images
@@ -165,7 +157,6 @@ export default abstract class Item {
     public static like(itemInfo: ItemInfo) {
         // Send like to server
         cloudRun('POST', "likeItem", {
-            userID: User.getCurrent().uid,
             itemID: itemInfo.item.itemID
         }).then((likeTime) => {
             itemInfo.likeTime = likeTime as number
@@ -181,7 +172,6 @@ export default abstract class Item {
     public static unlike(itemInfo: ItemInfo) {
         // Send like to server
         cloudRun('POST', "unlikeItem", {
-            userID: User.getCurrent().uid,
             itemID: itemInfo.item.itemID
         })
         // Update local version
@@ -199,5 +189,11 @@ export default abstract class Item {
             itemInfo.item.lastPrice = itemInfo.item.minPrice
         }
         itemInfo.item.likeCount -= 1
+    }
+    public static async getLikes(itemID: string) {
+        // Get likes from server
+        return (await cloudRun('POST', "getItemLikes", {
+            itemID: itemID
+        })) as ItemInteraction[]
     }
 }

@@ -39,6 +39,27 @@ export const prefetchImages = async (urlArray: string[]) => {
         }
   })
 }
+// Request access to the camera and open it
+export async function accessCamera(options?: ImagePicker.ImagePickerOptions) {
+    let requestResult = await ImagePicker.requestCameraPermissionsAsync()
+    if (requestResult.granted) {
+        let permissionResult = await ImagePicker.getCameraPermissionsAsync()
+        if (permissionResult.granted) {
+            // Default options for image picker
+            let imageOptions: ImagePicker.ImagePickerOptions = {
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                quality: 1,
+            }
+            // Add any modified options
+            imageOptions = options ? {...imageOptions, ...options} : imageOptions
+            // Get images
+            let imageResult = await ImagePicker.launchCameraAsync(imageOptions)
+            if (!imageResult.cancelled) {
+                return imageResult.uri
+            }
+        }
+    }
+}
 // Request access to the photo library and open it
 export async function accessPhotos(options?: ImagePicker.ImagePickerOptions) {
     let requestResult = await ImagePicker.requestMediaLibraryPermissionsAsync().catch((e) => {throw e})

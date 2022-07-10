@@ -1,3 +1,4 @@
+import { Octicons, SimpleLineIcons } from "@expo/vector-icons";
 import { RouteProp } from "@react-navigation/core";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -5,12 +6,12 @@ import React from "react";
 import { DeviceEventEmitter, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
-import { ImageSlider, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
+import { CustomTextButton, ImageSlider, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
-import { ItemData, ItemInfo } from "../HelperFiles/DataTypes";
+import { ItemData, ItemInfo, ItemInteraction } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
-import { colors, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 
 type ItemInfoNavigationProp = CompositeNavigationProp<
     StackNavigationProp<ClosetStackParamList, "itemInfo">,
@@ -26,6 +27,7 @@ type ItemInfoProps = {
 
 type State = {
     itemInfo?: ItemInfo,
+    itemLikes?: ItemInteraction[],
     errorOccurred: boolean
 }
 
@@ -35,6 +37,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
         super(props)
         const initialState: State = {
             itemInfo: undefined,
+            itemLikes: undefined,
             errorOccurred: false
         }
         this.state = initialState
@@ -49,8 +52,12 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
         try {
             this.setState({errorOccurred: false})
             // Get data
-            const itemInfo = (await Item.getFromIDs([this.props.route.params.itemID]))[0]
-            this.setState({itemInfo: itemInfo})
+            const [itemsInfo, itemLikes] = await Promise.all([
+                Item.getFromIDs([this.props.route.params.itemID]),
+                Item.getLikes(this.props.route.params.itemID)
+            ])
+            console.log(itemLikes)
+            this.setState({itemInfo: itemsInfo[0], itemLikes: itemLikes})
         } catch {
             this.setState({errorOccurred: true})
         }
@@ -84,10 +91,9 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
     }
 
     renderUI() {
-        if (this.state.itemInfo) {
+        if (this.state.itemInfo && this.state.itemLikes) {
             return (
                 <>
-                {this.renderInfo()}
                 <ScrollContainer>
                     <ImageSlider
                         uris={this.state.itemInfo.item.images}
@@ -95,6 +101,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                         minRatio={1}
                         maxRatio={2}
                     ></ImageSlider>
+                    {this.renderInfo()}
                     <Text style={{...textStyles.medium, alignSelf: "flex-start"}}>{"Views: ".concat(this.state.itemInfo.item.viewCount.toString())}</Text>
                     <Text style={{...textStyles.mediumHeader, alignSelf: "flex-start"}}>{"Likes: ".concat(this.state.itemInfo.item.likeCount.toString())}</Text>
                     <TextButton
@@ -108,6 +115,67 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                         rightIconSource={icons.crosshair}
                         onPress={() => {}}
                     />
+                    <Text style={textStyles.mediumHeader}>Likes</Text>
+                    {this.state.itemLikes.map((interaction, index) => {
+                        const secondsAgo = (Date.now() - interaction.likeTime)/1000
+                        let timeText = secondsAgo < 60 ? `${Math.floor(secondsAgo)}s ago`
+                        : secondsAgo < 3600 ? `${Math.floor(secondsAgo/60)}m ago`
+                        : secondsAgo < 86400 ? `${Math.floor(secondsAgo/3600)}h ago`
+                        : `${Math.floor(secondsAgo/86400)}d ago`
+                        return (
+                            <View
+                                style={{
+                                    ...shadowStyles.small,
+                                    ...defaultStyles.roundedBox,
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-start'
+                                }}
+                                key={index.toString()}
+                            >
+                                <SimpleLineIcons
+                                    name="heart"
+                                    style={{
+                                        height: styleValues.largerTextSize,
+                                        fontSize: styleValues.largerTextSize,
+                                        color: colors.main,
+                                        marginRight: styleValues.mediumPadding
+                                    }}
+                                />
+                                <View style={{flex: 1, justifyContent: 'space-between'}}>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: styleValues.minorPadding}}>
+                                        <Text style={{...textStyles.medium, marginRight: styleValues.mediumPadding}}>{currencyFormatter.format(interaction.likePrice)}</Text>
+                                        
+                                    </View>
+                                    <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+                                        <Text style={{...textStyles.small, textAlign: 'left', marginRight: styleValues.mediumPadding}}>{`${interaction.distance} km`}</Text>
+                                        <Text style={{...textStyles.smaller, textAlign: 'left', color: colors.grey}}>{timeText}</Text>
+                                    </View>
+                                </View>
+                                <View>
+                                    <CustomTextButton
+                                        text={'Accept'}
+                                        buttonStyle={{
+                                            marginBottom: undefined,
+                                            width: undefined,
+                                            alignSelf: 'flex-end'
+                                        }}
+                                        textStyle={{
+                                            marginRight: styleValues.mediumPadding
+                                        }}
+                                        rightChildren={
+                                            <Octicons
+                                                name={"arrow-switch"}
+                                                style={{
+                                                    fontSize: styleValues.largeTextSize,
+                                                    color: colors.main
+                                                }}
+                                            />
+                                        }
+                                    />
+                                </View>
+                            </View>
+                        )
+                    })}
                     <TextButton
                         text={"Delete item"}
                         textStyle={{color: colors.invalid}}
@@ -121,7 +189,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
     }
 
     renderLoading() {
-        if (!this.state.itemInfo) {
+        if (!this.state.itemInfo || !this.state.itemLikes) {
             return (
               <LoadingCover
                 size={"large"}

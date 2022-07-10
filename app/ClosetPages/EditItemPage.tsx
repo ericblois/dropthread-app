@@ -4,7 +4,7 @@ import React from "react";
 import { DeviceEventEmitter, StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
-import { CurrencyInputBox, ImageSliderSelector, LoadingCover, MenuBar, PageContainer, ScrollContainer, TagInputBox, TextDropdownAnimated, CustomTextInput, ToggleSwitch } from "../HelperFiles/CompIndex";
+import { CustomCurrencyInput, ImageSliderSelector, LoadingCover, MenuBar, PageContainer, ScrollContainer, TagInputBox, TextDropdownAnimated, CustomTextInput, ToggleSwitch, CustomScrollView } from "../HelperFiles/CompIndex";
 import { DefaultItemData, ItemCategories, ItemConditions, ItemData, ItemFits, ItemGenders, UserData, validateItem } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList } from "../HelperFiles/Navigation";
@@ -129,11 +129,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
         return (
             <ImageSliderSelector
                 uris={this.state.itemData!.images}
-                style={{width: screenWidth}}
-                placeHolderStyle={{
-                    borderWidth: styleValues.minorBorderWidth,
-                    borderColor: colors.invalid
-                }}
+                style={{width: screenWidth, marginLeft: -styleValues.mediumPadding}}
                 minRatio={1}
                 maxRatio={16/9}
                 onImagesLoaded={() => {
@@ -159,8 +155,9 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
     renderPriceInput() {
         if (this.state.itemData) {
             return (
-                <CurrencyInputBox
-                    validateFunc={(value) => value !== null && value > 0}
+                <CustomCurrencyInput
+                    indicatorType={'shadowSmall'}
+                    placeholder={"Minimum price"}
                     defaultValue={this.state.itemChanges.minPrice || this.state.itemData.minPrice > 0 ? this.state.itemData.minPrice : undefined}
                     onChangeValue={(value) => {
                         if (value) {
@@ -168,10 +165,6 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                         } else {
                             this.updateItem({minPrice: 0})
                         }
-                    }}
-                    textProps={{
-                        onChangeText: (text) => {this.setState({priceChangeText: text})},
-                        placeholder: "Minimum price"
                     }}
                 />
             )
@@ -285,8 +278,15 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
         if (this.state.itemData) {
             return (
                 <>
-                <ScrollContainer
-                    containerStyle={{marginTop: - styleValues.mediumPadding*2}}
+                <CustomScrollView
+                    style={{
+                        marginTop: - styleValues.mediumPadding,
+                    }}
+                    contentContainerStyle={{
+                        //borderWidth: 1,
+                        borderColor: 'red',
+                        marginBottom: styleValues.mediumHeight*2
+                    }}
                     avoidKeyboard={true}
                 >
                     {this.renderImageSelector()}
@@ -299,7 +299,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                     {this.renderFitDropdown()}
                     {this.renderStylesInput()}
                     {this.renderVisibilitySwitch()}
-                </ScrollContainer>
+                </CustomScrollView>
                 </>
             )
         }

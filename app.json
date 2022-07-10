@@ -21,13 +21,17 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.ericblois.dropthread",
       "infoPlist": {
+        "NSCameraUsageDescription": "This app uses your camera to take photos.",
         "NSPhotoLibraryUsageDescription": "This app uses your photos.",
         "NSLocationAlwaysUsageDescription": "This app uses your location.",
         "NSLocationWhenInUseUsageDescription": "This app uses your location.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location.",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        },
         "UIBackgroundModes": [
           "location",
-          "notification"
+          "remote-notification"
         ]
       }
     },
