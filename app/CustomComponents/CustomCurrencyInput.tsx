@@ -102,7 +102,7 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
                 {...this.props.boxProps}
                 style={{
                     ...defaultStyles.roundedBox,
-                    height: styleValues.smallHeight,
+                    //height: styleValues.smallHeight,
                     flexDirection: 'row',
                     ...(this.props.indicatorType ? this.animatedStyles[this.props.indicatorType] : undefined),
                     ...this.props.boxStyle
@@ -110,6 +110,9 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
             >
                 {this.props.placeholder ?
                     <Text style={{...textStyles.smaller, color: colors.grey, marginRight: styleValues.mediumPadding}}>{this.props.placeholder}</Text>    
+                : undefined}
+                {this.props.prefix ?
+                    <Text style={[textStyles.small, this.props.style, {marginRight: 0}]}>{this.props.prefix}</Text>
                 : undefined}
                 {this.state.value ?
                     <Text style={[textStyles.small, this.props.style]}>$</Text>

@@ -8,10 +8,12 @@ import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import { CustomTextButton, ImageSlider, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
-import { ItemData, ItemInfo, ItemInteraction } from "../HelperFiles/DataTypes";
+import { ItemData, ItemInfo, ItemInteraction, OfferData, OfferInfo } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
+import Offer from "../HelperFiles/Offer";
 import { colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import User from "../HelperFiles/User";
 
 type ItemInfoNavigationProp = CompositeNavigationProp<
     StackNavigationProp<ClosetStackParamList, "itemInfo">,
@@ -28,6 +30,9 @@ type ItemInfoProps = {
 type State = {
     itemInfo?: ItemInfo,
     itemLikes?: ItemInteraction[],
+    itemOffers?: OfferInfo[],
+    // Maps a user ID (like) to the index of an offer
+    offerMap?: {[userID: string]: number},
     errorOccurred: boolean
 }
 
@@ -38,6 +43,8 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
         const initialState: State = {
             itemInfo: undefined,
             itemLikes: undefined,
+            itemOffers: undefined,
+            offerMap: undefined,
             errorOccurred: false
         }
         this.state = initialState
@@ -56,8 +63,30 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                 Item.getFromIDs([this.props.route.params.itemID]),
                 Item.getLikes(this.props.route.params.itemID)
             ])
-            console.log(itemLikes)
-            this.setState({itemInfo: itemsInfo[0], itemLikes: itemLikes})
+            const itemOffers = await Offer.getWithItem(this.props.route.params.itemID)
+            const offerMap: {[userID: string]: number} = {}
+            // Get all user IDs involved in offers (that aren't current user)
+            const offerUserIDs = itemOffers.map((offerInfo) => {
+                if (offerInfo.offer.fromID === User.getCurrent().uid) {
+                    return offerInfo.offer.toID
+                } else {
+                    return offerInfo.offer.fromID
+                }
+            })
+            // Check which users (who have liked) are also in an offer
+            itemLikes.forEach((intx) => {
+                const index = offerUserIDs.indexOf(intx.userID)
+                if (index > -1) {
+                    // Add to offer map
+                    offerMap[intx.userID] = index
+                }
+            })
+            this.setState({
+                itemInfo: itemsInfo[0],
+                itemLikes: itemLikes,
+                itemOffers: itemOffers,
+                offerMap: offerMap
+            })
         } catch {
             this.setState({errorOccurred: true})
         }
@@ -171,6 +200,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                                                 }}
                                             />
                                         }
+                                        onPress={() => this.props.navigation.navigate('editOffer', {interaction: interaction})}
                                     />
                                 </View>
                             </View>

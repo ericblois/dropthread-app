@@ -43,7 +43,7 @@ export default class PageContainer extends CustomComponent<Props, State> {
                                 }
                             }}
                         >
-                            <Text style={textStyles.large}>{this.props.headerText}</Text>
+                            <Text style={textStyles.large} numberOfLines={1}>{this.props.headerText}</Text>
                         </View>
                     : undefined}
                 </View>

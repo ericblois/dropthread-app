@@ -1,14 +1,16 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { StyleSheet, Text, TextInput } from "react-native";
 import CustomComponent from "./CustomComponents/CustomComponent";
+import { alphanumericSpecialRegex, emailRegex, nameRegex, passwordRegex } from './CustomComponents/CustomTextInput';
 import { capitalizeWords } from "./HelperFiles/ClientFunctions";
-import { DateScrollPicker, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton, TextDropdownAnimated, CustomTextInput } from "./HelperFiles/CompIndex";
+import { DateScrollPicker, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton, TextDropdownAnimated, CustomTextInput, CustomTextButton } from "./HelperFiles/CompIndex";
 import { geofire } from "./HelperFiles/Constants";
 import { countriesList, Country, DefaultUserData, UserData, UserGender, UserGenders } from "./HelperFiles/DataTypes";
 import { RootStackParamList } from "./HelperFiles/Navigation";
-import { colors, icons, styleValues, textStyles } from "./HelperFiles/StyleSheet";
+import { colors, icons, shadowStyles, styleValues, textStyles } from "./HelperFiles/StyleSheet";
 import User from "./HelperFiles/User";
 
 type UserSignupNavigationProp = StackNavigationProp<RootStackParamList, "userSignup">
@@ -30,16 +32,15 @@ type State = {
 
 export default class UserSignupPage extends CustomComponent<UserSignupProps, State> {
 
-    defaultTextProps: TextInput['props']
+    defaultTextInputProps: CustomTextInput['props'] = {
+        autoCorrect: false,
+        autoCapitalize: "none",
+        clearButtonMode: "while-editing",
+    }
+    confirmInput: CustomTextInput | null = null
 
     constructor(props: UserSignupProps) {
         super(props)
-        this.defaultTextProps = {
-            autoCorrect: false,
-            autoCapitalize: "none",
-            clearButtonMode: "while-editing",
-        }
-
         this.state = {
             userData: {},
             password: undefined,
@@ -48,27 +49,26 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
         }
     }
 
-    refreshData() {
-        navigator.geolocation.getCurrentPosition((pos) => {
-            this.setState({userData: {
-                ...this.state.userData,
-                lat: pos.coords.latitude,
-                long: pos.coords.longitude
-            }})
-        }, (e) => console.error(e))
+    async refreshData() {
+        const location = await User.getLocation()
+        const userData: Partial<UserData> = {
+            ...this.state.userData,
+            ...location
+        }
+        this.setState({userData: userData})
     }
 
-    validateName() {
-        return this.state.userData.name !== undefined && this.state.userData.name.length > 0
+    validateName(name?: string) {
+        return name !== undefined && name.length > 0
     }
-    validateEmail() {
-        return this.state.userData.email !== undefined && /^[a-z0-9\.\_\-]+@[a-z0-9\.\-]+\.[a-z0-9]+$/m.test(this.state.userData.email.toLowerCase())
+    validateEmail(email?: string) {
+        return email !== undefined && /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.toLowerCase())
     }
-    validatePass() {
-        return this.state.password !== undefined && this.state.password.length > 6
+    validatePass(password?: string) {
+        return password !== undefined && password.length >= 6
     }
-    validateConfirm() {
-        return this.state.passwordConfirm !== undefined && this.state.passwordConfirm === this.state.password
+    validateConfirm(passwordConfirm?: string) {
+        return passwordConfirm !== undefined && passwordConfirm === this.state.password
     }
     validateBirthday() {
         if (this.state.userData.birthYear === undefined ||
@@ -145,47 +145,58 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
             <ScrollContainer>
                 {/* Name */}
                 <CustomTextInput
-                    validateFunc={() => this.validateName()}
-                    textProps={{...this.defaultTextProps, ...{
-                        onChangeText: async (text) => this.setState({userData: {...this.state.userData, name: text} as UserData}),
-                        placeholder: "Name",
-                        autoCapitalize: "words",
-                        textContentType: "name",
-                        autoCompleteType: "name"
-                    }}}
+                    {...this.defaultTextInputProps}
+                    // Allow letters and quotes
+                    allowedCharacters={nameRegex}
+                    validateFunc={(text) => this.validateName(text)}
+                    indicatorType={'shadowSmall'}
+                    onChangeText={async (text) => this.setState({userData: {...this.state.userData, name: text} as UserData})}
+                    placeholder={"Name"}
+                    autoCapitalize={"words"}
+                    textContentType={"name"}
                 />
                 {/* Email */}
                 <CustomTextInput
-                    validateFunc={() => this.validateEmail()}
-                    textProps={{...this.defaultTextProps, ...{
-                        onChangeText: (text) => this.setState({userData: {...this.state.userData, email: text} as UserData}),
-                        placeholder: "Email",
-                        textContentType: "emailAddress",
-                        autoCompleteType: "email",
-                    }}}
+                    {...this.defaultTextInputProps}
+                    allowedCharacters={emailRegex}
+                    indicatorType={'shadowSmall'}
+                    validateFunc={(text) => this.validateEmail(text)}
+                    onChangeText={(text) => this.setState({userData: {...this.state.userData, email: text} as UserData})}
+                    placeholder={"Email"}
+                    textContentType={"emailAddress"}
                 />
                 <Text style={styles.inputDescription}>
                     Use at least 6 characters in your password.
                 </Text>
                 {/* Password */}
                 <CustomTextInput
-                    validateFunc={() => this.validatePass()}
-                    textProps={{...this.defaultTextProps, ...{
-                        onChangeText: (text) => this.setState({password: text}),
-                        placeholder: "Password",
-                        textContentType: "newPassword",
-                        secureTextEntry: true,
-                    }}}
+                    {...this.defaultTextInputProps}
+                    allowedCharacters={passwordRegex}
+                    indicatorType={'shadowSmall'}
+                    validateFunc={(text) => this.validatePass(text)}
+                    onChangeText={(text) => {
+                        this.setState({password: text})
+                        if (!this.validateConfirm(this.state.passwordConfirm) && this.state.passwordConfirm && this.state.passwordConfirm.length > 0) {
+                            this.confirmInput?.animateInvalidate()
+                        } else {
+                            this.confirmInput?.animateValidate()
+                        }
+                    }}
+                    placeholder={"Password"}
+                    textContentType={"newPassword"}
+                    secureTextEntry={true}
                 />
                 {/* Confirm password */}
                 <CustomTextInput
-                    validateFunc={() => this.validateConfirm()}
-                    textProps={{...this.defaultTextProps, ...{
-                        onChangeText: (text) => this.setState({passwordConfirm: text}),
-                        placeholder: "Confirm password",
-                        textContentType: "newPassword",
-                        secureTextEntry: true,
-                    }}}
+                    {...this.defaultTextInputProps}
+                    allowedCharacters={passwordRegex}
+                    ref={(textInput) => {this.confirmInput = textInput}}
+                    indicatorType={'shadowSmall'}
+                    validateFunc={(text) => this.validateConfirm(text)}
+                    onChangeText={(text) => this.setState({passwordConfirm: text})}
+                    placeholder={"Confirm password"}
+                    textContentType={"newPassword"}
+                    secureTextEntry={true}
                 />
                 <Text style={styles.inputDescription}>
                     You must be 13 years of age or older to use this service.
@@ -225,17 +236,25 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     showValidSelection={true}
                     onSelect={(selections) => this.setState({userData: {...this.state.userData, country: selections[0].value as Country} as UserData})}
                 />
-                <Text style={styles.inputDescription}>Your location is required to view items near you. Location data is never shared with other users.</Text>
-                <TextButton
+                <Text style={{...styles.inputDescription, fontSize: styleValues.smallestTextSize}}>Your location is required to view items near you. Location data is never shared with other users without your permission.</Text>
+                <CustomTextButton
                     text={"Location"}
+                    wrapperStyle={{
+                        width: '100%'
+                    }}
                     buttonStyle={{
                         borderColor: this.validateCoords() ? colors.valid : colors.invalid,
                         borderWidth: styleValues.minorBorderWidth
                     }}
-                    rightIconSource={icons.crosshair}
-                    rightIconStyle={{
-                        tintColor: this.validateCoords() ? colors.valid : colors.invalid
-                    }}
+                    rightChildren={
+                        <MaterialIcons
+                            name={'my-location'}
+                            style={{
+                                color: this.validateCoords() ? colors.valid : colors.invalid,
+                                fontSize: styleValues.largeTextSize
+                            }}
+                        />
+                    }
                     onPress={() => this.refreshData()}
                 />
                 <Text style={styles.inputDescription}>Terms of Service</Text>
@@ -253,10 +272,9 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
     
     render() {
         return (
-        <PageContainer>
-            <Text style={textStyles.larger}>
-                Sign Up
-            </Text>
+        <PageContainer
+            headerText={'Sign Up'}
+        >
             {this.renderInputs()}
             {this.renderLoading()}
             <MenuBar

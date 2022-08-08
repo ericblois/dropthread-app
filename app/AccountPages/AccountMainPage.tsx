@@ -122,27 +122,6 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
         <PageContainer>
             {this.renderUI()}
             {this.renderLoading()}
-            <MenuBar
-                buttonProps={[
-                {
-                    iconSource: icons.shoppingBag,
-                    onPress: () => this.props.navigation.navigate("browse")
-                },
-                {
-                    iconSource: icons.hollowHeart,
-                    onPress: () => this.props.navigation.navigate("likes")
-                },
-                {
-                    iconSource: icons.closet,
-                    onPress: () => this.props.navigation.navigate("closet")
-                },
-                {
-                    iconSource: icons.profile,
-                    iconStyle: {tintColor: colors.main},
-                },
-                ]}
-            
-            />
         </PageContainer>
     );
     }

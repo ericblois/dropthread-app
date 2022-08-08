@@ -1,10 +1,10 @@
 import { Dimensions, StyleSheet } from "react-native";
 import { initialWindowMetrics } from "react-native-safe-area-context";
 
-const displayWidth = initialWindowMetrics
+export const displayWidth = initialWindowMetrics
   ? initialWindowMetrics.frame.width
   : Dimensions.get("window").width;
-const displayHeight = initialWindowMetrics
+export const displayHeight = initialWindowMetrics
   ? initialWindowMetrics.frame.height
   : Dimensions.get("window").height;
 
@@ -49,6 +49,7 @@ export const colors = {
   invalid: "#DD404B",
   yellow: "#FFCF56",
   flame: '#FF6933',
+  altBlue: '#306bf0',
   background: "#eee",
   majorTextColor: "#000",
   mediumTextColor: "#555",
@@ -218,9 +219,10 @@ export const defaultStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     alignSelf: "center",
-    width: displayWidth,
-    height: displayHeight,
+    position: "absolute",
     top: 0,
+    bottom: 0,
+    right: 0,
     left: 0,
     paddingTop: topInset + styleValues.mediumPadding,
     paddingBottom: bottomInset + styleValues.mediumPadding,

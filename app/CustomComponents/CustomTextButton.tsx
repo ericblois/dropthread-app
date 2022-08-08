@@ -16,6 +16,7 @@ type Props = {
     leftChildren?: ReactNode,
     rightChildren?: ReactNode,
     buttonStyle?: ViewStyle,
+    wrapperStyle?: ViewStyle,
     onPress?: (event?: GestureResponderEvent) => void,
     textProps?: Text['props'],
     subtextProps?: Text['props'],
@@ -80,6 +81,7 @@ export default class TextButton extends CustomComponent<Props, State> {
                     }
                 }}
                 {...this.props.touchableProps}
+                style={this.props.wrapperStyle}
             >
                 <View
                     style={{...defaultButtonStyle, ...{
@@ -107,9 +109,8 @@ export default class TextButton extends CustomComponent<Props, State> {
                         />
                     }
                 </View>
-            </CustomPressable
-            >
-            )
+            </CustomPressable>
+        )
     }
 }
 

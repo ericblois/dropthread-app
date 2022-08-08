@@ -134,27 +134,6 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
             <PageContainer headerText={"Your Closet"}>
                 {this.renderUI()}
                 {this.renderLoading()}
-                <MenuBar
-                    buttonProps={[
-                    {
-                        iconSource: icons.shoppingBag,
-                        onPress: () => this.props.navigation.navigate("browse")
-                    },
-                    {
-                        iconSource: icons.hollowHeart,
-                        onPress: () => this.props.navigation.navigate("likes")
-                    },
-                    {
-                        iconSource: icons.closet,
-                        iconStyle: {tintColor: colors.main},
-                    },
-                    {
-                        iconSource: icons.profile,
-                        onPress: () => this.props.navigation.navigate("account")
-                    },
-                    ]}
-                
-                />
             </PageContainer>
         );
     }

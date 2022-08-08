@@ -202,27 +202,6 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
                 {this.renderCarousel()}
                 {this.renderLoading()}
               </FilterSearchBar>
-              <MenuBar
-                buttonProps={[
-                  {
-                    iconSource: icons.shoppingBag,
-                    iconStyle: {tintColor: colors.main},
-                  },
-                  {
-                    iconSource: icons.hollowHeart,
-                    onPress: () => this.props.navigation.navigate("likes")
-                  },
-                  {
-                    iconSource: icons.closet,
-                    onPress: () => this.props.navigation.navigate("closet")
-                  },
-                  {
-                    iconSource: icons.profile,
-                    onPress: () => this.props.navigation.navigate("account")
-                  },
-                ]}
-              
-              />
             </PageContainer>
         );
       } catch (e) {

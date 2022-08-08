@@ -41,7 +41,7 @@ export default class MenuBar extends CustomComponent<Props, State> {
             return <CustomImageButton iconStyle={{tintColor: colors.darkGrey}} {...props} key={index}/>;
           })
         }
-
+        {this.props.children}
       </View>
     )
   }

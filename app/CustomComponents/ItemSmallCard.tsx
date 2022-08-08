@@ -1,6 +1,6 @@
 
 import React from "react";
-import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 import FastImage from "react-native-fast-image";
 import CustomPressable from "./CustomPressable";
 import { currencyFormatter } from "../HelperFiles/Constants";
@@ -16,6 +16,9 @@ import CustomBadge from "./CustomBadge";
 
 type Props = {
     itemInfo: ItemInfo,
+    style?: ViewStyle,
+    badgeNumber?: number,
+    showCustomPrice?: number,
     onLoadEnd?: () => void,
     onPress?: (event?: GestureResponderEvent) => void
 }
@@ -36,7 +39,7 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
     renderUI() {
         return (
         <CustomPressable
-            style={styles.cardContainer}
+            style={{...styles.cardContainer, ...this.props.style}}
             animationType={"shadow"}
             onPress={this.props.onPress}
         >
@@ -60,7 +63,7 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
                     >{this.props.itemInfo.item.name}</Text>
                     {/* Price */}
                     <Text style={{...styles.headerText, textAlign: 'right'}}
-                    >{currencyFormatter.format(this.props.itemInfo.item.currentPrice)}</Text>
+                    >{currencyFormatter.format(this.props.showCustomPrice || this.props.itemInfo.item.currentPrice)}</Text>
                 </View>
                 {/* Gender / category, distance */}
                 <View style={{flexDirection: "row", justifyContent: 'space-between', alignItems: 'flex-end'}}>
@@ -87,7 +90,10 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
                     })
                 }}
             />
-            <CustomBadge number={7}/>
+            {this.props.badgeNumber ?
+            <CustomBadge number={this.props.badgeNumber}/>
+            : undefined}
+            
         </CustomPressable>
         );
     }

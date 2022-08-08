@@ -11,12 +11,21 @@ type CustomTextInputProps = TextInputProps & {
     initialValidity?: boolean,
     animationTime?: number,
     prefix?: string,
+    allowedCharacters?: RegExp,
     validateFunc?: (text: string) => boolean
 }
 
 type State = {
     text: string,
 }
+
+export const lettersRegex = /^[A-Za-z]*$/
+export const wordsRegex = /^[A-Za-z\s\'\"\u2019\u0060\”\`]*$/
+export const alphanumericRegex = /^[A-Za-z0-9]*$/
+export const alphanumericSpecialRegex = /^[A-Za-z0-9\.\,\>\<\/\?\'\"\u2019\u0060\”\;\:\]\[\}\{\\\|\=\+\-\_\)\(\*\&\^\%\$\#\@\!\`\~]*$/
+export const nameRegex = /[a-zA-Z\ \'\"\u2019\u0060\”\`]*/
+export const emailRegex = /^[a-zA-Z0-9\.\!\#\$\%\&\'\*\+\/\=\?\^\_\`\{\|\}\~\-\@]*$/
+export const passwordRegex = /^[A-Za-z0-9\.\,\>\<\/\?\]\[\}\{\\\|\=\+\-\_\)\(\*\&\^\%\$\#\@\!\~]*$/
 
 export default class CustomTextInput extends CustomComponent<CustomTextInputProps, State> {
 
@@ -128,18 +137,22 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
                     {...this.props}
                     placeholder={undefined}
                     value={this.state.text}
-
                     onChangeText={(text) => {
-                        this.setState({text: text})
+                        let newText = text
+                        if (this.props.allowedCharacters) {
+                            const matchedChars = text.match(this.props.allowedCharacters)
+                            newText = matchedChars ? matchedChars.join() : ""
+                        }
+                        this.setState({text: newText})
                         if (this.props.validateFunc) {
-                            if (this.props.validateFunc(text)) {
+                            if (this.props.validateFunc(newText)) {
                                 this.animateValidate()
                             } else {
                                 this.animateInvalidate()
                             }
                         }
                         if (this.props.onChangeText) {
-                            this.props.onChangeText(text)
+                            this.props.onChangeText(newText)
                         }
                     }}
                 />

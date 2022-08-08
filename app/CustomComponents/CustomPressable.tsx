@@ -13,7 +13,7 @@ type CustomPressableProps = PressableProps & {
 type CustomPressableState = {
 }
 
-export default class LikesMainPage extends CustomComponent<CustomPressableProps, CustomPressableState> {
+export default class ViewLikesPage extends CustomComponent<CustomPressableProps, CustomPressableState> {
 
     progress = new Animated.Value(0);
     animationTime: number;

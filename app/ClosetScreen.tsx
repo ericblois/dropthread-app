@@ -2,9 +2,12 @@ import { RouteProp } from "@react-navigation/core";
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { StyleSheet } from "react-native";
+import ClosetItemInfoPage from "./ClosetPages/ClosetItemInfoPage";
+import ClosetMainPage from "./ClosetPages/ClosetMainPage";
+import EditItemPage from "./ClosetPages/EditItemPage";
+import ItemSwapsPage from "./ClosetPages/ItemSwapsPage";
 import CustomComponent from "./CustomComponents/CustomComponent";
 import { ClosetStack, UserMainStackParamList } from "./HelperFiles/Navigation";
-import { ClosetItemInfoPage, ClosetMainPage, EditItemPage, ItemSwapsPage } from "./HelperFiles/PageIndex";
 
 type ClosetNavigationProp = StackNavigationProp<UserMainStackParamList, "closet">;
 
@@ -32,6 +35,18 @@ export default class ClosetScreen extends CustomComponent<ClosetProps, State> {
             <ClosetStack.Navigator
                 screenOptions={{headerShown: false}}
                 initialRouteName="main"
+                screenListeners={{
+                    focus: (e) => {
+                        if (e.target) {
+                            const name = e.target.substring(0, e.target.indexOf('-'))
+                            if (name === 'main') {
+                                this.props.navigation.setOptions({headerShown: true})
+                            } else {
+                                this.props.navigation.setOptions({headerShown: false})
+                            }
+                        }
+                    }
+                }}
             >
                 <ClosetStack.Screen
                     name={"main"}

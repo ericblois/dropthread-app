@@ -8,6 +8,9 @@ export default abstract class Item {
 
     // Retrieve items by their ID
     public static async getFromIDs(itemIDs: string[]) {
+        if (itemIDs.length === 0) {
+            return []
+        }
         // Determine which item IDs should be refresh vs retrieved from cache
         const cacheResult = LocalCache.getItems(itemIDs)
         // Get items that need to be refreshed

@@ -9,12 +9,14 @@ import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth,
 import CustomComponent from "./CustomComponent";
 import CustomImage from "./CustomImage";
 import LoadingCover from "./LoadingCover";
-import { BlurView } from "expo-blur";
+import { BlurView, BlurViewProps } from "expo-blur";
 import CustomIconButton from "./CustomIconButton";
 
 type Props = {
     visible: boolean,
     disableExitButton?: boolean,
+    disableBackgroundDismiss?: boolean,
+    blurProps?: BlurViewProps,
     onClose?: (event: GestureResponderEvent) => void,
 }
 
@@ -46,27 +48,36 @@ export default class CustomModal extends CustomComponent<Props, State> {
                     onStartShouldSetResponder={() => true}
                 >
                     <BlurView
-                        style={defaultStyles.fill}
+                        style={{
+                            ...defaultStyles.fill,
+                        }}
+                        tint={'default'}
+                        intensity={15}
+                        {...this.props.blurProps}
                     />
-                    <Pressable
-                        style={defaultStyles.fill}
-                        onPress={this.props.onClose}
-                    />
+                    {!this.props.disableBackgroundDismiss ? 
+                        <Pressable
+                            style={defaultStyles.fill}
+                            onPress={this.props.onClose}
+                        />
+                    : undefined }
                     {this.props.children}
-                    <CustomIconButton
-                        name="close"
-                        type="AntDesign"
-                        buttonStyle={{
-                            height: styleValues.iconLargestSize,
-                            width: styleValues.iconLargestSize,
-                            marginTop: styleValues.mediumPadding
-                        }}
-                        onPress={(e) => {
-                            if (this.props.onClose) {
-                                this.props.onClose(e!)
-                            }
-                        }}
-                    />
+                    {!this.props.disableExitButton ? 
+                        <CustomIconButton
+                            name="close"
+                            type="AntDesign"
+                            buttonStyle={{
+                                height: styleValues.iconLargestSize,
+                                width: styleValues.iconLargestSize,
+                                marginTop: styleValues.mediumPadding
+                            }}
+                            onPress={(e) => {
+                                if (this.props.onClose) {
+                                    this.props.onClose(e!)
+                                }
+                            }}
+                        />
+                    : undefined }
                 </View>
             </Modal>
         )

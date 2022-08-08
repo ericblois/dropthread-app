@@ -1,14 +1,17 @@
 import React from "react";
-import { Image, ImageStyle, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
+import { Image, ImageStyle, Modal, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
 import FastImage from "react-native-fast-image";
 import { accessCamera, accessPhotos, getCompressedImage } from "../HelperFiles/ClientFunctions";
-import { colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, screenHeight, screenWidth, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import GradientView from "./GradientView";
 import CustomImageButton from "./CustomImageButton";
 import CustomImage from "./CustomImage";
 import CustomIconButton from "./CustomIconButton";
+import { AutoFocus, Camera, FlashMode } from 'expo-camera';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import CustomModal from "./CustomModal";
+import CustomCameraModal from "./CustomCameraModal";
 
 type ImageInfo = {
     uri: string,
@@ -37,11 +40,14 @@ type State = {
     newImages: ImageInfo[],
     deletedImages: string[],
     galleryWidth?: number,
-    galleryHeight?: number
+    galleryHeight?: number,
+    cameraOpen: boolean
 }
 
 export default class ImageSliderSelector extends CustomComponent<Props, State> {
 
+    scrollViewRef: ScrollView | null = null;
+    lastContentWidth = 0;
     loadCount: number
     ratioCount: number
 
@@ -53,7 +59,8 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
             newImages: [],
             deletedImages: [],
             galleryWidth: undefined,
-            galleryHeight: undefined
+            galleryHeight: undefined,
+            cameraOpen: false
         }
         this.loadCount = 0
         this.ratioCount = 0
@@ -233,8 +240,9 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     key={index.toString()}
                 >
                     {/* Add a delete button */}
-                    <CustomImageButton
-                        iconSource={icons.minus}
+                    <CustomIconButton
+                        name={'close'}
+                        type={'MaterialCommunityIcons'}
                         buttonStyle={{
                             position: "absolute",
                             width: styleValues.iconMediumSize,
@@ -244,7 +252,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                             right: 0,
                         }}
                         iconStyle={{
-                            tintColor: colors.white
+                            color: colors.white
                         }}
                         onPress={() => {
                             this.removeImage(item.uri)
@@ -303,15 +311,28 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                 }}
                 buttonProps={{animationType: 'shadowSmall'}}
                 onPress={async () => {
-                    const result = await accessCamera({aspect: [1, 1]})
+                    this.setState({cameraOpen: true})
+                    /*const result = await accessCamera({aspect: [1, 1]})
                     if (result) {
                         this.addImage(result)
-                    }
+                    }*/
                 }}
                 infoProps={{
                     text: "Add new image",
                     positionHorizontal: "left"
                 }}
+            />
+        )
+    }
+
+    renderCamera() {
+        return (
+            <CustomCameraModal
+                visible={this.state.cameraOpen}
+                onSave={(image) => {
+                    this.addImage(image.uri);
+                }}
+                onClose={() => this.setState({cameraOpen: false})}
             />
         )
     }
@@ -323,7 +344,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     ...styles.gallery,
                     width: "100%",
                     height: this.state.galleryHeight,
-                    overflow: "hidden",
+                    overflow: 'visible',
                     ...this.props.style
                 }}
                 onLayout={(e) => {
@@ -339,7 +360,8 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                 {this.state.images.length > 0 ?
                     /* Image scroller */
                     <ScrollView
-                        style={defaultStyles.fill}
+                        ref={(scrollView) => {this.scrollViewRef = scrollView}}
+                        style={{...defaultStyles.fill, overflow: 'hidden'}}
                         contentContainerStyle={{
                             paddingVertical: styleValues.mediumPadding,
                             paddingHorizontal: styleValues.mediumPadding/2,
@@ -351,12 +373,19 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                         horizontal={true}
                         /* THIS SHOULD BE SET TO > 1 */
                         scrollEnabled={this.state.images.length > 1}
+                        onContentSizeChange={(width) => {
+                            if (this.lastContentWidth < width) {
+                                this.scrollViewRef!.scrollToEnd()
+                            }
+                            this.lastContentWidth = width
+                        }}
                     >
                         {this.state.images.map((item, index) => this.renderImage(item, index))}
                     </ScrollView> : 
                     this.renderPlaceholder()
                 }
             {this.renderAddButton()}
+            {this.renderCamera()}
             </View>
         );
     }

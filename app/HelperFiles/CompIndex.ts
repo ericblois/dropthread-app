@@ -28,6 +28,8 @@ import CustomPressable from "../CustomComponents/CustomPressable"
 import CustomModal from "../CustomComponents/CustomModal"
 import CustomBadge from "../CustomComponents/CustomBadge"
 import CustomTextButton from "../CustomComponents/CustomTextButton"
+import OfferSmallCard from "../CustomComponents/OfferSmallCard"
+import CustomCameraModal from "../CustomComponents/CustomCameraModal"
 
 export {
     MenuBar,
@@ -59,5 +61,7 @@ export {
     CustomScrollView,
     CustomModal,
     CustomBadge,
-    CustomTextButton
+    CustomTextButton,
+    OfferSmallCard,
+    CustomCameraModal
 };

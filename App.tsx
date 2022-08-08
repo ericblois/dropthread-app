@@ -14,8 +14,9 @@ import PageContainer from "./app/CustomComponents/PageContainer";
 import { auth } from './app/HelperFiles/Constants';
 import { RootStack } from "./app/HelperFiles/Navigation";
 import StartPage from "./app/StartPage";
-import UserMainStackScreen from "./app/UserMainScreen";
+import UserMainScreen from "./app/UserMainScreen";
 import UserSignupPage from "./app/UserSignupPage";
+import UserDetailScreen from './app/UserDetailScreen';
 
 //LogBox.ignoreLogs(['Calling getNode()', 'VirtualizedLists should never be nested'])
 
@@ -102,7 +103,11 @@ export default class App extends Component<Props, State> {
                 />
                 <RootStack.Screen
                   name={"userMain"}
-                  component={UserMainStackScreen}
+                  component={UserMainScreen}
+                />
+                <RootStack.Screen
+                  name={"userDetail"}
+                  component={UserDetailScreen}
                 />
                 <RootStack.Screen
                   name={"userSignup"}

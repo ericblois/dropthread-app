@@ -7,20 +7,20 @@ import CustomComponent from "../CustomComponents/CustomComponent";
 import { CustomModal, ItemLargeCard, ItemLikedCard, LoadingCover, MenuBar, PageContainer, ScrollContainer } from "../HelperFiles/CompIndex";
 import { ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
-import { LikesStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
-import { colors, icons, screenHeight } from "../HelperFiles/StyleSheet";
+import { ExchangesStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
+import { colors, icons, screenHeight, styleValues } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
-type LikesMainNavigationProp = CompositeNavigationProp<
-    StackNavigationProp<LikesStackParamList, "main">,
+type ViewLikesNavigationProp = CompositeNavigationProp<
+    StackNavigationProp<ExchangesStackParamList, "likes">,
     StackNavigationProp<UserMainStackParamList>
 >
 
-type LikesMainRouteProp = RouteProp<LikesStackParamList, "main">;
+type ViewLikesRouteProp = RouteProp<ExchangesStackParamList, "likes">;
 
-type LikesMainProps = {
-    navigation: LikesMainNavigationProp,
-    route: LikesMainRouteProp
+type ViewLikesProps = {
+    navigation: ViewLikesNavigationProp,
+    route: ViewLikesRouteProp
 }
 
 type State = {
@@ -30,9 +30,9 @@ type State = {
     imagesLoaded: boolean
 }
 
-export default class LikesMainPage extends CustomComponent<LikesMainProps, State> {
+export default class ViewLikesPage extends CustomComponent<ViewLikesProps, State> {
 
-    constructor(props: LikesMainProps) {
+    constructor(props: ViewLikesProps) {
         super(props)
         const initialState = {
             userData: undefined,
@@ -92,7 +92,9 @@ export default class LikesMainPage extends CustomComponent<LikesMainProps, State
 
     render() {
         return (
-            <PageContainer headerText={"Liked Items"}>
+            <PageContainer
+                style={{paddingTop: undefined}}
+            >
                 <CustomModal
                     visible={!!this.state.showDetailCard}
                     onClose={() => this.setState({showDetailCard: undefined})}
@@ -109,27 +111,7 @@ export default class LikesMainPage extends CustomComponent<LikesMainProps, State
                 </CustomModal>
                 {this.renderUI()}
                 {this.renderLoading()}
-                <MenuBar
-                    buttonProps={[
-                    {
-                        iconSource: icons.shoppingBag,
-                        onPress: () => this.props.navigation.navigate("browse")
-                    },
-                    {
-                        iconSource: icons.hollowHeart,
-                        iconStyle: {tintColor: colors.main},
-                    },
-                    {
-                        iconSource: icons.closet,
-                        onPress: () => this.props.navigation.navigate("closet")
-                    },
-                    {
-                        iconSource: icons.profile,
-                        onPress: () => this.props.navigation.navigate("account")
-                    },
-                    ]}
                 
-                />
             </PageContainer>
         );
     }
