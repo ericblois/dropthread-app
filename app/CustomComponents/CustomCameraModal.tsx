@@ -57,7 +57,7 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
     }
 
     close() {
-        this.setState({ready: false, image: undefined})
+        this.setState({ready: false, image: undefined});
         if (this.props.onClose) {
             this.props.onClose()
         }
@@ -73,7 +73,7 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
                     tint: 'dark',
                     intensity: 30
                 }}
-                onClose={this.close}
+                onClose={() => this.close()}
             >
                 <View
                     style={{
@@ -169,7 +169,7 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
                         iconStyle={{
                             color: colors.white
                         }}
-                        onPress={this.close}
+                        onPress={() => this.close()}
                     />
                     <CustomPressable
                         style={{
