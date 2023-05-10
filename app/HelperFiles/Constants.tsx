@@ -1,11 +1,15 @@
 import { getApp, getApps, initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getStorage } from 'firebase/storage'
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { connectStorageEmulator, getStorage } from 'firebase/storage'
 import { getFunctions } from 'firebase/functions';
 import * as geofireSource from 'geofire-common';
 import { CustomImageButton } from './CompIndex';
 import firebaseConfig from './firebase-config.json';
 import { icons } from './StyleSheet';
+import { cloudRunURL } from './config';
+import * as Device from 'expo-device';
+
+const localhost = Device.isDevice ? '192.168.10.55' : 'localhost'
 
 // Initialize Firebase
 if (getApps().length < 1) {
@@ -16,6 +20,11 @@ export const firebaseApp = getApp('Dropthread');
 export const auth = getAuth(firebaseApp);
 export const storage = getStorage(firebaseApp);
 export const functions = getFunctions(firebaseApp);
+
+if (__DEV__) {
+  connectAuthEmulator(auth, `http://${localhost}:9099`);
+  connectStorageEmulator(storage, localhost, 9199);
+}
 
 export const geofire = geofireSource
 
@@ -31,14 +40,15 @@ export const simpleCurrencyFormatter = new Intl.NumberFormat("en-CA", {
   maximumFractionDigits: 0
 } as Intl.NumberFormatOptions
 )
-const cloudRunURL = 'https://dropthread-cloud-run-7bnszsbpsa-uc.a.run.app'
+
 //const cloudRunURL = 'localhost:8080'
 export const cloudRun = async (method: 'GET' | 'POST', url: string, data?: any, debug: boolean = false) => {
+  let bgy = cloudRunURL
   // Get auth token
   if (!auth.currentUser) {
-    throw new Error('Could not retrieve user')
+    throw new Error('Could not retrieve user');
   }
-  const token = await auth.currentUser!.getIdToken()
+  const token = await auth.currentUser!.getIdToken();
   if (!token) {
     throw new Error(`Could not retrieve token for user: ${auth.currentUser?.uid}`)
   }
@@ -66,9 +76,7 @@ export const cloudRun = async (method: 'GET' | 'POST', url: string, data?: any, 
   })
   const text = await response.text()
   if (!response.ok) {
-    throw new Error(`REQUEST ${method} ${url} returned status ${response.status}, response:
-    ${text}
-    `)
+    throw JSON.parse(text);
   }
   //const result = await response.json()
   if (debug) {

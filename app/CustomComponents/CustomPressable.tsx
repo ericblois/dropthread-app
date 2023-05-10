@@ -4,7 +4,7 @@ import CustomComponent from "./CustomComponent"
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-type CustomPressableProps = PressableProps & {
+type CustomPressableProps = Omit<PressableProps, 'style' > & {
     style?: Animated.AnimatedProps<ViewStyle>,
     animationType?: "opacity" | "shadowSmall" | "shadow" | "outline",
     animationTime?: number
@@ -13,7 +13,7 @@ type CustomPressableProps = PressableProps & {
 type CustomPressableState = {
 }
 
-export default class ViewLikesPage extends CustomComponent<CustomPressableProps, CustomPressableState> {
+export default class CustomPressable extends CustomComponent<CustomPressableProps, CustomPressableState> {
 
     progress = new Animated.Value(0);
     animationTime: number;
@@ -26,6 +26,7 @@ export default class ViewLikesPage extends CustomComponent<CustomPressableProps,
             })
         },
         shadowSmall: {
+            ...shadowStyles.small,
             shadowOffset: {
                 width: 0,
                 height: 0,
@@ -50,6 +51,7 @@ export default class ViewLikesPage extends CustomComponent<CustomPressableProps,
             }]
         },
         shadow: {
+            ...shadowStyles.medium,
             shadowOffset: {
                 width: 0,
                 height: 0,

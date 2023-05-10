@@ -59,7 +59,7 @@ export default class SearchResultItem extends CustomComponent<Props, State> {
                     numberOfLines={2}
                 >{this.props.itemData.name}</Text>
                 <View style={styles.productSubInfoArea}>
-                    <Text style={styles.productPrice}>{this.props.itemData.minPrice >= 0 ? currencyFormatter.format(this.props.itemData.minPrice) : "$0.00"}</Text>
+                    <Text style={styles.productPrice}>{this.props.itemData.priceData.minPrice >= 0 ? currencyFormatter.format(this.props.itemData.priceData.minPrice) : "$0.00"}</Text>
                 </View>
             </View>
         </TouchableOpacity>

@@ -7,12 +7,12 @@ type CustomTextInputProps = TextInputProps & {
     boxStyle?: ViewStyle,
     boxProps?: KeyboardAvoidingView['props'],
     focusOnStart?: boolean,
-    indicatorType?: 'shadowSmall' | 'shadow' | 'outline',
-    initialValidity?: boolean,
     animationTime?: number,
     prefix?: string,
     allowedCharacters?: RegExp,
-    validateFunc?: (text: string) => boolean
+    validateFunc?: (text: string) => boolean,
+    indicatorType?: 'shadowSmall' | 'shadow' | 'outline',
+    ignoreInitialValidity?: boolean,
 }
 
 type State = {
@@ -47,10 +47,7 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
         this.state = {
             text: props.defaultValue !== undefined ? props.defaultValue : "",
         }
-        this.progress = new Animated.Value(props.initialValidity ? 
-            isValid ? 1 : 0
-            : 1
-            )
+        this.progress = new Animated.Value(props.ignoreInitialValidity !== false ? 1 : (isValid ? 1 : 0))
         this.animationTime = props.animationTime || 300
         this.animatedStyles = {
             shadowSmall: {
@@ -103,6 +100,14 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
     }
 
     render() {
+        // Check validity of input
+        if (this.props.validateFunc && this.props.ignoreInitialValidity === false) {
+            if (this.props.validateFunc(this.state.text)) {
+                this.animateValidate()
+            } else {
+                this.animateInvalidate()
+            }
+        }
         return (
             <Animated.View
                 {...this.props.boxProps}

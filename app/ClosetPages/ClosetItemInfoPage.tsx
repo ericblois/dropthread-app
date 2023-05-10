@@ -109,7 +109,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                         <Text style={{...textStyles.large, textAlign: "left", color: colors.grey}}>{capitalizeWords(this.state.itemInfo.item.category)}</Text>
                     </View>
                     <View style={{alignItems: "flex-end", marginLeft: styleValues.mediumPadding}}>
-                        <Text style={{...textStyles.larger, textAlign: "right"}}>{currencyFormatter.format(this.state.itemInfo.item.minPrice)}</Text>
+                        <Text style={{...textStyles.larger, textAlign: "right"}}>{currencyFormatter.format(this.state.itemInfo.item.priceData.minPrice)}</Text>
                         {this.state.itemInfo.distance! > 0 ? 
                             <Text style={{...textStyles.large, textAlign: "right", color: colors.grey}}>{`${this.state.itemInfo.distance}km`}</Text>
                         : undefined}

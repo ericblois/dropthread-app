@@ -173,7 +173,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                         <ItemSmallCard
                             itemInfo={itemInfo}
                             style={{...shadowStyles.small, width: '100%'}}
-                            showCustomPrice={itemInfo.item.lastPrice}
+                            showCustomPrice={itemInfo.item.priceData.lastFacePrice}
                             onPress={() => this.setState({showDetailCard: itemInfo})}
                             key={index.toString()}
                         />

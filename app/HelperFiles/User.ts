@@ -16,7 +16,10 @@ export default abstract class User {
         // Add name to user account
         await updateProfile(cred.user, { displayName: userData.name })
         await cloudRun('POST', "createUser", {
-            userData: userData
+            userData: {
+                ...userData,
+                userID: cred.user.uid
+            }
         })
         return cred.user.uid
     }
@@ -38,7 +41,7 @@ export default abstract class User {
         const result = await cloudRun('POST', "getUser", {
             userID: User.getCurrent().uid
         }) as UserData
-        LocalCache.saveUser(User.getCurrent().uid, result)
+        LocalCache.saveUser(User.getCurrent().uid, result);
         return result
     }
 

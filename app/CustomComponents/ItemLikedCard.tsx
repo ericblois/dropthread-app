@@ -43,7 +43,7 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
     updateStatus = () => {
         if (!this.props.itemInfo.likePrice) {
             this.setState({status: 'unliked', statusText: 'Not liked'})
-        } else if (this.props.itemInfo.likePrice >= this.props.itemInfo.item.lastPrice) {
+        } else if (this.props.itemInfo.likePrice >= this.props.itemInfo.item.priceData.lastFacePrice) {
             this.setState({status: 'highestPrice', statusText: 'Most recent like'})
         } else {
             this.setState({status: 'outbid', statusText: 'Liked by other shopper'})
@@ -51,7 +51,7 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
     }
 
     renderUI() {
-        const priceText = currencyFormatter.format(this.state.status === 'highestPrice' ? this.props.itemInfo.likePrice! : this.props.itemInfo.item.currentPrice )
+        const priceText = currencyFormatter.format(this.state.status === 'highestPrice' ? this.props.itemInfo.likePrice! : this.props.itemInfo.item.priceData.facePrice )
         const priceColor = this.state.status === 'outbid' ? colors.invalid : colors.black 
         const statusColor = this.state.status === 'highestPrice' ? colors.valid : colors.invalid
         return (
@@ -130,7 +130,7 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
                         iconStyle={{tintColor: this.state.status === 'highestPrice' ? colors.valid : colors.grey}}
                         onPress={() => {
                             // Unlike
-                            if (this.props.itemInfo.likePrice && this.props.itemInfo.likePrice >= this.props.itemInfo.item.lastPrice) {
+                            if (this.props.itemInfo.likePrice && this.props.itemInfo.likePrice >= this.props.itemInfo.item.priceData.lastFacePrice) {
                                 Item.unlike(this.props.itemInfo)
                                 if (this.props.onPressLike) {
                                     this.props.onPressLike(false)

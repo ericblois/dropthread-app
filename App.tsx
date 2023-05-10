@@ -1,22 +1,20 @@
-import { Lato_400Regular, Lato_400Regular_Italic, Lato_700Bold } from '@expo-google-fonts/lato';
-import { Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_700Bold } from '@expo-google-fonts/poppins';
-import { Montserrat_400Regular, Montserrat_400Regular_Italic, Montserrat_500Medium, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
-import { Nunito_400Regular, Nunito_400Regular_Italic, Nunito_700Bold } from '@expo-google-fonts/nunito';
-import { Roboto_400Regular, Roboto_400Regular_Italic, Roboto_700Bold } from '@expo-google-fonts/roboto';
-import { RobotoSlab_400Regular, RobotoSlab_700Bold } from '@expo-google-fonts/roboto-slab';
-import { Rubik_400Regular, Rubik_400Regular_Italic, Rubik_500Medium } from '@expo-google-fonts/rubik';
-import { SourceSansPro_400Regular, SourceSansPro_400Regular_Italic, SourceSansPro_700Bold } from '@expo-google-fonts/source-sans-pro';
-import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { DefaultTheme, NavigationContainer, NavigationContainerRef, createNavigationContainerRef } from "@react-navigation/native";
 import * as Font from 'expo-font';
 import React, { Component } from "react";
-import { ActivityIndicator, LogBox, StatusBar } from "react-native";
+import { ActivityIndicator, AppState, DeviceEventEmitter, LogBox, StatusBar, Text } from "react-native";
 import PageContainer from "./app/CustomComponents/PageContainer";
 import { auth } from './app/HelperFiles/Constants';
-import { RootStack } from "./app/HelperFiles/Navigation";
+import { RootStack, RootStackParamList } from "./app/HelperFiles/Navigation";
 import StartPage from "./app/StartPage";
 import UserMainScreen from "./app/UserMainScreen";
 import UserSignupPage from "./app/UserSignupPage";
 import UserDetailScreen from './app/UserDetailScreen';
+import AppUtils from './app/HelperFiles/AppUtils';
+import GeoPermPage from "./app/EntryPages/GeoPermPage"
+import EntryLoadingPage from './app/EntryPages/EntryLoadingPage';
+import FastImage from "react-native-fast-image";
+import { defaultStyles, fonts, textStyles } from "./app/HelperFiles/StyleSheet";
+import CustomTextButton from "./app/CustomComponents/CustomTextButton";
 
 //LogBox.ignoreLogs(['Calling getNode()', 'VirtualizedLists should never be nested'])
 
@@ -25,60 +23,38 @@ interface Props {
 }
 
 interface State {
-  fontsLoaded: boolean
+  errorCaught: boolean
 }
 
 export default class App extends Component<Props, State> {
 
+  navContainer = createNavigationContainerRef<RootStackParamList>()
+  //rootNav: NavigationContainerRef<ReactNavigation.RootParamList> | null = null;
+
   constructor(props: Props) {
     super(props)
     this.state = {
-      fontsLoaded: false
+      errorCaught: false
     }
+    DeviceEventEmitter.addListener('goToEntry', (data) => {
+      if (this.navContainer.isReady()) {
+        this.navContainer.navigate('entry')
+      }
+    })
   }
 
   componentDidMount() {
-
-    this.loadFonts()
+    
   }
 
-  async loadFonts() {
-    try {
-      await Font.loadAsync({
-        SourceSansProRegular: SourceSansPro_400Regular,
-        SourceSansProItalic: SourceSansPro_400Regular_Italic,
-        SourceSansProBold: SourceSansPro_700Bold,
-        RubikRegular: Rubik_400Regular,
-        RubikItalic: Rubik_400Regular_Italic,
-        RubikBold: Rubik_500Medium,
-        LatoRegular: Lato_400Regular,
-        LatoItalic: Lato_400Regular_Italic,
-        LatoBold: Lato_700Bold,
-        NunitoRegular: Nunito_400Regular,
-        NunitoItalic: Nunito_400Regular_Italic,
-        NunitoBold: Nunito_700Bold,
-        RobotoRegular: Roboto_400Regular,
-        RobotoItalic: Roboto_400Regular_Italic,
-        RobotoBold: Roboto_700Bold,
-        MontserratRegular: Montserrat_400Regular,
-        MontserratMedium: Montserrat_500Medium,
-        MontserratItalic: Montserrat_400Regular_Italic,
-        MontserratBold: Montserrat_700Bold,
-        RobotoSlabRegular: RobotoSlab_400Regular,
-        RobotoSlabBold: RobotoSlab_700Bold,
-        PoppinsRegular: Poppins_400Regular,
-        PoppinsItalic: Poppins_400Regular_Italic,
-        PoppinsMedium: Poppins_500Medium,
-        PoppinsBold: Poppins_700Bold 
-      })
-      this.setState({fontsLoaded: true})
-    } catch (e) {
-      console.error(e)
-    }
+  componentDidCatch() {
+      this.setState({errorCaught: true});
+      console.error("Caught an error!");
   }
+  
 
   render() {
-    if (this.state.fontsLoaded) {
+    if (!this.state.errorCaught) {
       return (
         <>
           <StatusBar barStyle={"dark-content"}/>
@@ -90,13 +66,18 @@ export default class App extends Component<Props, State> {
                 background: "#f00"
               }
             }}
+            ref={this.navContainer}
           >
               <RootStack.Navigator
-                initialRouteName={auth.currentUser ? "userMain" : "start"}
+                initialRouteName={"entry"}
                 screenOptions={{
                   headerShown: false,
                 }}
               >
+                <RootStack.Screen
+                  name={"entry"}
+                  component={EntryLoadingPage}
+                />
                 <RootStack.Screen
                   name={"start"}
                   component={StartPage}
@@ -113,18 +94,36 @@ export default class App extends Component<Props, State> {
                   name={"userSignup"}
                   component={UserSignupPage}
                 />
+                <RootStack.Screen
+                  name={"geoPerm"}
+                  component={GeoPermPage}
+                />
               </RootStack.Navigator>
           </NavigationContainer>
         </>
       );
-    } else {
-      return (
-        <PageContainer>
-          <ActivityIndicator
-            size={"large"}
-          />
-        </PageContainer>
-      )
+    } // Error caught
+    else {
+      <PageContainer style={{justifyContent: 'center'}}>
+        <FastImage
+            source={require("./assets/entryBackground.jpg")}
+            resizeMode="cover"
+            style={{
+                ...defaultStyles.fill,
+            }}
+        />
+        <Text
+            style={{
+                ...textStyles.largest,
+                fontFamily: Font.isLoaded(fonts.bold) ? fonts.bold : undefined,
+                alignSelf: 'center',
+            }}
+        >The app experienced an error.</Text>
+        <CustomTextButton
+          text={"Reload"}
+          onPress={() => this.setState({errorCaught: false})}
+        />
+      </PageContainer>
     }
   }
 }

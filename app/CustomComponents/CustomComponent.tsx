@@ -1,6 +1,8 @@
 import { Component } from "react";
+import AppUtils from "../HelperFiles/AppUtils";
+import { auth } from "../HelperFiles/Constants";
 
-export default class CustomComponent<P = {}, S = {}, SS = any> extends Component<P, S, SS> {
+export default class CustomComponent<P = {}, S = {errorMessage: string}, SS = any> extends Component<P, S, SS> {
     
     componentMounted = false
 
@@ -40,6 +42,16 @@ export default class CustomComponent<P = {}, S = {}, SS = any> extends Component
             super.forceUpdate(callback)
         }
     }
-
+    // Will always get run on mount
     refreshData() {}
+
+    handleError(e: any) {
+        let errorMessage = 'An error occurred.'
+        if (Object.hasOwn(e, 'code')) {
+          errorMessage = AppUtils.errorMessage(e.code);
+        } else if (Object.hasOwn(e, 'message')) {
+          errorMessage = AppUtils.errorMessage(e.message);
+        }
+        this.setState({errorMessage: errorMessage});
+    }
 }

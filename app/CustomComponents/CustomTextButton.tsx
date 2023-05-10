@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
+import { Animated, GestureResponderEvent, Pressable, PressableProps, PressableStateCallbackType, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import FastImage, { ImageStyle } from "react-native-fast-image";
 import CustomPressable from "./CustomPressable";
 import { colors, defaultStyles, fonts, styleValues, textStyles } from "../HelperFiles/StyleSheet";
@@ -15,8 +15,8 @@ type Props = {
     subtextStyle?: TextStyle,
     leftChildren?: ReactNode,
     rightChildren?: ReactNode,
-    buttonStyle?: ViewStyle,
-    wrapperStyle?: ViewStyle,
+    buttonStyle?: Animated.AnimatedProps<ViewStyle>,
+    wrapperStyle?: Animated.AnimatedProps<ViewStyle>,
     onPress?: (event?: GestureResponderEvent) => void,
     textProps?: Text['props'],
     subtextProps?: Text['props'],
@@ -83,7 +83,7 @@ export default class TextButton extends CustomComponent<Props, State> {
                 {...this.props.touchableProps}
                 style={this.props.wrapperStyle}
             >
-                <View
+                <Animated.View
                     style={{...defaultButtonStyle, ...{
                         justifyContent: this.props.leftChildren || this.props.rightChildren ? "space-between" : "center",
                     }, ...this.props.buttonStyle}}
@@ -108,7 +108,7 @@ export default class TextButton extends CustomComponent<Props, State> {
                             }}
                         />
                     }
-                </View>
+                </Animated.View>
             </CustomPressable>
         )
     }

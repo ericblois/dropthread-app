@@ -27,7 +27,13 @@
         "NSLocationWhenInUseUsageDescription": "This app uses your location.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location.",
         "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true
+          "NSAllowsArbitraryLoads": true,
+          "NSExceptionDomains": {
+            "localhost": {
+              "NSTemporaryExceptionAllowsInsecureHTTPLoads": true,
+              "NSIncludesSubdomains": true
+            }
+          }
         },
         "UIBackgroundModes": [
           "location",
@@ -51,7 +57,8 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "sdkVersion": "45.0.0"
+    "sdkVersion": "45.0.0",
+    "entryPoint": ".vscode/exponentIndex.js"
   },
   "name": "dropthread"
 }

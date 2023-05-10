@@ -1,4 +1,5 @@
 {
     "typescript.tsdk": "node_modules/typescript/lib",
-    "editor.fontSize": 11
+    "editor.fontSize": 11,
+    "cmake.configureOnOpen": false
 }

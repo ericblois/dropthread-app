@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, ImageStyle, Modal, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
+import { Animated, Image, ImageStyle, Modal, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
 import FastImage from "react-native-fast-image";
 import { accessCamera, accessPhotos, getCompressedImage } from "../HelperFiles/ClientFunctions";
 import { colors, defaultStyles, icons, screenHeight, screenWidth, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
@@ -25,6 +25,8 @@ type Props = {
     minRatio?: number,
     maxRatio?: number,
     fadeColor?: string,
+    showValidSelection: boolean,
+    ignoreInitialValidity: boolean,
     onChange?: (uris: {
         all: string[],
         new: string[],
@@ -48,8 +50,10 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
 
     scrollViewRef: ScrollView | null = null;
     lastContentWidth = 0;
-    loadCount: number
-    ratioCount: number
+    loadCount: number;
+    ratioCount: number;
+    progress: Animated.Value;
+    animationTime: number;
 
     constructor(props: Props) {
         super(props)
@@ -62,8 +66,14 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
             galleryHeight: undefined,
             cameraOpen: false
         }
+        let isValid = false
+        if (props.showValidSelection) {
+            isValid = props.uris.length > 0
+        }
         this.loadCount = 0
         this.ratioCount = 0
+        this.progress = new Animated.Value(props.ignoreInitialValidity !== false ? 1 : (isValid ? 1 : 0))
+        this.animationTime = 300
     }
     componentDidMount() {
         if (this.props.uris.length === 0) {
@@ -76,6 +86,21 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
         }
         this.getImageRatios()
         super.componentDidMount()
+    }
+    animateValidate = () => {
+        Animated.timing(this.progress, {
+            toValue: 1,
+            duration: this.animationTime,
+            useNativeDriver: false
+        }).start()
+    }
+
+    animateInvalidate = () => {
+        Animated.timing(this.progress, {
+            toValue: 0,
+            duration: this.animationTime,
+            useNativeDriver: false
+        }).start()
     }
     // On mount, get the aspect ratio of each image in the slider
     getImageRatios() {
@@ -152,6 +177,9 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                         deleted: this.state.deletedImages
                     })
                 }
+                if (this.props.showValidSelection) {
+                    this.animateValidate()
+                }
             })
         })
     }
@@ -188,6 +216,9 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     new: this.state.newImages.map(({uri}) => uri),
                     deleted: this.state.deletedImages
                 })
+            }
+            if (this.props.showValidSelection && this.state.images.length === 0) {
+                this.animateInvalidate()
             }
         })
     }
@@ -272,9 +303,17 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
     renderPlaceholder() {
         return (
             /* Placeholder */
-            <View
+            <Animated.View
             style={{
                 ...shadowStyles.small,
+                shadowOpacity: this.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [1, shadowStyles.small.shadowOpacity]
+                }),
+                shadowColor: this.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [colors.invalid, colors.black]
+                }),
                 width: screenWidth - 2*styleValues.mediumPadding,
                 height: styleValues.largestHeight*2,
                 borderRadius: styleValues.mediumPadding,
@@ -291,7 +330,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     color: colors.grey
                 }}
             />
-        </View>
+        </Animated.View>
         )
     }
     // Render a button to add an image
@@ -338,6 +377,14 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
     }
 
     render() {
+        // Check validity of input
+        if (this.props.showValidSelection && this.props.ignoreInitialValidity === false) {
+            if (this.state.images.length > 0) {
+                this.animateValidate()
+            } else {
+                this.animateInvalidate()
+            }
+        }
         return (
             <View
                 style={{

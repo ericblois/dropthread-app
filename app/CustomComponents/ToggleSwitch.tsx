@@ -44,9 +44,8 @@ export default class ToggleSwitch extends CustomComponent<ToggleSwitchProps, Sta
         <View
             style={{
                 ...defaultStyles.roundedBox,
-                ...shadowStyles.small,
                 ...styles.container,
-                ...(this.props.shadow === true ? shadowStyles.small : undefined),
+                ...(this.props.shadow !== false ? shadowStyles.small : undefined),
                 ...this.props.style
             }}
         >
@@ -81,10 +80,7 @@ const styles = StyleSheet.create({
         height: screenWidth*0.125,
         padding: styleValues.minorPadding,
         paddingHorizontal: styleValues.mediumPadding,
-        borderRadius: styleValues.mediumPadding,
-        borderWidth: styleValues.minorBorderWidth,
-        borderColor: colors.lighterGrey,
-        backgroundColor: colors.white
+        borderRadius: styleValues.mediumPadding
     },
     switch: {
 

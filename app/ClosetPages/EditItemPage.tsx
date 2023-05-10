@@ -5,7 +5,7 @@ import { DeviceEventEmitter, StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import { CustomCurrencyInput, ImageSliderSelector, LoadingCover, MenuBar, PageContainer, ScrollContainer, TagInputBox, TextDropdownAnimated, CustomTextInput, ToggleSwitch, CustomScrollView } from "../HelperFiles/CompIndex";
-import { DefaultItemData, ItemCategories, ItemConditions, ItemData, ItemFits, ItemGenders, UserData, validateItem } from "../HelperFiles/DataTypes";
+import { DefaultItemData, ItemCategories, ItemConditions, ItemData, ItemFits, ItemGenders, ItemPriceData, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList } from "../HelperFiles/Navigation";
 import { colors, icons, screenWidth, styleValues } from "../HelperFiles/StyleSheet";
@@ -27,7 +27,10 @@ type State = {
     imagesLoaded: boolean,
     priceChangeText: string,
     saved: boolean,
-    errorOccurred: boolean
+    // Signals that all inouts should check their validity
+    validityFlag: boolean,
+    isLoading: boolean,
+    errorMessage?: string
 }
 
 export default class EditItemPage extends CustomComponent<EditItemProps, State> {
@@ -41,12 +44,14 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
             imagesLoaded: false,
             priceChangeText: "",
             saved: true,
-            errorOccurred: false
+            validityFlag: false,
+            isLoading: true,
+            errorMessage: undefined
         }
     }
 
     async refreshData() {
-        this.setState({errorOccurred: false})
+        this.setState({isLoading: true, errorMessage: undefined})
         try {
             const userData = await User.get()
             // Check if this is a new item or existing item
@@ -64,11 +69,12 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                     ...this.state.itemChanges,
                     itemID: itemData.itemID
                 },
-                priceChangeText: itemData.minPrice >= 0 ? itemData.minPrice.toString() : "",
+                priceChangeText: itemData.priceData.minPrice >= 0 ? itemData.priceData.minPrice.toString() : "",
             })
-        } catch {
-            this.setState({errorOccurred: true})
+        } catch (e) {
+            this.handleError(e)
         }
+        this.setState({isLoading: false})
     }
         
     // Update the local version of this item in state
@@ -85,43 +91,23 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
             saved: false
         }
         this.setState(stateUpdate, callback)
-        console.log(item)
+        //console.log(item)
     }
     // Try to upload this item's data to the server
-    async saveItem() {
-        // Check if the new item data is valid
-        const newItemData: ItemData = {
-            ...DefaultItemData,
-            ...this.state.itemData,
-            ...this.state.itemChanges
-        }
-        if (validateItem(newItemData)) {
-            // Save item
-            if (this.props.route.params.isNew) {
-                // Create new item
-                await Item.create(newItemData)
-                // Signal to previous pages in stack to refresh their data
-                DeviceEventEmitter.emit('refreshClosetItemData')
-                this.props.navigation.goBack()
-            } else {
-                const wouldBeItem = {
-                    ...this.state.itemData,
-                    ...this.state.itemChanges
-                }
-                let isMissingProp = false
-                // Check if item has any missing properties
-                for (const key of Object.keys(DefaultItemData) as (keyof ItemData)[]) {
-                    if (wouldBeItem[key] === undefined) {
-                        isMissingProp = true
-                        break
-                    }
-                }
-                // Send only changes if not missing any props, otherwise update all props
-                await Item.update(isMissingProp ? newItemData : this.state.itemChanges)
-                // Signal to previous pages in stack to refresh their data
-                DeviceEventEmitter.emit('refreshClosetItemData')
-                this.props.navigation.goBack()
-            }
+    async saveItem(newItemData: ItemData) {
+        // Save item
+        if (this.props.route.params.isNew) {
+            // Create new item
+            await Item.create(newItemData)
+            // Signal to previous pages in stack to refresh their data
+            DeviceEventEmitter.emit('refreshClosetItemData')
+            this.props.navigation.goBack()
+        } else {
+            // Send only changes if not missing any props, otherwise update all props
+            await Item.update(this.state.itemChanges)
+            // Signal to previous pages in stack to refresh their data
+            DeviceEventEmitter.emit('refreshClosetItemData')
+            this.props.navigation.goBack()
         }
     }
     
@@ -132,6 +118,8 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                 style={{width: screenWidth, marginLeft: -styleValues.mediumPadding}}
                 minRatio={1}
                 maxRatio={16/9}
+                showValidSelection={true}
+                ignoreInitialValidity={!this.state.validityFlag}
                 onImagesLoaded={() => {
                     this.setState({imagesLoaded: true})
                 }}
@@ -147,6 +135,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                 indicatorType={'shadowSmall'}
                 placeholder={"Name"}
                 defaultValue={this.state.itemChanges.name || this.state.itemData!.name}
+                ignoreInitialValidity={!this.state.validityFlag}
                 onChangeText={(text) => {this.updateItem({name: text})}}
             />
         )
@@ -156,14 +145,16 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
         if (this.state.itemData) {
             return (
                 <CustomCurrencyInput
+                    validateFunc={() => (this.state.itemChanges.priceData?.minPrice !== undefined || this.state.itemData?.priceData?.minPrice !== undefined)}
                     indicatorType={'shadowSmall'}
                     placeholder={"Minimum price"}
-                    defaultValue={this.state.itemChanges.minPrice || this.state.itemData.minPrice > 0 ? this.state.itemData.minPrice : undefined}
+                    defaultValue={this.state.itemChanges.priceData?.minPrice || this.state.itemData.priceData?.minPrice > 0 ? this.state.itemData.priceData?.minPrice : undefined}
+                    ignoreInitialValidity={!this.state.validityFlag}
                     onChangeValue={(value) => {
                         if (value) {
-                            this.updateItem({minPrice: value})
+                            this.updateItem({priceData: {...DefaultItemData.priceData, ...this.state.itemData?.priceData, minPrice: value}})
                         } else {
-                            this.updateItem({minPrice: 0})
+                            this.updateItem({priceData: {...DefaultItemData.priceData, ...this.state.itemData?.priceData, minPrice: 0}})
                         }
                     }}
                 />
@@ -178,6 +169,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                 indicatorType={'shadowSmall'}
                 placeholder={"Size"}
                 defaultValue={capitalizeWords(this.state.itemChanges.size || this.state.itemData!.size)}
+                ignoreInitialValidity={!this.state.validityFlag}
                 onChangeText={(text) => {this.updateItem({size: text.toLowerCase()})}}
             />
         )
@@ -190,6 +182,8 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                     return {text: capitalizeWords(category), value: category}
                 })}
                 showValidSelection={true}
+                indicatorType={'shadowSmall'}
+                ignoreInitialValidity={!this.state.validityFlag}
                 placeholderText="Category"
                 defaultValue={this.state.itemChanges.category || this.state.itemData!.category}
                 onSelect={(selections) => {
@@ -207,6 +201,8 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                     return {text: text, value: gender}
                 })}
                 showValidSelection={true}
+                indicatorType={'shadowSmall'}
+                ignoreInitialValidity={!this.state.validityFlag}
                 placeholderText="Gender"
                 defaultValue={this.state.itemChanges.gender || this.state.itemData!.gender}
                 onSelect={(selections) => {
@@ -221,6 +217,8 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
             <TextDropdownAnimated
                 items={ItemConditions.map((condition) => ({text: capitalizeWords(condition), value: condition}))}
                 showValidSelection={true}
+                indicatorType={'shadowSmall'}
+                ignoreInitialValidity={!this.state.validityFlag}
                 placeholderText={"Condition"}
                 defaultValue={this.state.itemChanges.condition || this.state.itemData!.condition}
                 onSelect={(selections) => {
@@ -238,6 +236,8 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                     return {text: text, value: fit}
                 })}
                 showValidSelection={true}
+                indicatorType={'shadowSmall'}
+                ignoreInitialValidity={!this.state.validityFlag}
                 placeholderText="Fit"
                 defaultValue={this.state.itemChanges.fit || this.state.itemData!.fit}
                 onSelect={(selections) => {
@@ -262,13 +262,13 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
     renderVisibilitySwitch() {
         return (
             <ToggleSwitch
-                text={"Hide this item"}
+                text={"Publicly visible"}
                 textStyle={{fontSize: styleValues.smallTextSize}}
                 switchProps={{
-                    value: this.state.itemChanges.isVisible !== undefined ? !this.state.itemChanges.isVisible : !this.state.itemData!.isVisible
+                    value: this.state.itemChanges.isVisible !== undefined ? this.state.itemChanges.isVisible : this.state.itemData!.isVisible
                 }}
                 onToggle={(value) => {
-                    this.updateItem({isVisible: !value})
+                    this.updateItem({isVisible: value})
                 }}
             />
         )
@@ -292,11 +292,11 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                     {this.renderImageSelector()}
                     {this.renderNameInput()}
                     {this.renderSizeInput()}
-                    {this.renderPriceInput()}
-                    {this.renderCategoryDropdown()}
                     {this.renderGenderDropdown()}
+                    {this.renderCategoryDropdown()}
                     {this.renderConditionDropdown()}
                     {this.renderFitDropdown()}
+                    {this.renderPriceInput()}
                     {this.renderStylesInput()}
                     {this.renderVisibilitySwitch()}
                 </CustomScrollView>
@@ -306,12 +306,12 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
     }
 
     renderLoading() {
-        if (!this.state.userData) {
+        if (this.state.isLoading) {
             return (
               <LoadingCover
                 size={"large"}
-                showError={this.state.errorOccurred}
-                errorText={"Could not load item."}
+                showError={!!this.state.errorMessage}
+                errorText={this.state.errorMessage}
                 onErrorRefresh={() => this.refreshData()}
             />
             )
@@ -319,6 +319,11 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
     }
 
     render() {
+        const currentItemData = {
+            ...DefaultItemData,
+            ...this.state.itemData,
+            ...this.state.itemChanges
+        }
         return (
             <PageContainer headerText={"Edit Item"}>
                 {this.renderUI()}
@@ -331,9 +336,14 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                     },
                     {
                         iconSource: icons.checkBox,
-                        iconStyle: {tintColor: this.state.itemData && validateItem(this.state.itemData) ? colors.darkGrey : colors.lightestGrey},
-                        buttonProps: {disabled: !this.state.itemData || !validateItem(this.state.itemData)},
-                        onPress: async () => await this.saveItem(),
+                        iconStyle: {tintColor: this.state.itemData && Item.validate(currentItemData) ? colors.darkGrey : colors.lightestGrey},
+                        onPress: async () => {
+                            if (this.state.itemData && Item.validate(currentItemData)) {
+                                await this.saveItem(currentItemData)
+                            } else {
+                                this.setState({validityFlag: true});
+                            }
+                        },
                         showLoading: true
                     },
                     ]}

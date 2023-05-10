@@ -27,6 +27,7 @@ type State = {
     password?: string,
     passwordConfirm?: string,
     isLoading: boolean,
+    errorMessage?: string
 }
 
 
@@ -46,6 +47,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
             password: undefined,
             passwordConfirm: undefined,
             isLoading: false,
+            errorMessage: undefined
         }
     }
 
@@ -79,8 +81,8 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
         const date = Date.parse(`${this.state.userData.birthYear}-${this.state.userData.birthMonth}-${this.state.userData.birthDay}`)
         // Get number of days between today and birthday
         const timeDiff = ((new Date()).getTime() - date)/(86400000);
-        // Check if this birthday is more than 13 years old (365.24*13=4748.12)
-        return timeDiff >= 4748.12
+        // Check if this birthday is more than 13 years old (365.24*16=5843.84)
+        return timeDiff >= 5844
     }
 
     validateCoords() {
@@ -100,7 +102,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
 
     validateInputs() {
         for (const key of Object.keys(DefaultUserData) as (keyof UserData)[]) {
-            if (key === "userID" || key == 'region') {
+            if (key === "userID" || key == 'region' || key == 'expoPushToken') {
                 continue
             }
             if (this.state.userData[key] === undefined || this.state.userData[key] === "") {
@@ -108,10 +110,10 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
             }
         }
         return (
-            this.validateName() &&
-            this.validateEmail() &&
-            this.validatePass() &&
-            this.validateConfirm() &&
+            this.validateName(this.state.userData.name) &&
+            this.validateEmail(this.state.userData.email) &&
+            this.validatePass(this.state.password) &&
+            this.validateConfirm(this.state.passwordConfirm) &&
             this.validateBirthday() &&
             this.validateCoords()
         )
@@ -135,9 +137,25 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                 this.props.navigation.navigate("userMain")
             })
         }).catch((e) => {
-            this.setState({isLoading: false})
-            throw e
+            this.handleError(e)
+            this.setState({isLoading: false});
         })
+    }
+
+    renderError() {
+        if (this.state.errorMessage) {
+            return <Text
+                style={{
+                    ...textStyles.smaller,
+                    color: colors.invalid,
+                    textAlign: 'left',
+                    paddingVertical: styleValues.mediumPadding
+                }}
+                numberOfLines={2}
+            >
+                {this.state.errorMessage}
+            </Text>
+        }
     }
 
     renderInputs() {
@@ -164,6 +182,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     onChangeText={(text) => this.setState({userData: {...this.state.userData, email: text} as UserData})}
                     placeholder={"Email"}
                     textContentType={"emailAddress"}
+                    keyboardType={'email-address'}
                 />
                 <Text style={styles.inputDescription}>
                     Use at least 6 characters in your password.
@@ -199,7 +218,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     secureTextEntry={true}
                 />
                 <Text style={styles.inputDescription}>
-                    You must be 13 years of age or older to use this service.
+                    You must be 16 years of age or older to use this service.
                 </Text>
                 {/* Birth date */}
                 <DateScrollPicker
@@ -271,10 +290,12 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
     }
     
     render() {
+        let isValid = this.validateInputs();
         return (
         <PageContainer
             headerText={'Sign Up'}
         >
+            {this.renderError()}
             {this.renderInputs()}
             {this.renderLoading()}
             <MenuBar

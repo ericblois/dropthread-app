@@ -2,10 +2,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { ExchangeData, ItemData, ItemInfo, ItemInteraction, OfferData, OfferInfo } from "../HelperFiles/DataTypes";
 
 export type RootStackParamList = {
+    entry: undefined,
     start: undefined,
     userMain: undefined,
     userDetail: any,
-    userSignup: undefined
+    userSignup: undefined,
+    geoPerm: undefined,
+    notifPerm: undefined,
+    camPerm: undefined,
+    photoPerm: undefined,
 }
 
 export const RootStack = createStackNavigator<RootStackParamList>();

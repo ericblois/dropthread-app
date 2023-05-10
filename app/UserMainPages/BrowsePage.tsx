@@ -3,12 +3,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { FilterSearchBar, ItemLargeCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
+import { CustomImageButton, FilterSearchBar, ItemLargeCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
 import { bottomInset, colors, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
+import AppUtils from "../HelperFiles/AppUtils";
 
 type BrowseNavigationProp = StackNavigationProp<UserMainStackParamList, "browse">;
 
@@ -25,7 +26,7 @@ type State = {
   searchFilters: ItemFilter,
   shouldRefresh: boolean,
   unupdatedViews: string[],
-  errorDidOccur: boolean
+  errorMessage?: string
 }
 
 //const AnimatedFilterScrollBar = Animated.createAnimatedComponent(FilterScrollBar);
@@ -45,12 +46,12 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
           },
           shouldRefresh: false,
           unupdatedViews: [],
-          errorDidOccur: false
+          errorMessage: undefined
         }
     }
 
     componentDidMount() {
-      this.getUserData()
+      this.getUserData();
       this.refreshSearchResults()
       super.componentDidMount()
     }
@@ -58,27 +59,19 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
     componentWillUnmount(): void {
         super.componentWillUnmount()
     }
+    
     // Retrieve this user's data
     async getUserData() {
-      try {
-        const userData = await User.get()
-        this.setState({userData: userData})
-      } catch (e) {
-        this.setState({errorDidOccur: true})
-      }
+      const userData = await User.get().catch((e) => this.handleError(e))
+      this.setState({userData: userData});
     }
     // Attempt to retrieve items that fit current filter
     async refreshSearchResults() {
-      try {
-        // Set carousel to first item
-        //this.carouselComp?.snapToItem(0)
-        this.setState({itemsInfo: undefined})
-        const results = await Item.getFromFilter(this.state.searchFilters)
-        this.setState({itemsInfo: results})
-      } catch (e) {
-        console.error(e)
-        this.setState({errorDidOccur: true})
-      }
+      // Set carousel to first item
+      //this.carouselComp?.snapToItem(0)
+      this.setState({itemsInfo: undefined})
+      const results = await Item.getFromFilter(this.state.searchFilters).catch((e) => this.handleError(e))
+      this.setState({itemsInfo: results})
     }
     // Render a swipable carousel of items
     renderCarousel() {
@@ -94,7 +87,19 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
                 justifyContent: "center"
               }}
             >
-              <Text style={{...textStyles.small, color: colors.grey}}>No items were found.</Text>
+              <Text style={{...textStyles.smallHeader, color: colors.grey}}>No items were found.</Text>
+              <CustomImageButton
+                iconSource={icons.refresh}
+                buttonStyle={{
+                    height: styleValues.iconMediumSize,
+                    width: styleValues.iconMediumSize
+                }}
+                iconStyle={{tintColor: colors.lightGrey}}
+                onPress={() => {
+                  this.getUserData();
+                  this.refreshSearchResults();
+                }}
+              />
             </View>
           )
         }
@@ -139,9 +144,9 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
             <LoadingCover
               style={{top: styleValues.mediumPadding}}
               size={"large"}
-              showError={this.state.errorDidOccur}
-              errorText={`An error occurred.`}
-              onErrorRefresh={() => this.setState({errorDidOccur: false}, () => {
+              showError={this.state.errorMessage !== undefined}
+              errorText={this.state.errorMessage}
+              onErrorRefresh={() => this.setState({errorMessage: undefined}, () => {
                 this.getUserData()
                 this.refreshSearchResults()
               })}
@@ -205,7 +210,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
             </PageContainer>
         );
       } catch (e) {
-        this.setState({errorDidOccur: true})
+        this.handleError(e)
       }
     }
 }

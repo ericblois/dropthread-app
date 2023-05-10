@@ -38,26 +38,6 @@ export const getItemKeywords = (item: ItemData) => {
   return extractKeywords(fullText)
 }
 
-/* --- KEEP THIS HERE, IMPORTANT --- */
-// Validate an item's data
-export const validateItem = (item: ItemData) => {
-  return (
-      item.name.length > 0
-   && item.category !== ""
-   && item.gender !== ""
-   && item.size !== ""
-   && item.fit !== ""
-   && item.condition !== ""
-   && item.images.length > 0
-   && item.minPrice >= 0
-   && item.styles.length <= 10
-   && item.country !== ""
-   && item.userID !== ""
-  )
-}
-
-module.exports.validateItem = validateItem
-
 export const countriesList = ["canada", "united_states"] as const
 export type Country = (typeof countriesList)[number] | ""
 
@@ -173,7 +153,7 @@ export type NotificationData = {
   imageURL?: string
 }
 
-export const UserGenders = ["male", "female", "non-binary"] as const
+export const UserGenders = ["female", "male", "non-binary"] as const
 export type UserGender = (typeof UserGenders)[number]
 
 export type UserData = {
@@ -224,7 +204,7 @@ export const validateUserData = (userData: UserData) => {
       return false
   }
   const date = Date.parse(`${userData.birthYear}-${userData.birthMonth}-${userData.birthDay}`)
-  if (date === NaN) {
+  if (isNaN(date)) {
     return false
   }
   // Get number of days between today and birthday
@@ -253,8 +233,20 @@ export const ItemCategories = [
   "other"
 ] as const
 
-export const itemPercentIncrease = 1.05
-export const itemDollarIncrease = 2.5
+export const percentFee = 10
+export const dollarFee = 1
+export const percentIncrease = 5
+export const dollarIncrease = 2
+
+export type ItemPriceData = {
+  minPrice: number,
+  basePrice: number,
+  feePrice: number,
+  facePrice: number,
+  lastBasePrice: number,
+  lastFeePrice: number,
+  lastFacePrice: number
+}
 
 export type ItemCategory = (typeof ItemCategories)[number] | ""
 
@@ -276,9 +268,7 @@ export type ItemData = {
   offerIDs: string[],
   name: string,
   description: string,
-  minPrice: number,
-  lastPrice: number,
-  currentPrice: number,
+  priceData: ItemPriceData,
   category: ItemCategory,
   gender: ItemGender,
   size: string,
@@ -302,9 +292,15 @@ export const DefaultItemData: Readonly<ItemData> = {
   offerIDs: [],
   name: "",
   description: "",
-  minPrice: 0,
-  lastPrice: 0,
-  currentPrice: 0,
+  priceData: {
+    minPrice: 0,
+    basePrice: 0,
+    feePrice: dollarFee,
+    facePrice: dollarFee,
+    lastBasePrice: 0,
+    lastFeePrice: dollarFee,
+    lastFacePrice: dollarFee
+  },
   category: "",
   gender: "",
   size: "",
@@ -319,7 +315,7 @@ export const DefaultItemData: Readonly<ItemData> = {
   viewCount: 0,
   likeCount: 0,
   favCount: 0,
-  isVisible: false
+  isVisible: true
 }
 
 export type ItemInfo = {

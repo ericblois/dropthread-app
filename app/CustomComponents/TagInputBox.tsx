@@ -1,9 +1,10 @@
 import React from "react";
-import { KeyboardAvoidingView, Text, TextInput, TextStyle, View, ViewStyle } from "react-native";
+import { FlatList, KeyboardAvoidingView, NativeSyntheticEvent, Pressable, ScrollView, Text, TextInput, TextInputSubmitEditingEventData, TextStyle, View, ViewStyle } from "react-native";
 import { colors, defaultStyles, icons, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImageButton from "./CustomImageButton";
 import ScrollContainer from "./ScrollContainer";
+import CustomIconButton from "./CustomIconButton";
 
 type TagInputBoxProps = {
     boxStyle?: ViewStyle,
@@ -15,7 +16,7 @@ type TagInputBoxProps = {
     focusOnStart?: boolean,
     shadow?: boolean,
     onChange?: (tags: string[]) => void,
-    validateFunc?: (tags: string[]) => boolean
+    onSubmit?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void
 }
 
 type State = {
@@ -42,11 +43,12 @@ export default class TagInputBox extends CustomComponent<TagInputBoxProps, State
             <View
                 style={{
                     flexDirection: "row",
-                    alignItems: "center",
-                    borderRadius: styleValues.minorPadding,
-                    padding: styleValues.minorPadding,
                     marginHorizontal: styleValues.minorPadding,
-                    backgroundColor: colors.lightestGrey
+                    ...defaultStyles.roundedBox,
+                    ...shadowStyles.small,
+                    padding: styleValues.minorPadding,
+                    width: undefined,
+                    height: styleValues.smallHeight
                 }}
                 key={text}
             >
@@ -57,13 +59,15 @@ export default class TagInputBox extends CustomComponent<TagInputBoxProps, State
                         ...this.props.textStyle
                     }}
                 >{text}</Text>
-                <CustomImageButton
-                    iconSource={icons.cross}
+                <CustomIconButton
+                    name="close"
+                    type="MaterialIcons"
                     buttonStyle={{
-                        width: styleValues.iconSmallestSize,
-                        height: styleValues.iconSmallestSize,
+                        width: styleValues.iconSmallSize,
+                        height: styleValues.iconSmallSize,
                         marginHorizontal: styleValues.minorPadding
                     }}
+                    animationType="opacity"
                     onPress={() => this.removeTag(text)}
                 />
             </View>
@@ -91,84 +95,110 @@ export default class TagInputBox extends CustomComponent<TagInputBoxProps, State
 
     render() {
         return (
-            <KeyboardAvoidingView
-                {...this.props.boxProps}
-                style={{width: "100%"}}
-                contentContainerStyle={{
-                    ...defaultStyles.roundedBox,
-                    height: undefined,
-                    ...(this.props.shadow !== false ? shadowStyles.small : undefined),
-                    borderColor: this.props.validateFunc ? (this.props.validateFunc(this.state.tags) ? colors.valid : colors.invalid) : colors.lighterGrey,
-                    borderWidth: styleValues.minorBorderWidth,
-                    ...this.props.boxStyle
+            <Pressable
+                onPress={() => {
+                    if (this.textInput !== null) {
+                        this.textInput?.focus()
+                    }
                 }}
-                behavior={"position"}
-                enabled={this.state.shouldAvoid && this.props.avoidKeyboard === true}
             >
-                {this.state.tags.length > 0 ? 
-                    <ScrollContainer
-                        containerStyle={{
-                            width: "100%",
-                            height: styleValues.smallHeight,
-                            margin: styleValues.minorPadding
-                        }}
-                        contentContainerStyle={{padding: 0, paddingHorizontal: styleValues.minorPadding}}
-                        fadeStartColor={colors.white}
-                        fadeEndColor={colors.white}
-                        horizontal
-                    >
-                        {this.state.tags.map((tag) => this.renderTag(tag))}
-                    </ScrollContainer>
-                : undefined}
-                <TextInput
-                    style={[defaultStyles.inputText, this.props.textStyle]}
-                    disableFullscreenUI={true}
-                    focusable={true}
-                    textAlign={"center"}
-                    textAlignVertical={"center"}
-                    autoCorrect={false}
-                    clearButtonMode={"while-editing"}
-                    ref={(textInput) => {this.textInput = textInput}}
-                    onLayout={() => {
-                        if (this.props.focusOnStart === true && this.textInput !== null) {
-                            this.textInput.focus()
-                        }
+                <KeyboardAvoidingView
+                    {...this.props.boxProps}
+                    style={{width: "100%", ...(this.props.shadow !== false ? shadowStyles.small : undefined)}}
+                    contentContainerStyle={{
+                        ...defaultStyles.roundedBox,
+                        padding: styleValues.minorPadding,
+                        paddingBottom: styleValues.mediumPadding,
+                        height: undefined,
+                        overflow: 'hidden',
+                        ...this.props.boxStyle
                     }}
-                    {...this.props.textProps}
-                    value={this.state.text}
-                    onFocus={(e) => {
-                        this.setState({shouldAvoid: true})
-                        if (this.props.textProps?.onFocus) {
-                            this.props.textProps.onFocus(e)
-                        }
-                    }}
-                    onEndEditing={(e) => {
-                        this.setState({shouldAvoid: false})
-                        if (this.props.textProps?.onEndEditing) {
-                            this.props.textProps.onEndEditing(e)
-                        }
-                    }}
-                    onChangeText={(text) => {
-                        if (text.includes(' ') || text.includes('\n') || text.includes('\t')) {
-                            let newText = text.split(' ')[0]
-                            newText = newText.split('\n')[0]
-                            newText = newText.split('\t')[0]
-                            newText = newText.replaceAll(/[^a-zA-Z]/g, '').toLowerCase()
-                            if (newText.length > 0) {
-                                this.addTag(newText)
-                                this.setState({text: ''})
-                            }
-                        } else {
-                            this.setState({text: text})
-                        }
-                        if (this.props.textProps?.onChangeText) {
-                            this.props.textProps.onChangeText(text)
-                        }
-                    }}
+                    behavior={"position"}
+                    enabled={this.state.shouldAvoid && this.props.avoidKeyboard === true}
                 >
-                    {this.props.children}
-                </TextInput>
-            </KeyboardAvoidingView>
+                    {this.state.tags.length > 0 ? 
+                        <ScrollView
+                            style={{
+                                width: "100%",
+                                height: styleValues.smallHeight,
+                                margin: styleValues.minorPadding,
+                                overflow: 'visible',marginBottom: styleValues.mediumPadding
+                            }}
+                            contentContainerStyle={{
+                                padding: 0,
+                                //paddingHorizontal: styleValues.minorPadding,
+                                overflow: 'visible'
+                            }}
+                            showsHorizontalScrollIndicator={false}
+                            showsVerticalScrollIndicator={false}
+                            horizontal
+                        >
+                            <Pressable style={{flexDirection: 'row'}}>
+                                {this.state.tags.map((tag) => this.renderTag(tag))}
+                            </Pressable>
+                        </ScrollView>
+                    : undefined}
+                    <TextInput
+                        style={[defaultStyles.inputText, {marginTop: styleValues.minorPadding}, this.props.textStyle]}
+                        disableFullscreenUI={true}
+                        focusable={true}
+                        textAlign={"center"}
+                        textAlignVertical={"center"}
+                        autoCorrect={false}
+                        clearButtonMode={"while-editing"}
+                        ref={(textInput) => {this.textInput = textInput}}
+                        onLayout={() => {
+                            if (this.props.focusOnStart === true && this.textInput !== null) {
+                                this.textInput.focus()
+                            }
+                        }}
+                        {...this.props.textProps}
+                        maxLength={20}
+                        value={this.state.text}
+                        onFocus={(e) => {
+                            this.setState({shouldAvoid: true})
+                            if (this.props.textProps?.onFocus) {
+                                this.props.textProps.onFocus(e)
+                            }
+                        }}
+                        onEndEditing={(e) => {
+                            if (e.nativeEvent.text.length > 0) {
+                                let newText = e.nativeEvent.text.split(' ')[0]
+                                newText = newText.split('\n')[0]
+                                newText = newText.split('\t')[0]
+                                newText = newText.replaceAll(/[^a-zA-Z]/g, '').toLowerCase()
+                                if (newText.length > 0) {
+                                    this.addTag(newText)
+                                    this.setState({text: ''})
+                                }
+                            }
+                            this.setState({shouldAvoid: false})
+                            if (this.props.textProps?.onEndEditing) {
+                                this.props.textProps.onEndEditing(e)
+                            }
+                        }}
+                        onChangeText={(text) => {
+                            if (text.includes(' ') || text.includes('\n') || text.includes('\t')) {
+                                let newText = text.split(' ')[0]
+                                newText = newText.split('\n')[0]
+                                newText = newText.split('\t')[0]
+                                newText = newText.replaceAll(/[^a-zA-Z]/g, '').toLowerCase()
+                                if (newText.length > 0) {
+                                    this.addTag(newText)
+                                    this.setState({text: ''})
+                                }
+                            } else {
+                                this.setState({text: text})
+                            }
+                            if (this.props.textProps?.onChangeText) {
+                                this.props.textProps.onChangeText(text)
+                            }
+                        }}
+                    >
+                        {this.props.children}
+                    </TextInput>
+                </KeyboardAvoidingView>
+            </Pressable>
             )
     }
 }

@@ -8,13 +8,13 @@ type CustomTextInputProps = Omit<TextInputProps, 'defaultValue'> & {
     boxStyle?: ViewStyle,
     boxProps?: KeyboardAvoidingView['props'],
     focusOnStart?: boolean,
-    indicatorType?: 'shadowSmall' | 'shadow' | 'outline',
-    initialValidity?: boolean,
     animationTime?: number,
     prefix?: string,
     defaultValue?: number | null,
     onChangeValue?: (value: number | null) => void,
-    validateFunc?: (value: number | null) => boolean
+    validateFunc?: (value: number | null) => boolean,
+    indicatorType?: 'shadowSmall' | 'shadow' | 'outline',
+    ignoreInitialValidity?: boolean
 }
 
 type State = {
@@ -41,10 +41,7 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
         this.state = {
             value: props.defaultValue || null
         }
-        this.progress = new Animated.Value(props.initialValidity ? 
-            isValid ? 1 : 0
-            : 1
-            )
+        this.progress = new Animated.Value(props.ignoreInitialValidity !== false ? 1 : (isValid ? 1 : 0))
         this.animationTime = props.animationTime || 300
         this.animatedStyles = {
             shadowSmall: {
@@ -97,12 +94,20 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
     }
 
     render() {
+        // Check validity of input
+        if (this.props.validateFunc && !this.props.ignoreInitialValidity) {
+            if (this.props.validateFunc(this.state.value)) {
+                this.animateValidate();
+            } else {
+                this.animateInvalidate();
+            }
+        }
         return (
             <Animated.View
                 {...this.props.boxProps}
                 style={{
                     ...defaultStyles.roundedBox,
-                    //height: styleValues.smallHeight,
+                    height: styleValues.smallHeight,
                     flexDirection: 'row',
                     ...(this.props.indicatorType ? this.animatedStyles[this.props.indicatorType] : undefined),
                     ...this.props.boxStyle

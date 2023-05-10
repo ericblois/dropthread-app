@@ -269,7 +269,7 @@ export const defaultStyles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
     borderRadius: styleValues.mediumPadding,
     color: colors.majorTextColor,
   },

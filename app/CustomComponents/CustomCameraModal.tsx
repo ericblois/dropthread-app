@@ -4,11 +4,12 @@ import { AutoFocus, Camera, CameraType, FlashMode } from "expo-camera";
 import { CameraCapturedPicture, ImageType } from "expo-camera/build/Camera.types";
 import React from "react";
 import { LayoutRectangle, Text, View } from "react-native";
-import { CustomImage, CustomPressable } from "../HelperFiles/CompIndex";
 import { bottomInset, colors, defaultStyles, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomIconButton from "./CustomIconButton";
 import CustomModal from "./CustomModal";
+import CustomImage from "./CustomImage";
+import CustomPressable from "./CustomPressable";
 
 type CustomCameraModalProps = {
   visible: boolean,

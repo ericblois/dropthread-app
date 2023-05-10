@@ -1,10 +1,27 @@
 import { httpsCallable } from "firebase/functions"
-import { ItemData, itemDollarIncrease, ItemFilter, ItemInfo, ItemInteraction, itemPercentIncrease } from "../HelperFiles/DataTypes"
+import { ItemData, dollarIncrease, ItemFilter, ItemInfo, ItemInteraction, percentIncrease } from "../HelperFiles/DataTypes"
 import { cloudRun, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import User from "./User"
 
 export default abstract class Item {
+
+    public static validate(item: ItemData) {
+        let ex = false || 0
+        return (
+            item.name.length > 0
+         && item.category !== ""
+         && item.gender !== ""
+         && item.size !== ""
+         && item.fit !== ""
+         && item.condition !== ""
+         && item.images.length > 0
+         && item.priceData.minPrice >= 0
+         && item.styles.length <= 10
+         && item.country !== ""
+         && item.userID !== ""
+        )
+    }
 
     // Retrieve items by their ID
     public static async getFromIDs(itemIDs: string[]) {
@@ -84,6 +101,7 @@ export default abstract class Item {
     // Create a new item
     public static async create(itemData: ItemData) {
         // Create item
+        let u = User.getCurrent()
         if (itemData.userID !== User.getCurrent().uid) {
             throw new Error("User not permitted to create this item")
         }
@@ -166,9 +184,9 @@ export default abstract class Item {
         })
         // Return updated local version
         itemInfo.likeTime = Date.now()
-        itemInfo.likePrice = itemInfo.item.currentPrice
-        itemInfo.item.lastPrice = itemInfo.item.currentPrice
-        itemInfo.item.currentPrice = Math.max(itemInfo.item.currentPrice*itemPercentIncrease, itemInfo.item.currentPrice + itemDollarIncrease)
+        itemInfo.likePrice = itemInfo.item.priceData.basePrice
+        itemInfo.item.priceData.lastBasePrice = itemInfo.item.priceData.basePrice
+        itemInfo.item.priceData.basePrice = Math.max(itemInfo.item.priceData.basePrice*(1 + percentIncrease/100), itemInfo.item.priceData.basePrice + dollarIncrease)
         itemInfo.item.likeCount += 1
     }
     // Unlike an item, update local version and server version
@@ -180,16 +198,16 @@ export default abstract class Item {
         // Update local version
         itemInfo.likeTime = null
         itemInfo.likePrice = null
-        itemInfo.item.currentPrice = itemInfo.item.lastPrice
+        itemInfo.item.priceData.basePrice = itemInfo.item.priceData.lastBasePrice
         // Revert lastPrice
-        if (itemInfo.item.lastPrice*(1 - 1/itemPercentIncrease) >= itemDollarIncrease) {
-            itemInfo.item.lastPrice /= 1.05
+        if (itemInfo.item.priceData.lastBasePrice*(1/(1 + percentIncrease/100)) >= dollarIncrease) {
+            itemInfo.item.priceData.lastBasePrice *= 1/(1 + percentIncrease/100)
         } else {
-            itemInfo.item.lastPrice -= 2.5
+            itemInfo.item.priceData.lastBasePrice -= 2.5
         }
         // Check if last price is now lower than the minimum prcie
-        if (itemInfo.item.lastPrice < itemInfo.item.minPrice) {
-            itemInfo.item.lastPrice = itemInfo.item.minPrice
+        if (itemInfo.item.priceData.lastBasePrice < itemInfo.item.priceData.minPrice) {
+            itemInfo.item.priceData.lastBasePrice = itemInfo.item.priceData.minPrice
         }
         itemInfo.item.likeCount -= 1
     }

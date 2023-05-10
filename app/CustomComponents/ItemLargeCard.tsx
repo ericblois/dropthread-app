@@ -68,7 +68,7 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                 iconStyle={{tintColor: this.props.itemInfo.likePrice ? colors.valid : colors.lightGrey}}
                 onPress={() => {
                     // Unlike
-                    if (this.props.itemInfo.likePrice && this.props.itemInfo.likePrice >= this.props.itemInfo.item.lastPrice) {
+                    if (this.props.itemInfo.likePrice && this.props.itemInfo.likePrice >= this.props.itemInfo.item.priceData.lastFacePrice) {
                         Item.unlike(this.props.itemInfo)
                         if (this.props.onPressLike) {
                             this.props.onPressLike(false)
@@ -129,7 +129,7 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                             ...textStyles.large,
                             textAlign: "right",
                             }}
-                        >{currencyFormatter.format(this.props.itemInfo.item.currentPrice)}</Text>
+                        >{currencyFormatter.format(this.props.itemInfo.item.priceData.facePrice)}</Text>
                     </View>
                     {/* Gender / category, distance */}
                     <View style={{flexDirection: "row", justifyContent: 'space-between'}}>

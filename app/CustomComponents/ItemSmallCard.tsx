@@ -63,7 +63,7 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
                     >{this.props.itemInfo.item.name}</Text>
                     {/* Price */}
                     <Text style={{...styles.headerText, textAlign: 'right'}}
-                    >{currencyFormatter.format(this.props.showCustomPrice || this.props.itemInfo.item.currentPrice)}</Text>
+                    >{currencyFormatter.format(this.props.showCustomPrice || this.props.itemInfo.item.priceData.facePrice)}</Text>
                 </View>
                 {/* Gender / category, distance */}
                 <View style={{flexDirection: "row", justifyContent: 'space-between', alignItems: 'flex-end'}}>

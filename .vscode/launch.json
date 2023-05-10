@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Debug on Simulator iOS",
+            "request": "attach",
+            "type": "reactnative",
+            "cwd": "${workspaceFolder}",
+            "sourceMaps": true,
+            "preLaunchTask": "Expo Run iOS",
+            "postDebugTask": "React Native: Stop Packager",
+        },
+        {
+            "name": "Debug on Device iOS",
+            "request": "attach",
+            "type": "reactnative",
+            "cwd": "${workspaceFolder}",
+            "sourceMaps": true,
+            "preLaunchTask": "Expo Run iOS Device",
+            "postDebugTask": "React Native: Stop Packager",
+        },
+        {
+            "name": "Attach to App iOS",
+            "request": "attach",
+            "type": "reactnative",
+            "cwd": "${workspaceFolder}",
+            "sourceMaps": true,
+        }
+    ]
+}
