@@ -11,6 +11,8 @@ type CustomTextInputProps = Omit<TextInputProps, 'defaultValue'> & {
     animationTime?: number,
     prefix?: string,
     defaultValue?: number | null,
+    minValue?: number,
+    maxValue?: number,
     onChangeValue?: (value: number | null) => void,
     validateFunc?: (value: number | null) => boolean,
     indicatorType?: 'shadowSmall' | 'shadow' | 'outline',
@@ -130,6 +132,7 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
                     textAlignVertical={"center"}
                     autoCorrect={false}
                     clearButtonMode={"while-editing"}
+                    maxLength={5}
                     ref={(textInput) => {this.textInput = textInput}}
                     onLayout={() => {
                         if (this.props.focusOnStart === true && this.textInput !== null) {
@@ -159,6 +162,12 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
                         if (isNaN(parsedValue) || parsedValue < 0) {
                             parsedValue = null
                             parsedText = ''
+                        } else if (this.props.minValue !== undefined && parsedValue < this.props.minValue) {
+                            parsedValue = this.props.minValue
+                            parsedText = parsedValue.toString()
+                        } else if (this.props.maxValue !== undefined && parsedValue > this.props.maxValue) {
+                            parsedValue = this.props.maxValue
+                            parsedText = parsedValue.toString()
                         } else {
                             parsedValue = Math.round(parsedValue * 100) / 100
                             // Remove potential second period

@@ -136,7 +136,7 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                         <Text style={{...styles.minorText}}>{
                         capitalizeWords(`${this.props.itemInfo.item.gender !== 'unisex' ? this.props.itemInfo.item.gender + `'s` : ``} ${this.props.itemInfo.item.category !== 'other' ? this.props.itemInfo.item.category : ''}`)
                         }</Text>
-                        <Text style={{...styles.minorText, textAlign: "right"}}>{`${this.props.itemInfo.distance} km`}</Text>
+                        <Text style={{...styles.minorText, textAlign: "right"}}>{`within ${this.props.itemInfo.distance} km`}</Text>
                     </View>
                 </View>
                 {/* Popular item? */}

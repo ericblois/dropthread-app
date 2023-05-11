@@ -222,19 +222,9 @@ export type Coords = {
   long: number
 }
 
-export const ItemCategories = [
-  "top",
-  "bottom",
-  "dress",
-  "outerwear",
-  "accessory",
-  "jewelry",
-  "shoes",
-  "other"
-] as const
-
 export const percentFee = 10
 export const dollarFee = 1
+export const maxFee = 10
 export const percentIncrease = 5
 export const dollarIncrease = 2
 
@@ -247,7 +237,16 @@ export type ItemPriceData = {
   lastFeePrice: number,
   lastFacePrice: number
 }
-
+export const ItemCategories = [
+  "top",
+  "bottom",
+  "dress",
+  "outerwear",
+  "accessory",
+  "jewelry",
+  "shoes",
+  "other"
+] as const
 export type ItemCategory = (typeof ItemCategories)[number] | ""
 
 export const ItemGenders = ["women", "men", "unisex"] as const

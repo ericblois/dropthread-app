@@ -1,27 +1,10 @@
 import { httpsCallable } from "firebase/functions"
-import { ItemData, dollarIncrease, ItemFilter, ItemInfo, ItemInteraction, percentIncrease } from "../HelperFiles/DataTypes"
+import { ItemData, dollarIncrease, ItemFilter, ItemInfo, ItemInteraction, percentIncrease, ItemCategories, ItemGenders, ItemFits, ItemConditions, countriesList, DefaultItemData, ItemPriceData } from "../HelperFiles/DataTypes"
 import { cloudRun, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import User from "./User"
 
 export default abstract class Item {
-
-    public static validate(item: ItemData) {
-        let ex = false || 0
-        return (
-            item.name.length > 0
-         && item.category !== ""
-         && item.gender !== ""
-         && item.size !== ""
-         && item.fit !== ""
-         && item.condition !== ""
-         && item.images.length > 0
-         && item.priceData.minPrice >= 0
-         && item.styles.length <= 10
-         && item.country !== ""
-         && item.userID !== ""
-        )
-    }
 
     // Retrieve items by their ID
     public static async getFromIDs(itemIDs: string[]) {
@@ -49,12 +32,12 @@ export default abstract class Item {
         return result.concat(cacheResult.validItems)
     }
     // Retrieve all items from a specific user
-    public static async getFromUser(userID?: string) {
+    public static async getFromUser(userID?: string, forceRefresh?: boolean) {
         const id = userID ? userID : User.getCurrent().uid
         // Determine which item IDs should be refresh vs retrieved from cache
         const cacheResult = LocalCache.getItems(id)
         const coords = await User.getLocation()
-        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getUserItems", {
+        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 || forceRefresh ? (await cloudRun('POST', "getUserItems", {
             requestingUserID: User.getCurrent().uid,
             targetUserID: id,
             coords: coords
@@ -111,9 +94,9 @@ export default abstract class Item {
         })) as string
         // Upload images after item ID is generated
         if (itemData.images.length > 0) {
-            const newItemData: ItemData = {...itemData, itemID: newItemID}
             // Upload images (server will update item data)
-            await User.uploadItemImages(newItemID, itemData.images)
+            const imgURLs = await User.uploadItemImages(newItemID, itemData.images)
+            await Item.update({itemID: newItemID, images: imgURLs})
         }
         return newItemID
     }
@@ -216,5 +199,93 @@ export default abstract class Item {
         return (await cloudRun('POST', "getItemLikes", {
             itemID: itemID
         })) as ItemInteraction[]
+    }
+
+    public static validatePriceData(priceData: ItemPriceData) {
+        return (
+            priceData.minPrice !== undefined
+         && priceData.minPrice >= 0
+         && priceData.minPrice < 90000
+         && priceData.basePrice !== undefined
+         && priceData.basePrice >= 0
+         && priceData.basePrice < 90000
+         && priceData.feePrice !== undefined
+         && priceData.feePrice >= 0
+         && priceData.feePrice < 90000
+         && priceData.facePrice !== undefined
+         && priceData.facePrice >= 0
+         && priceData.facePrice < 100000
+         && priceData.lastBasePrice !== undefined
+         && priceData.lastBasePrice >= 0
+         && priceData.lastBasePrice < 90000
+         && priceData.lastFeePrice !== undefined
+         && priceData.lastFeePrice >= 0
+         && priceData.lastFeePrice < 90000
+         && priceData.lastFacePrice !== undefined
+         && priceData.lastFacePrice >= 0
+         && priceData.lastFacePrice < 100000
+        )
+    }
+
+    public static validateProperty(key: keyof ItemData, value: any) {
+        /* 
+        --- [IN FUTURE] Need to add delivery methods ---
+        */
+        switch (key) {
+            case "name":
+                if (!value || value === "") return false
+                break
+            case "category":
+                if (!value || value === "" || !ItemCategories.includes(value)) return false
+                break
+            case "gender":
+                if (!value || value === "" || !ItemGenders.includes(value)) return false
+                break
+            case "size":
+                if (!value || value === "") return false
+                break
+            case "fit":
+                if (!value || value === "" || !ItemFits.includes(value)) return false
+                break
+            case "condition":
+                if (!value || value === "" || !ItemConditions.includes(value)) return false
+                break
+            case "images":
+                if ((value as string[]).length <= 0) return false
+                break
+            case "priceData":
+                if (!Item.validatePriceData(value)) return false
+                break
+            case "styles":
+                if ((value as string[]).length > 10) return false
+                break
+            case "country":
+                if (!value || value === "" || !countriesList.includes(value)) return false
+                break
+            case "userID":
+                if (!value || value === "") return false
+                break
+            default:
+                break
+        }
+        return true
+    }
+
+    public static validate(item: ItemData) {
+        for (const key of Object.keys(item)) {
+            if (!Item.validateProperty(key as keyof ItemData, item[key as keyof ItemData])) {
+                return false
+            }
+        }
+        return true
+    }
+
+    public static validatePartial(item: Partial<ItemData>) {
+        for (const key of Object.keys(item)) {
+            if (!Item.validateProperty(key as keyof ItemData, item[key as keyof ItemData])) {
+                return false
+            }
+        }
+        return true
     }
 }

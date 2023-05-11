@@ -59,21 +59,29 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
                     {/* Name */}
                     <Text
                         style={{...styles.majorText, flex: 1}}
-                        numberOfLines={2}
+                        numberOfLines={1}
                     >{this.props.itemInfo.item.name}</Text>
-                    {/* Price */}
-                    <Text style={{...styles.headerText, textAlign: 'right'}}
-                    >{currencyFormatter.format(this.props.showCustomPrice || this.props.itemInfo.item.priceData.facePrice)}</Text>
                 </View>
                 {/* Gender / category, distance */}
                 <View style={{flexDirection: "row", justifyContent: 'space-between', alignItems: 'flex-end'}}>
-                    <View>
+                    <View style={{flex: 1}}>
                         <Text style={{...styles.minorText}}>{
-                        capitalizeWords(`${this.props.itemInfo.item.gender !== 'unisex' ? this.props.itemInfo.item.gender + `'s` : ``} ${this.props.itemInfo.item.category !== 'other' ? this.props.itemInfo.item.category : ''}`)
+                        capitalizeWords(`${this.props.itemInfo.item.gender !== 'unisex' ? this.props.itemInfo.item.gender + `'s ` : ``}${this.props.itemInfo.item.category !== 'other' ? this.props.itemInfo.item.category : ''}`)
                         }</Text>
-                        <Text style={styles.minorText}>{capitalizeWords(this.props.itemInfo.item.size)}</Text>
+                        <Text
+                            style={styles.minorText}
+                            numberOfLines={1}
+                        >Size: {capitalizeWords(this.props.itemInfo.item.size)}</Text>
+                        <Text style={{...styles.minorText}}>{`within ${this.props.itemInfo.distance} km`}</Text>
                     </View>
-                    <Text style={{...styles.minorText, textAlign: "right"}}>{`${this.props.itemInfo.distance} km`}</Text>
+                    {/* Price */}
+                    <Text style={{
+                        ...styles.headerText,
+                        textAlign: 'right',
+                    }}
+                    numberOfLines={1}
+                    >{currencyFormatter.format(this.props.showCustomPrice || this.props.itemInfo.item.priceData.facePrice).substring(0, 9)}</Text>
+                    
                 </View>
             </View>
             <CustomImage
@@ -109,7 +117,7 @@ const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: colors.background,
         borderRadius: styleValues.mediumPadding,
-        height: screenUnit * 5,
+        height: screenUnit * 6,
         width: screenWidth - styleValues.mediumPadding*2,
         marginBottom: styleValues.mediumPadding,
         padding: styleValues.minorPadding,
@@ -133,7 +141,6 @@ const styles = StyleSheet.create({
     },
     headerText: {
         ...textStyles.medium,
-        marginBottom: styleValues.minorPadding,
         textAlign: "left"
     },
     majorText: {
@@ -143,6 +150,6 @@ const styles = StyleSheet.create({
     minorText: {
         ...textStyles.small,
         color: colors.darkGrey,
-        textAlign: "left"
+        textAlign: "left",
     },
 })

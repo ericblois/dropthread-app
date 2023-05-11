@@ -95,20 +95,26 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
     }
     // Try to upload this item's data to the server
     async saveItem(newItemData: ItemData) {
-        // Save item
-        if (this.props.route.params.isNew) {
-            // Create new item
-            await Item.create(newItemData)
-            // Signal to previous pages in stack to refresh their data
-            DeviceEventEmitter.emit('refreshClosetItemData')
-            this.props.navigation.goBack()
-        } else {
-            // Send only changes if not missing any props, otherwise update all props
-            await Item.update(this.state.itemChanges)
-            // Signal to previous pages in stack to refresh their data
-            DeviceEventEmitter.emit('refreshClosetItemData')
-            this.props.navigation.goBack()
+        this.setState({isLoading: true, errorMessage: undefined})
+        try {
+            // Save item
+            if (this.props.route.params.isNew) {
+                // Create new item
+                await Item.create(newItemData)
+                // Signal to previous pages in stack to refresh their data
+                DeviceEventEmitter.emit('refreshClosetItemData')
+                this.props.navigation.goBack()
+            } else {
+                // Send only changes if not missing any props, otherwise update all props
+                await Item.update(this.state.itemChanges)
+                // Signal to previous pages in stack to refresh their data
+                DeviceEventEmitter.emit('refreshClosetItemData')
+                this.props.navigation.goBack()
+            }
+        } catch (e) {
+            this.handleError(e)
         }
+        this.setState({isLoading: false})
     }
     
     renderImageSelector() {
@@ -131,9 +137,10 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
     renderNameInput() {
         return (
             <CustomTextInput
-                validateFunc={(text) => (text.length > 0)}
+                validateFunc={(text) => Item.validateProperty('name', text)}
                 indicatorType={'shadowSmall'}
                 placeholder={"Name"}
+                maxLength={50}
                 defaultValue={this.state.itemChanges.name || this.state.itemData!.name}
                 ignoreInitialValidity={!this.state.validityFlag}
                 onChangeText={(text) => {this.updateItem({name: text})}}
@@ -145,7 +152,17 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
         if (this.state.itemData) {
             return (
                 <CustomCurrencyInput
-                    validateFunc={() => (this.state.itemChanges.priceData?.minPrice !== undefined || this.state.itemData?.priceData?.minPrice !== undefined)}
+                    validateFunc={() => {
+                        let change = true
+                        if (this.state.itemChanges.priceData) {
+                            change = Item.validatePriceData(this.state.itemChanges.priceData)
+                        }
+                        return this.state.itemData?.priceData !== undefined
+                            && Item.validatePriceData(this.state.itemData.priceData)
+                            && change
+                    }}
+                    minValue={0}
+                    maxValue={90000}
                     indicatorType={'shadowSmall'}
                     placeholder={"Minimum price"}
                     defaultValue={this.state.itemChanges.priceData?.minPrice || this.state.itemData.priceData?.minPrice > 0 ? this.state.itemData.priceData?.minPrice : undefined}
@@ -165,9 +182,10 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
     renderSizeInput() {
         return (
             <CustomTextInput
-                validateFunc={(text) => (text.length > 0)}
+                validateFunc={(text) => Item.validateProperty('size', text)}
                 indicatorType={'shadowSmall'}
                 placeholder={"Size"}
+                maxLength={20}
                 defaultValue={capitalizeWords(this.state.itemChanges.size || this.state.itemData!.size)}
                 ignoreInitialValidity={!this.state.validityFlag}
                 onChangeText={(text) => {this.updateItem({size: text.toLowerCase()})}}
@@ -283,8 +301,6 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                         marginTop: - styleValues.mediumPadding,
                     }}
                     contentContainerStyle={{
-                        //borderWidth: 1,
-                        borderColor: 'red',
                         marginBottom: styleValues.mediumHeight*2
                     }}
                     avoidKeyboard={true}
@@ -306,7 +322,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
     }
 
     renderLoading() {
-        if (this.state.isLoading) {
+        if (this.state.isLoading || this.state.errorMessage) {
             return (
               <LoadingCover
                 size={"large"}
@@ -319,38 +335,42 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
     }
 
     render() {
-        const currentItemData = {
-            ...DefaultItemData,
-            ...this.state.itemData,
-            ...this.state.itemChanges
-        }
-        return (
-            <PageContainer headerText={"Edit Item"}>
-                {this.renderUI()}
-                {this.renderLoading()}
-                <MenuBar
-                    buttonProps={[
-                    {
-                        iconSource: icons.chevron,
-                        onPress: () => {this.props.navigation.goBack()}
-                    },
-                    {
-                        iconSource: icons.checkBox,
-                        iconStyle: {tintColor: this.state.itemData && Item.validate(currentItemData) ? colors.darkGrey : colors.lightestGrey},
-                        onPress: async () => {
-                            if (this.state.itemData && Item.validate(currentItemData)) {
-                                await this.saveItem(currentItemData)
-                            } else {
-                                this.setState({validityFlag: true});
-                            }
+        try {
+            const currentItemData = {
+                ...DefaultItemData,
+                ...this.state.itemData,
+                ...this.state.itemChanges
+            }
+            return (
+                <PageContainer headerText={"Edit Item"}>
+                    {this.renderUI()}
+                    {this.renderLoading()}
+                    <MenuBar
+                        buttonProps={[
+                        {
+                            iconSource: icons.chevron,
+                            onPress: () => {this.props.navigation.goBack()}
                         },
-                        showLoading: true
-                    },
-                    ]}
-                
-                ></MenuBar>
-            </PageContainer>
-        );
+                        {
+                            iconSource: icons.checkBox,
+                            iconStyle: {tintColor: this.state.itemData && Item.validate(currentItemData) ? colors.darkGrey : colors.lightestGrey},
+                            onPress: async () => {
+                                if (this.state.itemData && Item.validate(currentItemData)) {
+                                    await this.saveItem(currentItemData)
+                                } else {
+                                    this.setState({validityFlag: true});
+                                }
+                            },
+                            showLoading: true
+                        },
+                        ]}
+                    
+                    ></MenuBar>
+                </PageContainer>
+            );
+        } catch (e) {
+            this.handleError(e)
+        }
     }
 }
 

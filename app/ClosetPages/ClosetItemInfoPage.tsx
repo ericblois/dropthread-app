@@ -1,18 +1,18 @@
-import { Octicons, SimpleLineIcons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, Octicons, SimpleLineIcons } from "@expo/vector-icons";
 import { RouteProp } from "@react-navigation/core";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
-import { DeviceEventEmitter, StyleSheet, Text, View } from "react-native";
+import { DeviceEventEmitter, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
-import { CustomTextButton, ImageSlider, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
+import { CustomScrollView, CustomTextButton, ImageSlider, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo, ItemInteraction, OfferData, OfferInfo } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
 import Offer from "../HelperFiles/Offer";
-import { colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, displayWidth, icons, menuBarStyles, screenUnit, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type ItemInfoNavigationProp = CompositeNavigationProp<
@@ -33,7 +33,9 @@ type State = {
     itemOffers?: OfferInfo[],
     // Maps a user ID (like) to the index of an offer
     offerMap?: {[userID: string]: number},
-    errorOccurred: boolean
+    imagesLoaded: boolean,
+    isLoading: boolean,
+    errorMessage?: string
 }
 
 export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, State> {
@@ -45,7 +47,9 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
             itemLikes: undefined,
             itemOffers: undefined,
             offerMap: undefined,
-            errorOccurred: false
+            imagesLoaded: false,
+            isLoading: false,
+            errorMessage: undefined
         }
         this.state = initialState
         DeviceEventEmitter.addListener('refreshClosetItemData', () => {
@@ -57,7 +61,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
 
     async refreshData() {
         try {
-            this.setState({errorOccurred: false})
+            this.setState({isLoading: true, imagesLoaded: false, errorMessage: undefined})
             // Get data
             const [itemsInfo, itemLikes] = await Promise.all([
                 Item.getFromIDs([this.props.route.params.itemID]),
@@ -87,64 +91,100 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                 itemOffers: itemOffers,
                 offerMap: offerMap
             })
-        } catch {
-            this.setState({errorOccurred: true})
+        } catch(e) {
+            this.handleError(e)
         }
+        this.setState({isLoading: false})
+    }
+
+    async deleteItem() {
+        try {
+            this.setState({isLoading: true, errorMessage: undefined})
+            await Item.delete(this.state.itemInfo!.item)
+            DeviceEventEmitter.emit('refreshClosetItemData')
+            this.props.navigation.goBack()
+        } catch (e) {
+            this.handleError(e)
+        }
+        this.setState({isLoading: false})
     }
 
     renderInfo() {
         if (this.state.itemInfo) {
             return (
-                <View
-                    style={{
-                        width: "100%",
-                        flexDirection: "row"
-                    }}
-                >
-                    <View style={{flex: 1}}>
+                <View style={{width: "100%", flexDirection: 'row'}}>
+                    <View style={{flex: 1, marginRight: styleValues.minorPadding}}>
+                        {/* Name */}
                         <Text
-                            style={{...textStyles.larger, textAlign: "left"}}
+                            style={{...textStyles.large, textAlign: "left"}}
                             numberOfLines={4}
                         >{this.state.itemInfo.item.name}</Text>
-                        <Text style={{...textStyles.large, textAlign: "left", color: colors.grey}}>{capitalizeWords(this.state.itemInfo.item.category)}</Text>
-                    </View>
-                    <View style={{alignItems: "flex-end", marginLeft: styleValues.mediumPadding}}>
-                        <Text style={{...textStyles.larger, textAlign: "right"}}>{currencyFormatter.format(this.state.itemInfo.item.priceData.minPrice)}</Text>
+                        {/* Gender / category */}
+                        <Text
+                            style={{
+                                ...textStyles.medium,
+                                textAlign: "left",
+                                color: colors.grey
+                            }}
+                        >{capitalizeWords(`${this.state.itemInfo.item.gender !== 'unisex' ? this.state.itemInfo.item.gender + `'s ` : ``}${this.state.itemInfo.item.category !== 'other' ? this.state.itemInfo.item.category : ''}`)}</Text>
+                        {/* Size */}
+                        <Text
+                            style={{...textStyles.medium, textAlign: "left", color: colors.grey}}
+                            numberOfLines={1}
+                        >Size: {capitalizeWords(this.state.itemInfo.item.size)}</Text>
+                        {/* Distance */}
                         {this.state.itemInfo.distance! > 0 ? 
-                            <Text style={{...textStyles.large, textAlign: "right", color: colors.grey}}>{`${this.state.itemInfo.distance}km`}</Text>
+                            <Text style={{...textStyles.medium, textAlign: "left", color: colors.grey}}>{`within ${this.state.itemInfo.distance} km`}</Text>
                         : undefined}
+                    </View>
+                    <View>
+                        {/* Current base price */}
+                        <Text style={{
+                                ...textStyles.larger,
+                                textAlign: 'right',
+                            }}
+                            numberOfLines={1}
+                        >{currencyFormatter.format(this.state.itemInfo.item.priceData.basePrice).substring(0, 9)}</Text>
+                        {/* Fee */}
+                        <Text
+                            style={{...textStyles.small, textAlign: "right", color: colors.grey}}
+                            numberOfLines={1}
+                        >Fee: {currencyFormatter.format(Math.ceil(this.state.itemInfo.item.priceData.feePrice)).substring(0, 9)}</Text>
                     </View>
                 </View>
             )
         }
     }
 
-    renderUI() {
+    renderLikes() {
         if (this.state.itemInfo && this.state.itemLikes) {
             return (
-                <>
-                <ScrollContainer>
-                    <ImageSlider
-                        uris={this.state.itemInfo.item.images}
-                        style={{width: screenWidth}}
-                        minRatio={1}
-                        maxRatio={2}
-                    ></ImageSlider>
-                    {this.renderInfo()}
-                    <Text style={{...textStyles.medium, alignSelf: "flex-start"}}>{"Views: ".concat(this.state.itemInfo.item.viewCount.toString())}</Text>
-                    <Text style={{...textStyles.mediumHeader, alignSelf: "flex-start"}}>{"Likes: ".concat(this.state.itemInfo.item.likeCount.toString())}</Text>
-                    <TextButton
-                        text={"View matches"}
-                        rightIconSource={icons.chevron}
-                        rightIconStyle={{transform: [{scaleX: -1}]}}
-                        onPress={() => {this.props.navigation.navigate("itemSwaps", {likedUserIDs: ["B9m6149WWAZoaVOpomSgcy2riyD3"]})}}
-                    />
-                    <TextButton
-                        text={"Update location"}
-                        rightIconSource={icons.crosshair}
-                        onPress={() => {}}
-                    />
-                    <Text style={textStyles.mediumHeader}>Likes</Text>
+                <View style={{marginBottom: styleValues.mediumPadding}}>
+                    {/* Views / likes */}
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'flex-start',
+                            marginBottom: styleValues.mediumPadding
+                        }}
+                    >
+                        <View style={{flexDirection: 'row'}}>
+                            <Ionicons
+                                name="eye-outline"
+                                style={{fontSize: styleValues.iconMediumSize, textAlignVertical: 'center', marginRight: styleValues.minorPadding, marginTop: -screenUnit*0.15}}
+                            />
+                            <Text style={{...textStyles.medium}}>{this.state.itemInfo.item.viewCount.toString()}</Text>
+                        </View>
+                        <Text style={{...textStyles.mediumHeader, marginVertical: undefined}}>Likes</Text>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={{...textStyles.medium}}>{this.state.itemInfo.item.likeCount.toString()}</Text>
+                            <AntDesign
+                                name="hearto"
+                                style={{fontSize: styleValues.iconSmallSize, textAlignVertical: 'center', marginLeft: styleValues.minorPadding, marginTop: screenUnit*0.1}}
+                            />
+                        </View>
+                    </View>
                     {this.state.itemLikes.map((interaction, index) => {
                         const secondsAgo = (Date.now() - interaction.likeTime)/1000
                         let timeText = secondsAgo < 60 ? `${Math.floor(secondsAgo)}s ago`
@@ -171,60 +211,110 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                                     }}
                                 />
                                 <View style={{flex: 1, justifyContent: 'space-between'}}>
-                                    <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: styleValues.minorPadding}}>
-                                        <Text style={{...textStyles.medium, marginRight: styleValues.mediumPadding}}>{currencyFormatter.format(interaction.likePrice)}</Text>
-                                        
-                                    </View>
-                                    <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-                                        <Text style={{...textStyles.small, textAlign: 'left', marginRight: styleValues.mediumPadding}}>{`${interaction.distance} km`}</Text>
-                                        <Text style={{...textStyles.smaller, textAlign: 'left', color: colors.grey}}>{timeText}</Text>
-                                    </View>
+                                    <Text style={{...textStyles.medium, textAlign: 'left'}}>{currencyFormatter.format(interaction.likePrice)}</Text>
+                                    <Text style={{...textStyles.small, textAlign: 'left'}}>{`within ${interaction.distance} km`}</Text>
+                                    <Text style={{...textStyles.smaller, textAlign: 'left', color: colors.grey}}>{timeText}</Text>
                                 </View>
-                                <View>
-                                    <CustomTextButton
-                                        text={'Accept'}
-                                        buttonStyle={{
-                                            marginBottom: undefined,
-                                            width: undefined,
-                                            alignSelf: 'flex-end'
-                                        }}
-                                        textStyle={{
-                                            marginRight: styleValues.mediumPadding
-                                        }}
-                                        rightChildren={
-                                            <Octicons
-                                                name={"arrow-switch"}
-                                                style={{
-                                                    fontSize: styleValues.largeTextSize,
-                                                    color: colors.main
-                                                }}
-                                            />
-                                        }
-                                        onPress={() => this.props.navigation.navigate('editOffer', {interaction: interaction})}
-                                    />
-                                </View>
+                                <CustomTextButton
+                                    text={'Accept'}
+                                    wrapperStyle={{width: '30%'}}
+                                    buttonStyle={{
+                                        marginBottom: undefined,
+                                        flex: 1,
+                                        alignSelf: 'flex-end'
+                                    }}
+                                    textStyle={{
+                                        marginRight: styleValues.mediumPadding
+                                    }}
+                                    rightChildren={
+                                        <Octicons
+                                            name={"arrow-switch"}
+                                            style={{
+                                                fontSize: styleValues.largeTextSize,
+                                                color: colors.main
+                                            }}
+                                        />
+                                    }
+                                    onPress={() => this.props.navigation.navigate('editOffer', {interaction: interaction})}
+                                />
                             </View>
                         )
                     })}
+                </View>
+            )
+        }
+    }
+
+    renderUI() {
+        if (this.state.itemInfo && this.state.itemLikes) {
+            return (
+                <>
+                <CustomScrollView
+                    style={{
+                        marginTop: - styleValues.mediumPadding,
+                    }}
+                    contentContainerStyle={{
+                        marginHorizontal: -styleValues.mediumPadding,
+                        paddingHorizontal: styleValues.mediumPadding,
+                        marginBottom: styleValues.mediumHeight*2,
+                        overflow: 'hidden'
+                    }}
+                    avoidKeyboard={true}
+                >
+                    <View
+                        style={{
+                            ...shadowStyles.medium,
+                            backgroundColor: colors.background,
+                            marginHorizontal: -styleValues.mediumPadding,
+                            paddingHorizontal: styleValues.mediumPadding,
+                            paddingBottom: styleValues.mediumPadding,
+                            marginBottom: styleValues.mediumPadding
+                        }}
+                    >
+                        <ImageSlider
+                            uris={this.state.itemInfo.item.images}
+                            style={{width: screenWidth, marginHorizontal: -styleValues.mediumPadding}}
+                            minRatio={1}
+                            maxRatio={2}
+                            onImagesLoaded={() => this.setState({imagesLoaded: true})}
+                        ></ImageSlider>
+                        {this.renderInfo()}
+                    </View>
+                    {/* Buttons */}
+                    <TextButton
+                        text={"View matches"}
+                        rightIconSource={icons.chevron}
+                        rightIconStyle={{transform: [{scaleX: -1}]}}
+                        onPress={() => {this.props.navigation.navigate("itemSwaps", {likedUserIDs: ["B9m6149WWAZoaVOpomSgcy2riyD3"]})}}
+                    />
+                    <TextButton
+                        text={"Update location"}
+                        rightIconSource={icons.crosshair}
+                        rightIconStyle={{tintColor: colors.black}}
+                        onPress={() => {}}
+                    />
+                    {/* Views / likes */}
+                    {this.renderLikes()}
+                    {/* Delete button */}
                     <TextButton
                         text={"Delete item"}
                         textStyle={{color: colors.invalid}}
                         showLoading={true}
-                        onPress={async () => {await Item.delete(this.state.itemInfo!.item)}}
+                        onPress={() => this.deleteItem()}
                     />
-                </ScrollContainer>
+                </CustomScrollView>
                 </>
             )
         }
     }
 
     renderLoading() {
-        if (!this.state.itemInfo || !this.state.itemLikes) {
+        if (this.state.isLoading || !this.state.imagesLoaded || this.state.errorMessage) {
             return (
               <LoadingCover
                 size={"large"}
-                showError={this.state.errorOccurred}
-                errorText={"Could not load item."}
+                showError={!!this.state.errorMessage}
+                errorText={this.state.errorMessage}
                 onErrorRefresh={() => this.refreshData()}
             />
             )
@@ -233,7 +323,9 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
 
     render() {
     return (
-        <PageContainer>
+        <PageContainer
+            headerText={'Item Info'}
+        >
             {this.renderUI()}
             {this.renderLoading()}
             <MenuBar

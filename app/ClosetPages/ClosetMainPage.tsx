@@ -2,7 +2,7 @@ import { RouteProp } from "@react-navigation/core";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
-import { DeviceEventEmitter, StyleSheet } from "react-native";
+import { DeviceEventEmitter, RefreshControl, StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import CustomIconButton from "../CustomComponents/CustomIconButton";
 import { ItemSmallCard, CustomImageButton, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
@@ -27,30 +27,35 @@ type ClosetMainProps = {
 type State = {
     userData?: UserData,
     itemsInfo?: ItemInfo[],
-    imagesLoaded: boolean
+    imagesLoaded: boolean,
+    isLoading: boolean,
+    errorMessage?: string
 }
 
 export default class ClosetMainPage extends CustomComponent<ClosetMainProps, State> {
 
     constructor(props: ClosetMainProps) {
         super(props)
-        const initialState = {
+        this.state = {
             userData: undefined,
             itemsInfo: undefined,
-            imagesLoaded: true
+            imagesLoaded: true,
+            isLoading: true,
+            errorMessage: undefined
         }
-        this.state =initialState
-        DeviceEventEmitter.addListener('refreshClosetItemData', () => {
-            this.setState(initialState, () => {
-                this.refreshData()
-            })
-        })
+        DeviceEventEmitter.addListener('refreshClosetItemData', () => this.refreshData())
     }
 
     async refreshData() {
-        const userData = await User.get()
-        const itemsInfo = await Item.getFromUser()
-        this.setState({userData: userData, itemsInfo: itemsInfo})
+        try {
+            this.setState({isLoading: true, errorMessage: undefined})
+            const userData = await User.get()
+            const itemsInfo = await Item.getFromUser(undefined, true)
+            this.setState({userData: userData, itemsInfo: itemsInfo})
+        } catch (e) {
+            this.handleError(e)
+        }
+        this.setState({isLoading: false})
     }
 
     renderAddButton() {
@@ -90,7 +95,14 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
     renderItems() {
         if (this.state.itemsInfo) {
             return (
-                <ScrollContainer>
+                <ScrollContainer
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={false}
+                            onRefresh={() => this.refreshData()}
+                        />
+                    }
+                >
                     {this.state.itemsInfo.map((itemInfo, index) => {
                         return (
                             <ItemSmallCard
@@ -111,7 +123,7 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
     }
     
     renderUI() {
-        if (this.state.userData && this.state.itemsInfo) {
+        if (!this.state.isLoading && !this.state.errorMessage) {
             return (
                 <>
                     {this.renderItems()}
@@ -122,9 +134,13 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
     }
 
     renderLoading() {
-        if (this.state.userData === undefined || this.state.itemsInfo === undefined || !this.state.imagesLoaded) {
+        if (this.state.isLoading || this.state.errorMessage) {
             return (
-              <LoadingCover size={"large"}/>
+              <LoadingCover
+                size={"large"}
+                showError={!!this.state.errorMessage}
+                errorText={this.state.errorMessage}
+            />
             )
           }
     }
