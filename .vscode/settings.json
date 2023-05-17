@@ -1,5 +1,6 @@
 {
     "typescript.tsdk": "node_modules/typescript/lib",
     "editor.fontSize": 11,
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "java.compile.nullAnalysis.mode": "disabled"
 }

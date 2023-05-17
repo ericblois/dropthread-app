@@ -44,7 +44,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
     constructor(props: ViewOfferProps) {
         super(props)
         this.state = {
-            wasSent: props.route.params.offerInfo.offer.fromID === User.getCurrent().uid,
+            wasSent: props.route.params.offerInfo.offer.fromUserID === User.getCurrent().uid,
             offerData: props.route.params.offerInfo.offer,
             fromItems: props.route.params.offerInfo.fromItems,
             toItems: props.route.params.offerInfo.toItems,
@@ -173,7 +173,6 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                         <ItemSmallCard
                             itemInfo={itemInfo}
                             style={{...shadowStyles.small, width: '100%'}}
-                            showCustomPrice={itemInfo.item.priceData.lastFacePrice}
                             onPress={() => this.setState({showDetailCard: itemInfo})}
                             key={index.toString()}
                         />
@@ -295,7 +294,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                             //width: '50%',
                             height: screenHeight*0.7
                         }}
-                        disableViewCloset
+                        hideButtons
                     />
                     : undefined}
                 </CustomModal>

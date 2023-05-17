@@ -12,13 +12,14 @@ import LoadingCover from "./LoadingCover";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import * as Icons from "@expo/vector-icons"
 import CustomBadge from "./CustomBadge";
+import User from "../HelperFiles/User";
 
 
 type Props = {
     itemInfo: ItemInfo,
     style?: ViewStyle,
     badgeNumber?: number,
-    showCustomPrice?: number,
+    hidePrice?: boolean,
     onLoadEnd?: () => void,
     onPress?: (event?: GestureResponderEvent) => void
 }
@@ -40,7 +41,7 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
         return (
         <CustomPressable
             style={{...styles.cardContainer, ...this.props.style}}
-            animationType={"shadow"}
+            animationType={"shadowSmall"}
             onPress={this.props.onPress}
         >
             <View style={{flex: 1, height: '100%', justifyContent: 'space-between'}}>
@@ -75,12 +76,18 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
                         <Text style={{...styles.minorText}}>{`within ${this.props.itemInfo.distance} km`}</Text>
                     </View>
                     {/* Price */}
-                    <Text style={{
-                        ...styles.headerText,
-                        textAlign: 'right',
-                    }}
-                    numberOfLines={1}
-                    >{currencyFormatter.format(this.props.showCustomPrice || this.props.itemInfo.item.priceData.facePrice).substring(0, 9)}</Text>
+                    {this.props.hidePrice !== true ?
+                        <Text style={{
+                            ...styles.headerText,
+                            textAlign: 'right',
+                        }}
+                        numberOfLines={1}
+                        >{currencyFormatter.format(this.props.itemInfo.item.userID === User.getCurrent().uid
+                            ? this.props.itemInfo.item.priceData.minPrice
+                            : this.props.itemInfo.item.priceData.facePrice)
+                            .substring(0, 9)}
+                        </Text>
+                    : undefined}
                     
                 </View>
             </View>

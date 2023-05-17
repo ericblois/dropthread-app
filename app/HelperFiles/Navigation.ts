@@ -21,12 +21,23 @@ export type UserMainStackParamList = {
     closet: undefined,
     account: undefined,
     viewItems: {
-        items: ItemInfo[],
-        header?: string
-    }
+        getItems: () => Promise<ItemInfo[]>,
+        addItem?: (item: ItemInfo) => void,
+        addedItems?: string[],
+        header?: string,
+        description?: string,
+    },
+    createOffer: {
+        offer: OfferData
+    },
     editOffer: {
-        interaction: ItemInteraction
+        offerInfo: OfferInfo
     }
+}
+
+export type UserMainStackOptions = {
+    viewItemsGetItems: () => Promise<ItemInfo[]>,
+    viewItemsAddItem?: (item: ItemInfo) => void,
 }
 
 export const UserMainStack = createStackNavigator<UserMainStackParamList>();

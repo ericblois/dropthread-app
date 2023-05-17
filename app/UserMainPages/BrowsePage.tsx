@@ -1,7 +1,7 @@
 import { RouteProp } from "@react-navigation/core";
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useRef } from "react";
+import { AppState, FlatList, Pressable, StyleSheet, Text, View, ViewToken, ViewabilityConfigCallbackPairs } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { CustomImageButton, FilterSearchBar, ItemLargeCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, UserData } from "../HelperFiles/DataTypes";
@@ -21,11 +21,11 @@ type BrowseProps = {
 }
 
 type State = {
-  itemsInfo?: ItemInfo[],
+  itemInfos?: ItemInfo[],
   userData?: UserData,
   searchFilters: ItemFilter,
   shouldRefresh: boolean,
-  unupdatedViews: string[],
+  isLoading: boolean,
   errorMessage?: string
 }
 
@@ -33,51 +33,78 @@ type State = {
 
 export default class BrowsePage extends CustomComponent<BrowseProps, State> {
 
-  flatListComp: FlatList<ItemInfo> | null = null
+    flatListComp: FlatList<ItemInfo> | null = null
+    viewabilityConfigCallbackPairs: ViewabilityConfigCallbackPairs = [{
+      viewabilityConfig: {
+        itemVisiblePercentThreshold: 100,
+        minimumViewTime: 500
+      },
+      onViewableItemsChanged: (info) => {
+        // Flag this item as being viewed, add it to views list
+        for (const token of info.viewableItems) {
+          token.item.viewTime = Date.now();
+          this.viewTimes[token.item.item.itemID] = token.item.viewTime;
+        }
+      }
+    }];
+    viewTimes: {[itemID: string]: number};
 
     constructor(props: BrowseProps) {
         super(props)
         this.state = {
-          itemsInfo: undefined,
+          itemInfos: undefined,
           userData: undefined,
           searchFilters: {
               country: "canada",
               distanceInKM: 10
           },
           shouldRefresh: false,
-          unupdatedViews: [],
+          isLoading: true,
           errorMessage: undefined
         }
-    }
-
-    componentDidMount() {
-      this.getUserData();
-      this.refreshSearchResults()
-      super.componentDidMount()
+        this.viewTimes = {};
+        // Send updated view times to server when page is switched
+        this.props.navigation.addListener('state', (e) => {
+          if (Object.keys(this.viewTimes).length > 0) {
+            Item.updateItemViewTimes(this.viewTimes);
+            this.viewTimes = {}
+          }
+        })
+        // Send updated view times to server when app is suspened / closed
+        AppState.addEventListener('change', (state) => {
+          if (state !== 'active') {
+            if (Object.keys(this.viewTimes).length > 0) {
+              Item.updateItemViewTimes(this.viewTimes);
+              this.viewTimes = {}
+            }
+          }
+        })
     }
 
     componentWillUnmount(): void {
+        console.log('unmounted')
         super.componentWillUnmount()
     }
+
+    async refreshData() {
+      try {
+        this.setState({isLoading: true, errorMessage: undefined})
+        const [userData, results] = await Promise.all([
+          User.get(),
+          Item.getFromFilter(this.state.searchFilters)
+        ])
+        this.setState({userData: userData, itemInfos: results})
+      } catch(e) {
+        this.handleError(e)
+      }
+      this.setState({isLoading: false})
+    }
     
-    // Retrieve this user's data
-    async getUserData() {
-      const userData = await User.get().catch((e) => this.handleError(e))
-      this.setState({userData: userData});
-    }
-    // Attempt to retrieve items that fit current filter
-    async refreshSearchResults() {
-      // Set carousel to first item
-      //this.carouselComp?.snapToItem(0)
-      this.setState({itemsInfo: undefined})
-      const results = await Item.getFromFilter(this.state.searchFilters).catch((e) => this.handleError(e))
-      this.setState({itemsInfo: results})
-    }
     // Render a swipable carousel of items
     renderCarousel() {
       // Check if items list is empty
-      if (this.state.itemsInfo && this.state.userData) {
-        if (this.state.itemsInfo.length <= 0) {
+      if (this.state.itemInfos && this.state.userData) {
+        if (this.state.itemInfos.length <= 0) {
           return (
             <View
               style={{
@@ -95,10 +122,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
                     width: styleValues.iconMediumSize
                 }}
                 iconStyle={{tintColor: colors.lightGrey}}
-                onPress={() => {
-                  this.getUserData();
-                  this.refreshSearchResults();
-                }}
+                onPress={() => this.refreshData()}
               />
             </View>
           )
@@ -106,7 +130,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
         return (
           <FlatList
             ref={(flatList) => {this.flatListComp = flatList}}
-            data={this.state.itemsInfo}
+            data={this.state.itemInfos}
             style={{
               width: screenWidth
             }}
@@ -116,6 +140,8 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
             horizontal={true}
             pagingEnabled={true}
             showsHorizontalScrollIndicator={true}
+            //onViewableItemsChanged={(info) => this.onViewableItemsChanged(info)}
+            viewabilityConfigCallbackPairs={this.viewabilityConfigCallbackPairs}
             renderItem={(listItem) => (
               <Pressable
                 style={{
@@ -139,16 +165,19 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
     }
     // Render a loading indicator and, if need be, an error handler
     renderLoading() {
-      if (!this.state.itemsInfo || !this.state.userData) {
+      if (
+        this.state.isLoading
+        || this.state.errorMessage
+        || !this.state.itemInfos
+        || !this.state.userData) {
           return (
             <LoadingCover
               style={{top: styleValues.mediumPadding}}
               size={"large"}
-              showError={this.state.errorMessage !== undefined}
+              showError={!!this.state.errorMessage}
               errorText={this.state.errorMessage}
               onErrorRefresh={() => this.setState({errorMessage: undefined}, () => {
-                this.getUserData()
-                this.refreshSearchResults()
+                this.refreshData()
               })}
             />
           )
@@ -191,7 +220,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
                     delete newSearchFilter.keywords
                   }
                   this.setState({searchFilters: newSearchFilter}, () => {
-                      this.refreshSearchResults()
+                      this.refreshData()
                   })
                 }}
                 onFilterChange={(newFilter) => {
@@ -199,7 +228,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
                 }}
                 onFilterSubmit={() => {
                   if (this.state.shouldRefresh) {
-                    this.refreshSearchResults()
+                    this.refreshData()
                     this.setState({shouldRefresh: false})
                   }
                 }}

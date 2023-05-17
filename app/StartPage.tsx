@@ -1,5 +1,6 @@
 import { RouteProp } from "@react-navigation/core";
 import { StackNavigationProp } from '@react-navigation/stack';
+import { CommonActions } from '@react-navigation/native';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from "react-native";
@@ -33,6 +34,18 @@ export default class StartPage extends CustomComponent<StartProps, State> {
             passText: "",
             responseText: ""
         }
+        /*props.navigation.addListener('state', (e) => {
+            const routes = e.data.state.routes
+            if (routes[routes.length - 1].name === 'start' && routes.length > 1) {
+                props.navigation.dispatch(
+                    CommonActions.reset({routes: [{
+                            name: routes[routes.length - 1].name,
+                            key: routes[routes.length - 1].key,
+                            params: routes[routes.length - 1].params
+                    }]})
+                )
+            }
+        })*/
     }
 
     attemptSignin() {
@@ -109,9 +122,27 @@ export default class StartPage extends CustomComponent<StartProps, State> {
     return (
         <PageContainer>
             <TextButton
-                text={"Go to main page"}
+                text={"Go to main page (Tester1)"}
                 onPress={() => {
-                    this.props.navigation.navigate("userMain")
+                    this.setState({userText: 'test@example.com', passText: 'asdfasdf'}, () => {
+                        this.attemptSignin();
+                    })
+                }}
+            />
+            <TextButton
+                text={"Go to main page (Tester2)"}
+                onPress={() => {
+                    this.setState({userText: 'test2@example.com', passText: 'asdfasdf'}, () => {
+                        this.attemptSignin();
+                    })
+                }}
+            />
+            <TextButton
+                text={"Go to main page (Tester3)"}
+                onPress={() => {
+                    this.setState({userText: 'test3@example.com', passText: 'asdfasdf'}, () => {
+                        this.attemptSignin();
+                    })
                 }}
             />
             <TextButton

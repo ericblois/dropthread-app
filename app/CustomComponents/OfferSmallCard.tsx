@@ -20,36 +20,25 @@ type Props = {
     offerInfo: OfferInfo,
     style?: ViewStyle,
     badgeNumber?: number,
-    showCustomPrice?: number,
     onLoadEnd?: () => void,
     onPress?: (event?: GestureResponderEvent) => void
 }
 
 type State = {
-    wasSent: boolean,
-    willPay: boolean,
-    price: number
+    isFrom: boolean,
+    willPayPrice: number,
+    willReceivePrice: number
 }
 
-export default class ItemSmallCard extends CustomComponent<Props, State> {
+export default class OfferSmallCard extends CustomComponent<Props, State> {
 
     constructor(props: Props) {
         super(props);
-        // Determine if this offer was sent by this user
-        let wasSent = User.getCurrent().uid === props.offerInfo.offer.fromID ? true : false
-        // Determine if this user will pay
-        let willPay = false
-        if (wasSent && props.offerInfo.offer.fromPayment) {
-            willPay = true
-        } else if (!wasSent && props.offerInfo.offer.toPayment) {
-            willPay = true
-        }
-        // Determine the display price
-        let price = props.offerInfo.offer.toPayment || props.offerInfo.offer.fromPayment
+        const isFrom = User.getCurrent().uid === props.offerInfo.offer.fromUserID
         this.state = {
-            wasSent: wasSent,
-            willPay: willPay,
-            price: price!
+            isFrom: isFrom,
+            willPayPrice: isFrom ? props.offerInfo.fromFacePrice : props.offerInfo.toFacePrice,
+            willReceivePrice: isFrom ? props.offerInfo.toBasePrice - props.offerInfo.fromFeePrice : props.offerInfo.fromBasePrice - props.offerInfo.toFeePrice
         }
     }
 
@@ -57,46 +46,36 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
         return (
         <CustomPressable
             style={{...styles.cardContainer, ...this.props.style}}
-            animationType={"shadow"}
+            animationType={"shadowSmall"}
             onPress={this.props.onPress}
         >
             <View style={{flex: 1, height: '100%', justifyContent: 'space-between'}}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                    {/* Names */}
+                    <Text style={textStyles.small}>{`From: ${this.state.isFrom ? 'You' : this.props.offerInfo.offer.fromName}`}</Text>
+                    <Text style={textStyles.small}>{`To: ${this.state.isFrom ? this.props.offerInfo.offer.toName : 'You'}`}</Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                    {/* Items */}
+                    <Text style={textStyles.small}>
+                        {`${this.props.offerInfo.fromItemInfos.length} item${this.props.offerInfo.fromItemInfos.length === 1 ? '' : 's'}`}
+                    </Text>
+                    <Text style={textStyles.small}>
+                        {`${this.props.offerInfo.toItemInfos.length} item${this.props.offerInfo.toItemInfos.length === 1 ? '' : 's'}`}
+                    </Text>
+                </View>
+                <View style={{flexDirection: 'row', flex: 1, alignItems: 'flex-end', justifyContent: 'space-between'}}>
                     {/* Cash Icon */}
                     <Icons.FontAwesome5
                         name={'money-bill-wave'}
                         style={{
                             fontSize: styleValues.mediumTextSize,
-                            color: this.state.willPay ? colors.darkGrey : colors.main 
+                            color: this.state.willPayPrice > 0 ? colors.lighterGrey : colors.main 
                         }}
                     />
                     {/* Price */}
-                    <Text style={{...textStyles.medium, textAlign: 'left', marginLeft: styleValues.mediumPadding, flex: 1}}
-                    >{currencyFormatter.format(this.state.price)}</Text>
-                    {/* Name */}
-                    <Text numberOfLines={1} style={{...textStyles.medium, textAlign: 'right', marginRight: styleValues.minorPadding, maxWidth: '50%'}}>
-                        {this.state.wasSent
-                            ? capitalizeWords(this.props.offerInfo.offer.toName)
-                            : capitalizeWords(this.props.offerInfo.offer.fromName)
-                        }
-                    </Text>
-                </View>
-                <View style={{flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between'}}>
-                    {/* Items */}
-                    <View style={{alignItems: 'flex-start'}}>
-                        <Text style={textStyles.small}>
-                            {`Your items: ${this.state.wasSent
-                                ? this.props.offerInfo.fromItems.length
-                                : this.props.offerInfo.toItems.length
-                            }`}
-                        </Text>
-                        <Text style={textStyles.small}>
-                            {`Their items: ${!this.state.wasSent
-                                ? this.props.offerInfo.fromItems.length
-                                : this.props.offerInfo.toItems.length
-                            }`}
-                        </Text>
-                    </View>
+                    <Text style={{...textStyles.small, textAlign: 'left', marginLeft: styleValues.mediumPadding, flex: 1}}
+                    >{`${this.state.willPayPrice > 0 ? 'You pay: ' : 'You receive: '}${currencyFormatter.format(this.state.willPayPrice > 0 ? this.state.willPayPrice : this.state.willReceivePrice)}`}</Text>
                     {/* View offer text */}
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={{...textStyles.small, color: colors.grey}}>View offer</Text>

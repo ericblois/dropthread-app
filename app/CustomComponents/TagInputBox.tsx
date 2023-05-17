@@ -5,6 +5,7 @@ import CustomComponent from "./CustomComponent";
 import CustomImageButton from "./CustomImageButton";
 import ScrollContainer from "./ScrollContainer";
 import CustomIconButton from "./CustomIconButton";
+import Item from "../HelperFiles/Item";
 
 type TagInputBoxProps = {
     boxStyle?: ViewStyle,
@@ -75,12 +76,16 @@ export default class TagInputBox extends CustomComponent<TagInputBoxProps, State
     }
 
     addTag(text: string) {
-        if (this.state.tags.includes(text) || this.state.tags.length >= 10) {
+        if (this.state.tags.includes(text) || this.state.tags.length >= Item.maxNumStyles) {
             return
         } else {
             const newTags = this.state.tags
             newTags.push(text)
-            this.setState({tags: newTags})
+            this.setState({tags: newTags}, () => {
+                if (this.props.onChange) {
+                    this.props.onChange(this.state.tags)
+                }
+            })
         }
     }
 
@@ -89,7 +94,11 @@ export default class TagInputBox extends CustomComponent<TagInputBoxProps, State
         if (tagIndex > -1) {
             const newTags = this.state.tags
             newTags.splice(tagIndex, 1)
-            this.setState({tags: newTags})
+            this.setState({tags: newTags}, () => {
+                if (this.props.onChange) {
+                    this.props.onChange(this.state.tags)
+                }
+            })
         }
     }
 

@@ -11,9 +11,10 @@ import ExchangesScreen from "./ExchangesScreen";
 import ViewItemsPage from "./UserMainPages/ViewItemsPage";
 import * as Notifications from 'expo-notifications'
 import BrowsePage from "./UserMainPages/BrowsePage";
-import EditOfferPage from "./UserMainPages/EditOfferPage";
+import CreateOfferPage from "./UserMainPages/CreateOfferPage";
 import MenuBar from "./CustomComponents/MenuBar";
 import { bottomInset, colors, displayHeight, icons, screenHeight, screenWidth, styleValues } from "./HelperFiles/StyleSheet";
+import EditOfferPage from "./UserMainPages/EditOfferPage";
 
 type UserMainNavigationProp = StackNavigationProp<RootStackParamList, "userMain">;
 
@@ -116,8 +117,9 @@ export default class UserMainScreen extends CustomComponent<UserMainProps, State
             >
                 <UserMainStack.Screen
                     name={"browse"}
-                    component={BrowsePage}
-                />
+                >
+                    {props => <BrowsePage {...props} refreshOnNavigate={false}/>}
+                </UserMainStack.Screen>
                 <UserMainStack.Screen
                     name={"exchanges"}
                     component={ExchangesScreen}
@@ -135,6 +137,10 @@ export default class UserMainScreen extends CustomComponent<UserMainProps, State
                 <UserMainStack.Screen
                     name={"viewItems"}
                     component={ViewItemsPage}
+                />
+                <UserMainStack.Screen
+                    name={"createOffer"}
+                    component={CreateOfferPage}
                 />
                 <UserMainStack.Screen
                     name={"editOffer"}

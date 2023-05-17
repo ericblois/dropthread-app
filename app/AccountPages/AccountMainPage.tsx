@@ -69,9 +69,17 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
                     <Text>Account main</Text>
                     {this.renderViewLikesButton()}
                     <TextButton
-                        text={"signout"}
+                        text={"Log Out"}
                         showLoading
-                        onPress={async () => await auth.signOut()}
+                        onPress={async () => {
+                            await auth.signOut()
+                            this.props.navigation.reset({
+                                routes: [{
+                                    name: 'entry'
+                                }]
+                            })
+                            //this.props.navigation.navigate('start')
+                        }}
                     />
                     <View
                         style={{
@@ -119,7 +127,9 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
 
     render() {
     return (
-        <PageContainer>
+        <PageContainer
+            headerText={"Account"}
+        >
             {this.renderUI()}
             {this.renderLoading()}
         </PageContainer>

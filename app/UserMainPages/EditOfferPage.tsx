@@ -1,18 +1,19 @@
-import { FontAwesome5, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
+import { Entypo, Feather, FontAwesome5, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import { RouteProp } from "@react-navigation/core";
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import CustomIconButton from "../CustomComponents/CustomIconButton";
-import { CustomCurrencyInput, CustomModal, CustomScrollView, CustomTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { CustomCurrencyInput, CustomImage, CustomModal, CustomScrollView, CustomTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
-import { extractKeywords, ItemData, ItemFilter, ItemInfo, OfferData, UserData } from "../HelperFiles/DataTypes";
+import { extractKeywords, ItemData, ItemFilter, ItemInfo, ItemPriceData, OfferData, OfferInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
 import Offer from "../HelperFiles/Offer";
 import { bottomInset, colors, defaultStyles, fonts, icons, screenHeight, screenUnit, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
+import OfferLargeCard from "../CustomComponents/OfferLargeCard";
 
 type EditOfferNavigationProp = StackNavigationProp<UserMainStackParamList, "editOffer">;
 
@@ -24,14 +25,13 @@ type EditOfferProps = {
 }
 
 type State = {
-    offerData: OfferData,
-    fromItems: ItemInfo[],
-    toItems: ItemInfo[],
-    fromPayment: number | null,
-    toPayment: number | null,
+    offerInfo: OfferInfo,
+    originalItemIDs: string[],
     showDetailCard?: ItemInfo,
-    didLoad: boolean,
-    errorDidOccur: boolean
+    otherLikedItems?: ItemInfo[],
+    isLoading: boolean,
+    imagesLoaded: boolean,
+    errorMessage?: string
 }
 
 //const AnimatedFilterScrollBar = Animated.createAnimatedComponent(FilterScrollBar);
@@ -43,141 +43,137 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
     constructor(props: EditOfferProps) {
         super(props)
         this.state = {
-            offerData: Offer.createData(
-                User.getCurrent().uid,
-                props.route.params.interaction.likePrice,
-                0
-            ),
-            fromItems: [],
-            toItems: [],
-            toPayment: props.route.params.interaction.likePrice,
-            fromPayment: 0,
-            didLoad: false,
-            errorDidOccur: false
+            offerInfo: props.route.params.offerInfo,
+            originalItemIDs: props.route.params.offerInfo.offer.itemIDs,
+            showDetailCard: undefined,
+            otherLikedItems: undefined,
+            isLoading: false,
+            imagesLoaded: false,
+            errorMessage: undefined
         }
     }
-    // Refresh data, only used for initial load
+    // Refresh data
     async refreshData() {
-        this.setState({didLoad: false})
-        let fromItems = await Item.getFromIDs([this.props.route.params.interaction.itemID])
-        //let toPayment = fromItems.map(({item}) => (item.lastPrice)).reduce((prev, current) => (prev + current))
-        this.setState({fromItems: fromItems})
-    }
-
-    validateOfferData() {
-        const offer = this.state.offerData
-        //if (offer.)
-    }
-
-    renderReceived() {
-        if (this.state.toItems) {
-            const totalPrice = this.state.toPayment || 0
-            const feeAmount = Math.min(Math.max(1, totalPrice*0.08), 10)
-            const subtotalPrice = totalPrice - feeAmount
-            return (
-                <>
-                    <Text
-                        style={textStyles.mediumHeader}
-                    >You receive:</Text>
-                    {this.state.toPayment ? 
-                    <View style={{...shadowStyles.small, ...defaultStyles.roundedBox, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-                        <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Total: ${currencyFormatter.format(totalPrice)}`}</Text>
-                        <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Fee: ${currencyFormatter.format(feeAmount)}`}</Text>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                width: '100%',
-                                borderTopWidth: styleValues.minorBorderWidth,
-                                borderColor: colors.grey,
-                                paddingTop: styleValues.mediumPadding,
-                                marginTop: styleValues.mediumPadding
-                            }}
-                        >
-                            <Text style={{...textStyles.small, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(subtotalPrice)}`}</Text>
-                            <FontAwesome5
-                                name={'money-bill-wave'}
-                                style={{
-                                    fontSize: styleValues.mediumTextSize,
-                                    color: colors.main
-                                }}
-                            />
-                        </View>
-                    </View> : undefined}
-                    {this.state.toItems.map((itemInfo, index) => {
-                        return (
-                            <ItemSmallCard
-                                itemInfo={itemInfo}
-                                style={{...shadowStyles.small, width: '100%'}}
-                                key={index.toString()}
-                            />
-                        )
-                    })}
-                </>
-            )
+        try {
+            this.setState({isLoading: true, errorMessage: undefined})
+            // Get offer info
+            let [offerInfo, otherLikedItems] = await Promise.all([
+                Offer.getInfo(this.state.offerInfo?.offer),
+                Item.getLiked(this.state.offerInfo?.offer.toUserID)
+            ]);
+            otherLikedItems = otherLikedItems.filter((itemInfo) => !offerInfo.offer.itemIDs.includes(itemInfo.item.itemID))
+            this.setState({offerInfo: offerInfo, otherLikedItems: otherLikedItems, offerData: offerInfo.offer})
+        } catch (e) {
+            this.handleError(e)
         }
+        this.setState({isLoading: false})
     }
 
-    renderGiven() {
-        if (this.state.fromItems) {
-            return (
-                <>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            width: '100%',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                    >
-                        <Octicons
-                            name={"arrow-switch"}
-                            style={{
-                                fontSize: styleValues.largeTextSize,
-                                color: colors.darkerGrey,
-                                marginRight: styleValues.mediumPadding,
-                                transform: [{rotate: '90deg'}]
-                            }}
-                        />
-                        <Text
-                            style={textStyles.mediumHeader}
-                        >For:</Text>
-                    </View>
-                    {this.state.fromPayment ? 
-                    <View style={defaultStyles.roundedBox}>
-                        <Text>{this.state.fromPayment}</Text>
-                    </View> : undefined}
-                    {this.state.fromItems.map((itemInfo, index) => {
-                        return (
-                            <ItemSmallCard
-                                itemInfo={itemInfo}
-                                style={{...shadowStyles.small, width: '100%'}}
-                                showCustomPrice={itemInfo.item.priceData.lastFacePrice}
-                                onPress={() => this.setState({showDetailCard: itemInfo})}
-                                key={index.toString()}
-                            />
-                        )
-                    })}
-                </>
-            )
+    addItem(itemInfo: ItemInfo) {
+        const newOfferData: OfferData = {
+            ...this.state.offerInfo?.offer,
+            itemIDs: this.state.offerInfo?.offer.itemIDs.concat([itemInfo.item.itemID])
         }
+        this.setState({offerData: newOfferData}, () => {
+            this.refreshData()
+        })
+    }
+
+    removeItem(itemInfo: ItemInfo) {
+        const newOfferData: OfferData = this.state.offerInfo?.offer
+        const itemIndex = newOfferData.itemIDs.indexOf(itemInfo.item.itemID)
+        if (itemIndex !== -1) {
+            newOfferData.itemIDs.splice(itemIndex, 1)
+        }
+        this.setState({offerData: newOfferData}, () => {
+            this.refreshData()
+        })
     }
 
     renderUI() {
         return (
-            <CustomScrollView>
-                <View
-                    style={{
-                        ...shadowStyles.small,
-                        ...defaultStyles.roundedBox,
+            <CustomScrollView
+                contentContainerStyle={{paddingBottom: styleValues.mediumHeight + styleValues.mediumPadding}}
+            >
+                <CustomTextButton
+                    text={`Browse ${this.state.offerInfo?.offer.toName}'s items`}
+                    textStyle={{color: colors.grey}}
+                    rightChildren={
+                        <Entypo
+                            name="chevron-thin-right"
+                            style={{
+                                fontSize: styleValues.mediumTextSize,
+                                color: colors.grey
+                            }}
+                        />
+                    }
+                    onPress={() => {
+                        this.props.navigation.navigate('viewItems', {
+                            getItems: () => Item.getFromUser(this.state.offerInfo?.offer.toUserID),
+                            addItem: async (itemInfo: ItemInfo) => {
+                                await Item.like(itemInfo);
+                                this.addItem(itemInfo);
+                            },
+                            addedItems: this.state.offerInfo?.offer.itemIDs,
+                            header: 'Add Items to Offer'
+                        })
                     }}
-                >
-                    {this.renderReceived()}
-                    {this.renderGiven()}
-                </View>
+                />
+                <OfferLargeCard
+                    offerInfo={this.state.offerInfo!}
+                    onPressItem={(itemInfo) => this.setState({showDetailCard: itemInfo})}
+                    onLoadEnd={() => this.setState({imagesLoaded: true})}
+                    removeItem={(itemInfo) => this.removeItem(itemInfo)}
+                />
+                {/* Other liked items */}
+                {this.state.otherLikedItems && this.state.otherLikedItems.length > 0 ?
+                    <>
+                        <Text style={{...textStyles.smallHeader, color: colors.grey}}>{`${this.state.offerInfo?.offer.toName} has also liked:`}</Text>
+                        {this.state.otherLikedItems.map((itemInfo, index) => {
+                            return (
+                                <View key={index.toString()}>
+                                    <ItemSmallCard
+                                        itemInfo={itemInfo}
+                                        onPress={() => this.setState({showDetailCard: itemInfo})}
+                                    />
+                                    <CustomIconButton
+                                        name="plus"
+                                        type="Feather"
+                                        buttonStyle={{
+                                            position: 'absolute',
+                                            top: styleValues.mediumPadding,
+                                            right: styleValues.mediumPadding,
+                                            backgroundColor: colors.main,
+                                            height: styleValues.iconMediumSize,
+                                            borderRadius: styleValues.iconMediumSize,
+                                            padding: styleValues.minorPadding
+                                        }}
+                                        iconStyle={{color: colors.white}}
+                                        onPress={() => this.addItem(itemInfo)}
+                                    />
+                                </View>
+                            )
+                        })}
+                    </>
+                : undefined}
             </CustomScrollView>
         )
+    }
+
+    renderLoading() {
+        if (this.state.isLoading
+            || !this.state.offerInfo
+            || !this.state.imagesLoaded
+            || this.state.errorMessage) {
+            return (
+              <LoadingCover
+                size={"large"}
+                showError={!!this.state.errorMessage}
+                errorText={this.state.errorMessage}
+                onErrorRefresh={() => this.refreshData()}
+            />
+            );
+        }
     }
 
     render() {
@@ -186,7 +182,47 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
             <PageContainer
                 headerText={'Send Offer'}
             >
-                <CustomModal
+                {this.renderUI()}
+                <View style={{
+                    position: 'absolute',
+                    bottom: bottomInset + styleValues.mediumPadding,
+                    width: '100%', 
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                }}>
+                    <CustomIconButton
+                        name={'close'}
+                        type={'MaterialCommunityIcons'}
+                        animationType={'shadowSmall'}
+                        buttonStyle={{
+                            ...defaultStyles.roundedBox,
+                            width: styleValues.mediumHeight,
+                            marginRight: styleValues.mediumPadding,
+                            marginVertical: 0
+                        }}
+                        onPress={() => this.props.navigation.goBack()}
+                    />
+                    <CustomTextButton
+                        text={'Send'}
+                        appearance={'color'}
+                        showLoading
+                        wrapperStyle={{
+                            flex: 1
+                        }}
+                        buttonStyle={{
+                            height: styleValues.mediumHeight
+                        }}
+                        textStyle={{
+                            fontSize: styleValues.mediumTextSize
+                        }}
+                        onPress={async () => {
+                            
+                            await Offer.send(this.state.offerInfo!.offer)
+                            this.props.navigation.goBack()
+                        }}
+                    />
+              </View>
+              <CustomModal
                     visible={!!this.state.showDetailCard}
                     onClose={() => this.setState({showDetailCard: undefined})}
                 >
@@ -195,60 +231,17 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                         itemInfo={this.state.showDetailCard}
                         style={{
                             //width: '50%',
-                            height: screenHeight*0.7
+                            height: screenHeight*0.8
                         }}
-                        disableViewCloset
+                        hideButtons
                     />
                     : undefined}
                 </CustomModal>
-              {this.renderUI()}
-              <View style={{
-                position: 'absolute',
-                bottom: bottomInset + styleValues.mediumPadding,
-                width: '100%', 
-                flexDirection: 'row',
-                alignItems: 'center'
-              }}>
-                <CustomIconButton
-                    name={'close'}
-                    type={'MaterialCommunityIcons'}
-                    animationType={'shadowSmall'}
-                    buttonStyle={{
-                        ...defaultStyles.roundedBox,
-                        width: styleValues.mediumHeight,
-                        marginRight: styleValues.mediumPadding,
-                        marginVertical: 0
-                    }}
-                    onPress={() => this.props.navigation.goBack()}
-                />
-                <CustomTextButton
-                    text={'Send'}
-                    appearance={'color'}
-                    showLoading
-                    wrapperStyle={{
-                        flex: 1
-                    }}
-                    buttonStyle={{
-                        height: styleValues.mediumHeight
-                    }}
-                    textStyle={{
-                        fontSize: styleValues.mediumTextSize
-                    }}
-                    onPress={async () => {
-                        
-                        await Offer.send(
-                            this.state.offerData,
-                            this.state.fromItems.map(({item}) => (item.itemID)),
-                            this.state.toItems.map(({item}) => (item.itemID))
-                        )
-                        this.props.navigation.goBack()
-                    }}
-                />
-              </View>
+                {this.renderLoading()}
             </PageContainer>
         );
       } catch (e) {
-        this.setState({errorDidOccur: true})
+        this.handleError(e);
       }
     }
 }

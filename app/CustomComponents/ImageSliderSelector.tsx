@@ -12,6 +12,7 @@ import { AutoFocus, Camera, FlashMode } from 'expo-camera';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomModal from "./CustomModal";
 import CustomCameraModal from "./CustomCameraModal";
+import Item from "../HelperFiles/Item";
 
 type ImageInfo = {
     uri: string,
@@ -25,6 +26,7 @@ type Props = {
     minRatio?: number,
     maxRatio?: number,
     fadeColor?: string,
+    maxNum?: number,
     showValidSelection: boolean,
     ignoreInitialValidity: boolean,
     onChange?: (uris: {
@@ -43,7 +45,8 @@ type State = {
     deletedImages: string[],
     galleryWidth?: number,
     galleryHeight?: number,
-    cameraOpen: boolean
+    cameraOpen: boolean,
+    maxNum: number
 }
 
 export default class ImageSliderSelector extends CustomComponent<Props, State> {
@@ -64,7 +67,8 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
             deletedImages: [],
             galleryWidth: undefined,
             galleryHeight: undefined,
-            cameraOpen: false
+            cameraOpen: false,
+            maxNum: props.maxNum || Item.maxNumImages
         }
         let isValid = false
         if (props.showValidSelection) {
@@ -348,13 +352,12 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     borderRadius: styleValues.mediumPadding,
                     backgroundColor: colors.background,
                 }}
-                buttonProps={{animationType: 'shadowSmall'}}
+                buttonProps={{animationType: 'shadowSmall', disabled: this.state.images.length >= this.state.maxNum}}
+                iconStyle={{
+                    color: this.state.images.length >= this.state.maxNum ? colors.lighterGrey : colors.darkerGrey
+                }}
                 onPress={async () => {
                     this.setState({cameraOpen: true})
-                    /*const result = await accessCamera({aspect: [1, 1]})
-                    if (result) {
-                        this.addImage(result)
-                    }*/
                 }}
                 infoProps={{
                     text: "Add new image",

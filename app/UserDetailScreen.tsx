@@ -11,7 +11,7 @@ import ExchangesScreen from "./ExchangesScreen";
 import ViewItemsPage from "./UserMainPages/ViewItemsPage";
 import * as Notifications from 'expo-notifications'
 import BrowsePage from "./UserMainPages/BrowsePage";
-import EditOfferPage from "./UserMainPages/EditOfferPage";
+import CreateOfferPage from "./UserMainPages/CreateOfferPage";
 import MenuBar from "./CustomComponents/MenuBar";
 import { bottomInset, colors, displayHeight, icons, screenHeight, screenWidth, styleValues } from "./HelperFiles/StyleSheet";
 import ViewOfferPage from "./UserDetailPages/ViewOfferPage";

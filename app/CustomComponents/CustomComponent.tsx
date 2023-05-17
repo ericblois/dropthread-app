@@ -1,12 +1,44 @@
 import { Component } from "react";
 import AppUtils from "../HelperFiles/AppUtils";
 import { auth } from "../HelperFiles/Constants";
+import { EventListenerCallback, NavigationProp } from "@react-navigation/native";
 
-export default class CustomComponent<P = {}, S = {errorMessage: string}, SS = any> extends Component<P, S, SS> {
-    
+type Props = {
+    navigation?: {[key: string]: any},
+    route?: {[key: string]: any},
+    refreshOnNavigate?: boolean
+}
+
+type State = {
+    errorMessage?: string
+}
+
+export default class CustomComponent<P, S, SS = any> extends Component<P & Props, S & State, SS> {
+
+    constructor(props: P & Props) {
+        super(props)
+        this.state = {
+            errorMessage: undefined
+        } as Readonly<S & State>
+        if (props.refreshOnNavigate !== false && props.navigation && props.navigation.addListener && props.route && props.route.name) {
+            // This component has a navigation and route prop
+            // Ensure this component refreshes its data when navigated to
+            props['navigation']!['addListener']!('state', (e: {[key: string]: any}) => {
+                const routes = e.data.state.routes
+                if (routes[routes.length - 1].name === props.route!.name) {
+                    if (!this.isRefreshing) {
+                        this.isRefreshing = true
+                        this.refreshData().then(() => {this.isRefreshing = false})
+                    }
+                }
+            })
+        }
+    }
+
+    isRefreshing = false
     componentMounted = false
 
-    waitingStateUpdate: S | ((prevState: Readonly<S>, props: Readonly<P>) => S | Pick<S, never> | null) | Pick<S, never> | null = null
+    waitingStateUpdate: (S & State) | ((prevState: Readonly<(S & State)>, props: Readonly<P & Props>) => (S & State) | Pick<(S & State), never> | null) | Pick<(S & State), never> | null = null
 
     componentDidMount() {
         this.componentMounted = true
@@ -15,10 +47,12 @@ export default class CustomComponent<P = {}, S = {errorMessage: string}, SS = an
         }
         if (this.waitingStateUpdate !== null) {
             this.setState(this.waitingStateUpdate, () => {
-                this.refreshData()
+                this.isRefreshing = true
+                this.refreshData().then(() => {this.isRefreshing = false})
             })
         } else {
-            this.refreshData()
+            this.isRefreshing = true
+            this.refreshData().then(() => {this.isRefreshing = false})
         }
     }
 
@@ -29,7 +63,7 @@ export default class CustomComponent<P = {}, S = {errorMessage: string}, SS = an
         }
     }
 
-    setState(state: S | ((prevState: Readonly<S>, props: Readonly<P>) => S | Pick<S, never> | null) | Pick<S, never> | null, callback?: (() => void) | undefined) {
+    setState(state: (S & State) | ((prevState: Readonly<S & State>, props: Readonly<P & Props>) => (S & State) | Pick<(S & State), never> | null) | Pick<(S & State), never> | null, callback?: (() => void) | undefined) {
         if (this.componentMounted) {
             super.setState(state, callback)
         } else {
@@ -43,7 +77,7 @@ export default class CustomComponent<P = {}, S = {errorMessage: string}, SS = an
         }
     }
     // Will always get run on mount
-    refreshData() {}
+    async refreshData() {}
 
     handleError(e: any) {
         let errorMessage = 'An error occurred.'

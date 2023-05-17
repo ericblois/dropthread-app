@@ -6,7 +6,7 @@ import React from "react";
 import { DeviceEventEmitter, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
-import { CustomScrollView, CustomTextButton, ImageSlider, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
+import { ConfirmationPopup, CustomScrollView, CustomTextButton, ImageSlider, LoadingCover, MenuBar, OfferSmallCard, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo, ItemInteraction, OfferData, OfferInfo } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -14,6 +14,7 @@ import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Nav
 import Offer from "../HelperFiles/Offer";
 import { colors, defaultStyles, displayWidth, icons, menuBarStyles, screenUnit, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
+import { ConfirmationPopupConfig } from "../CustomComponents/ConfirmationPopup";
 
 type ItemInfoNavigationProp = CompositeNavigationProp<
     StackNavigationProp<ClosetStackParamList, "itemInfo">,
@@ -31,8 +32,7 @@ type State = {
     itemInfo?: ItemInfo,
     itemLikes?: ItemInteraction[],
     itemOffers?: OfferInfo[],
-    // Maps a user ID (like) to the index of an offer
-    offerMap?: {[userID: string]: number},
+    showDeletePopup: boolean,
     imagesLoaded: boolean,
     isLoading: boolean,
     errorMessage?: string
@@ -46,7 +46,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
             itemInfo: undefined,
             itemLikes: undefined,
             itemOffers: undefined,
-            offerMap: undefined,
+            showDeletePopup: false,
             imagesLoaded: false,
             isLoading: false,
             errorMessage: undefined
@@ -63,34 +63,26 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
         try {
             this.setState({isLoading: true, imagesLoaded: false, errorMessage: undefined})
             // Get data
-            const [itemsInfo, itemLikes] = await Promise.all([
+            let [itemsInfo, itemLikes, itemOffers] = await Promise.all([
                 Item.getFromIDs([this.props.route.params.itemID]),
-                Item.getLikes(this.props.route.params.itemID)
+                Item.getLikes(this.props.route.params.itemID),
+                Offer.getWithItem(this.props.route.params.itemID)
             ])
-            const itemOffers = await Offer.getWithItem(this.props.route.params.itemID)
-            const offerMap: {[userID: string]: number} = {}
             // Get all user IDs involved in offers (that aren't current user)
             const offerUserIDs = itemOffers.map((offerInfo) => {
-                if (offerInfo.offer.fromID === User.getCurrent().uid) {
-                    return offerInfo.offer.toID
+                if (offerInfo.offer.fromUserID === User.getCurrent().uid) {
+                    return offerInfo.offer.toUserID
                 } else {
-                    return offerInfo.offer.fromID
+                    return offerInfo.offer.fromUserID
                 }
             })
-            // Check which users (who have liked) are also in an offer
-            itemLikes.forEach((intx) => {
-                const index = offerUserIDs.indexOf(intx.userID)
-                if (index > -1) {
-                    // Add to offer map
-                    offerMap[intx.userID] = index
-                }
-            })
+            // Filter out users' likes who are involved in an open offer with this item
+            itemLikes = itemLikes.filter((interaction) => !offerUserIDs.includes(interaction.userID))
             this.setState({
                 itemInfo: itemsInfo[0],
                 itemLikes: itemLikes,
-                itemOffers: itemOffers,
-                offerMap: offerMap
-            })
+                itemOffers: itemOffers
+            });
         } catch(e) {
             this.handleError(e)
         }
@@ -138,18 +130,13 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                         : undefined}
                     </View>
                     <View>
-                        {/* Current base price */}
+                        {/* Minimum price */}
                         <Text style={{
                                 ...textStyles.larger,
                                 textAlign: 'right',
                             }}
                             numberOfLines={1}
-                        >{currencyFormatter.format(this.state.itemInfo.item.priceData.basePrice).substring(0, 9)}</Text>
-                        {/* Fee */}
-                        <Text
-                            style={{...textStyles.small, textAlign: "right", color: colors.grey}}
-                            numberOfLines={1}
-                        >Fee: {currencyFormatter.format(Math.ceil(this.state.itemInfo.item.priceData.feePrice)).substring(0, 9)}</Text>
+                        >{currencyFormatter.format(this.state.itemInfo.item.priceData.minPrice).substring(0, 9)}</Text>
                     </View>
                 </View>
             )
@@ -159,7 +146,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
     renderLikes() {
         if (this.state.itemInfo && this.state.itemLikes) {
             return (
-                <View style={{marginBottom: styleValues.mediumPadding}}>
+                <View>
                     {/* Views / likes */}
                     <View
                         style={{
@@ -185,7 +172,9 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                             />
                         </View>
                     </View>
-                    {this.state.itemLikes.map((interaction, index) => {
+                    {this.state.itemLikes.length === 0
+                    ? <Text style={{...textStyles.small, color: colors.grey, marginBottom: styleValues.mediumPadding}}>No likes yet.</Text>    
+                    : this.state.itemLikes.map((interaction, index) => {
                         const secondsAgo = (Date.now() - interaction.likeTime)/1000
                         let timeText = secondsAgo < 60 ? `${Math.floor(secondsAgo)}s ago`
                         : secondsAgo < 3600 ? `${Math.floor(secondsAgo/60)}m ago`
@@ -216,7 +205,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                                     <Text style={{...textStyles.smaller, textAlign: 'left', color: colors.grey}}>{timeText}</Text>
                                 </View>
                                 <CustomTextButton
-                                    text={'Accept'}
+                                    text={'Send offer'}
                                     wrapperStyle={{width: '30%'}}
                                     buttonStyle={{
                                         marginBottom: undefined,
@@ -235,9 +224,33 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                                             }}
                                         />
                                     }
-                                    onPress={() => this.props.navigation.navigate('editOffer', {interaction: interaction})}
+                                    onPress={() => {
+                                        this.props.navigation.navigate('createOffer', {offer: Offer.createOffer(interaction.userID, interaction.itemID)})
+                                    }}
                                 />
                             </View>
+                        )
+                    })}
+                </View>
+            )
+        }
+    }
+
+    renderOffers() {
+        if (this.state.itemInfo && this.state.itemOffers && this.state.itemOffers.length > 0) {
+            return (
+                <View style={{marginBottom: styleValues.mediumPadding}}>
+                    {/* Views / likes */}
+                    <Text style={{...textStyles.mediumHeader, marginTop: 0}}>Offers</Text>
+                    {this.state.itemOffers.map((offerInfo, index) => {
+                        return (
+                            <OfferSmallCard
+                                offerInfo={offerInfo}
+                                onPress={() => {
+
+                                }}
+                                key={index.toString()}
+                            />
                         )
                     })}
                 </View>
@@ -295,12 +308,14 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                     />
                     {/* Views / likes */}
                     {this.renderLikes()}
+                    {/* Offers */}
+                    {this.renderOffers()}
                     {/* Delete button */}
                     <TextButton
                         text={"Delete item"}
                         textStyle={{color: colors.invalid}}
                         showLoading={true}
-                        onPress={() => this.deleteItem()}
+                        onPress={() => this.setState({showDeletePopup: true})}
                     />
                 </CustomScrollView>
                 </>
@@ -350,6 +365,16 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                 ]}
             
             ></MenuBar>
+            <ConfirmationPopup
+                visible={this.state.showDeletePopup}
+                headerText={"Delete Item"}
+                infoText={"Are you sure you want to delete this item? Views, likes, and images associated with this item will also be deleted."}
+                confirmText="Delete"
+                confirmButtonStyle={{backgroundColor: colors.invalid}}
+                confirmTextStyle={{color: colors.white}}
+                onConfirm={() => this.deleteItem()}
+                onDeny={() => this.setState({showDeletePopup: false})}
+            />
         </PageContainer>
     );
     }

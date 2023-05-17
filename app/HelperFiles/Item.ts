@@ -1,5 +1,5 @@
 import { httpsCallable } from "firebase/functions"
-import { ItemData, dollarIncrease, ItemFilter, ItemInfo, ItemInteraction, percentIncrease, ItemCategories, ItemGenders, ItemFits, ItemConditions, countriesList, DefaultItemData, ItemPriceData } from "../HelperFiles/DataTypes"
+import { ItemData, dollarIncrease, ItemFilter, ItemInfo, ItemInteraction, percentIncrease, ItemCategories, ItemGenders, ItemFits, ItemConditions, countriesList, DefaultItemData, ItemPriceData, ItemColor } from "../HelperFiles/DataTypes"
 import { cloudRun, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import User from "./User"
@@ -7,7 +7,7 @@ import User from "./User"
 export default abstract class Item {
 
     // Retrieve items by their ID
-    public static async getFromIDs(itemIDs: string[]) {
+    public static async getFromIDs(itemIDs: string[], forceRefresh?: boolean) {
         if (itemIDs.length === 0) {
             return []
         }
@@ -20,8 +20,8 @@ export default abstract class Item {
             this is an initial refresh and should
             use itemIDs, otherwise just use refreshIDs
         */
-        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getItemsFromIDs", {
-            itemIDs: cacheResult.validItems.length === 0 ? itemIDs : cacheResult.refreshIDs,
+        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 || forceRefresh ? (await cloudRun('POST', "getItemsFromIDs", {
+            itemIDs: cacheResult.validItems.length === 0 || forceRefresh ? itemIDs : cacheResult.refreshIDs,
             coords: coords
         })) : []
         // Cache refreshed items
@@ -51,13 +51,14 @@ export default abstract class Item {
         return result.concat(cacheResult.validItems)
     }
     // Retrieve all items from a specific user
-    public static async getLiked() {
+    public static async getLiked(targetUserID?: string) {
         // Determine which item IDs should be refresh vs retrieved from cache
         /* 
             IMPLEMENT CACHE GET
         */
         const coords = await User.getLocation()
         const result: ItemInfo[] = await cloudRun('POST', "getLikedItems", {
+            targetUserID: targetUserID,
             coords: coords
         })
         /*
@@ -157,42 +158,29 @@ export default abstract class Item {
         // Reload this item in cache
         LocalCache.forceReloadItem(itemData.itemID)
     }
-    // Like an item, return like time, update local version and server version
-    public static like(itemInfo: ItemInfo) {
-        // Send like to server
-        cloudRun('POST', "likeItem", {
-            itemID: itemInfo.item.itemID
-        }).then((likeTime) => {
-            itemInfo.likeTime = likeTime as number
+    // Update the view times for multiple items
+    public static async updateItemViewTimes(viewTimes: {[itemID: string]: number}) {
+        // Send view times to server
+        await cloudRun('POST', "updateItemViewTimes", {
+            viewTimes: viewTimes
         })
-        // Return updated local version
-        itemInfo.likeTime = Date.now()
-        itemInfo.likePrice = itemInfo.item.priceData.basePrice
-        itemInfo.item.priceData.lastBasePrice = itemInfo.item.priceData.basePrice
-        itemInfo.item.priceData.basePrice = Math.max(itemInfo.item.priceData.basePrice*(1 + percentIncrease/100), itemInfo.item.priceData.basePrice + dollarIncrease)
-        itemInfo.item.likeCount += 1
+    }
+
+    // Like an item, return like time, update local version and server version
+    public static async like(itemInfo: ItemInfo) {
+        // Send like to server
+        const likeTime = await cloudRun('POST', "likeItem", {
+            itemID: itemInfo.item.itemID,
+            itemLoadTime: itemInfo.loadTime
+        })
+        return likeTime as number
     }
     // Unlike an item, update local version and server version
-    public static unlike(itemInfo: ItemInfo) {
+    public static async unlike(itemInfo: ItemInfo) {
         // Send like to server
-        cloudRun('POST', "unlikeItem", {
+        await cloudRun('POST', "unlikeItem", {
             itemID: itemInfo.item.itemID
         })
-        // Update local version
-        itemInfo.likeTime = null
-        itemInfo.likePrice = null
-        itemInfo.item.priceData.basePrice = itemInfo.item.priceData.lastBasePrice
-        // Revert lastPrice
-        if (itemInfo.item.priceData.lastBasePrice*(1/(1 + percentIncrease/100)) >= dollarIncrease) {
-            itemInfo.item.priceData.lastBasePrice *= 1/(1 + percentIncrease/100)
-        } else {
-            itemInfo.item.priceData.lastBasePrice -= 2.5
-        }
-        // Check if last price is now lower than the minimum prcie
-        if (itemInfo.item.priceData.lastBasePrice < itemInfo.item.priceData.minPrice) {
-            itemInfo.item.priceData.lastBasePrice = itemInfo.item.priceData.minPrice
-        }
-        itemInfo.item.likeCount -= 1
     }
     public static async getLikes(itemID: string) {
         // Get likes from server
@@ -201,29 +189,29 @@ export default abstract class Item {
         })) as ItemInteraction[]
     }
 
+    public static maxNameLength = 60
+    public static maxDescriptionLength = 200
+    public static maxSizeLength = 20
+    public static maxSubPrice = 90000
+    public static maxFacePrice = 100000
+    public static maxNumStyles = 10
+    public static maxNumColors = 5
+    public static maxNumImages = 5
+
     public static validatePriceData(priceData: ItemPriceData) {
         return (
             priceData.minPrice !== undefined
          && priceData.minPrice >= 0
-         && priceData.minPrice < 90000
+         && priceData.minPrice < Item.maxSubPrice
          && priceData.basePrice !== undefined
          && priceData.basePrice >= 0
-         && priceData.basePrice < 90000
+         && priceData.basePrice < Item.maxSubPrice
          && priceData.feePrice !== undefined
          && priceData.feePrice >= 0
-         && priceData.feePrice < 90000
+         && priceData.feePrice < Item.maxSubPrice
          && priceData.facePrice !== undefined
          && priceData.facePrice >= 0
-         && priceData.facePrice < 100000
-         && priceData.lastBasePrice !== undefined
-         && priceData.lastBasePrice >= 0
-         && priceData.lastBasePrice < 90000
-         && priceData.lastFeePrice !== undefined
-         && priceData.lastFeePrice >= 0
-         && priceData.lastFeePrice < 90000
-         && priceData.lastFacePrice !== undefined
-         && priceData.lastFacePrice >= 0
-         && priceData.lastFacePrice < 100000
+         && priceData.facePrice < Item.maxFacePrice
         )
     }
 
@@ -233,7 +221,7 @@ export default abstract class Item {
         */
         switch (key) {
             case "name":
-                if (!value || value === "") return false
+                if (!value || value === "" || (value as string).length > Item.maxNameLength) return false
                 break
             case "category":
                 if (!value || value === "" || !ItemCategories.includes(value)) return false
@@ -242,7 +230,10 @@ export default abstract class Item {
                 if (!value || value === "" || !ItemGenders.includes(value)) return false
                 break
             case "size":
-                if (!value || value === "") return false
+                if (!value || value === "" || (value as string).length > Item.maxSizeLength) return false
+                break
+            case "colors":
+                if (!value || value.length === 0 || (value as ItemColor[]).length > Item.maxNumColors) return false
                 break
             case "fit":
                 if (!value || value === "" || !ItemFits.includes(value)) return false
@@ -251,13 +242,13 @@ export default abstract class Item {
                 if (!value || value === "" || !ItemConditions.includes(value)) return false
                 break
             case "images":
-                if ((value as string[]).length <= 0) return false
+                if ((value as string[]).length <= 0 || (value as string[]).length > Item.maxNumImages) return false
                 break
             case "priceData":
                 if (!Item.validatePriceData(value)) return false
                 break
             case "styles":
-                if ((value as string[]).length > 10) return false
+                if ((value as string[]).length > Item.maxNumStyles) return false
                 break
             case "country":
                 if (!value || value === "" || !countriesList.includes(value)) return false

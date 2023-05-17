@@ -184,9 +184,9 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
                             if (!this.state.image) {
                                 if (!this.cameraRef || !this.state.ready || !this.state.permsGranted) return;
                                 const picture = await this.cameraRef.takePictureAsync({
-                                    exif: true,
+                                    exif: false,
                                     imageType: ImageType.jpg,
-                                    quality: 1
+                                    quality: 0.75
                                 })
                                 this.setState({image: picture})
                             } else if (this.props.onSave) {

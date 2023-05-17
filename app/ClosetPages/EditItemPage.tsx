@@ -4,7 +4,7 @@ import React from "react";
 import { DeviceEventEmitter, StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
-import { CustomCurrencyInput, ImageSliderSelector, LoadingCover, MenuBar, PageContainer, ScrollContainer, TagInputBox, TextDropdownAnimated, CustomTextInput, ToggleSwitch, CustomScrollView } from "../HelperFiles/CompIndex";
+import { CustomCurrencyInput, ImageSliderSelector, LoadingCover, MenuBar, PageContainer, ScrollContainer, TagInputBox, TextDropdownAnimated, CustomTextInput, ToggleSwitch, CustomScrollView, ColorDropdown } from "../HelperFiles/CompIndex";
 import { DefaultItemData, ItemCategories, ItemConditions, ItemData, ItemFits, ItemGenders, ItemPriceData, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList } from "../HelperFiles/Navigation";
@@ -59,7 +59,9 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                 ? {...DefaultItemData,
                     userID: userData.userID,
                     country: userData.country,
-                    region: userData.region
+                    region: userData.region,
+                    styles: [],
+                    colors: []
                 }
                 : (await Item.getFromIDs([this.props.route.params.itemID]))[0].item
             this.setState({
@@ -126,6 +128,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                 maxRatio={16/9}
                 showValidSelection={true}
                 ignoreInitialValidity={!this.state.validityFlag}
+                maxNum={Item.maxNumImages}
                 onImagesLoaded={() => {
                     this.setState({imagesLoaded: true})
                 }}
@@ -140,7 +143,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                 validateFunc={(text) => Item.validateProperty('name', text)}
                 indicatorType={'shadowSmall'}
                 placeholder={"Name"}
-                maxLength={50}
+                maxLength={Item.maxNameLength}
                 defaultValue={this.state.itemChanges.name || this.state.itemData!.name}
                 ignoreInitialValidity={!this.state.validityFlag}
                 onChangeText={(text) => {this.updateItem({name: text})}}
@@ -185,7 +188,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                 validateFunc={(text) => Item.validateProperty('size', text)}
                 indicatorType={'shadowSmall'}
                 placeholder={"Size"}
-                maxLength={20}
+                maxLength={Item.maxSizeLength}
                 defaultValue={capitalizeWords(this.state.itemChanges.size || this.state.itemData!.size)}
                 ignoreInitialValidity={!this.state.validityFlag}
                 onChangeText={(text) => {this.updateItem({size: text.toLowerCase()})}}
@@ -241,6 +244,20 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                 defaultValue={this.state.itemChanges.condition || this.state.itemData!.condition}
                 onSelect={(selections) => {
                     this.updateItem({condition: selections[0].value})
+                }}
+            />
+        )
+    }
+
+    renderColorDropdown() {
+        return (
+            <ColorDropdown
+                showValidSelection={true}
+                indicatorType={'shadowSmall'}
+                ignoreInitialValidity={!this.state.validityFlag}
+                defaultValues={this.state.itemChanges.colors || this.state.itemData!.colors}
+                onSelect={(selections) => {
+                    this.updateItem({colors: selections})
                 }}
             />
         )
@@ -311,6 +328,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                     {this.renderGenderDropdown()}
                     {this.renderCategoryDropdown()}
                     {this.renderConditionDropdown()}
+                    {this.renderColorDropdown()}
                     {this.renderFitDropdown()}
                     {this.renderPriceInput()}
                     {this.renderStylesInput()}

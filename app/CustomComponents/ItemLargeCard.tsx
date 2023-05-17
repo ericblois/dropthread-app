@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
 import CustomIconButton from "./CustomIconButton";
+import User from "../HelperFiles/User";
 
 type Props = {
     navigation?: StackNavigationProp<UserMainStackParamList>,
@@ -26,10 +27,11 @@ type Props = {
     onLoadEnd?: () => void,
     onPressCard?: () => void,
     onPressLike?: (isLiked: boolean) => void,
-    disableViewCloset?: boolean
+    hideButtons?: boolean
 }
 
 type State = {
+    itemInfo: ItemInfo,
     imageLoaded: boolean
 }
 
@@ -56,42 +58,61 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
+            itemInfo: props.itemInfo,
             imageLoaded: false
         }
     }
 
     renderLikeButton() {
-        return (
-            <CustomImageButton
-                iconSource={icons.hollowHeart}
-                buttonStyle={styles.likeButton}
-                iconStyle={{tintColor: this.props.itemInfo.likePrice ? colors.valid : colors.lightGrey}}
-                onPress={() => {
-                    // Unlike
-                    if (this.props.itemInfo.likePrice && this.props.itemInfo.likePrice >= this.props.itemInfo.item.priceData.lastFacePrice) {
-                        Item.unlike(this.props.itemInfo)
-                        if (this.props.onPressLike) {
-                            this.props.onPressLike(false)
+        if (this.props.hideButtons !== true) {
+            return (
+                <CustomImageButton
+                    iconSource={icons.hollowHeart}
+                    buttonStyle={styles.likeButton}
+                    iconStyle={{tintColor: this.state.itemInfo.likePrice && this.state.itemInfo.likePrice >= this.state.itemInfo.item.priceData.basePrice ? colors.valid : colors.lightGrey}}
+                    onPress={() => {
+                        // Unlike
+                        if (this.state.itemInfo.likePrice && this.state.itemInfo.likePrice >= this.state.itemInfo.item.priceData.basePrice) {
+                            const newItemInfo: ItemInfo = {
+                                ...this.state.itemInfo,
+                                likeTime: null,
+                                likePrice: null
+                            }
+                            this.setState({itemInfo: newItemInfo})
+                            Item.unlike(this.state.itemInfo).then(() => {
+                                Item.getFromIDs([this.state.itemInfo.item.itemID], true).then((itemInfos) => {
+                                    this.setState({itemInfo: itemInfos[0]}, () => {
+                                        let bla = 'k'
+                                    })
+                                })
+                            })
+                            if (this.props.onPressLike) {
+                                this.props.onPressLike(false)
+                            }
+                        } // Like
+                        else {
+                            const newItemInfo: ItemInfo = {
+                                ...this.state.itemInfo,
+                                likeTime: Date.now(),
+                                likePrice: this.state.itemInfo.item.priceData.basePrice
+                            }
+                            this.setState({itemInfo: newItemInfo})
+                            Item.like(this.state.itemInfo)
+                            if (this.props.onPressLike) {
+                                this.props.onPressLike(true)
+                            }
                         }
-                    } // Like
-                    else {
-                        Item.like(this.props.itemInfo)
-                        if (this.props.onPressLike) {
-                            this.props.onPressLike(true)
-                        }
-                    }
-                    console.log(this.props.itemInfo)
-                    this.forceUpdate()
-                }}
-            />
-        )
+                    }}
+                />
+            )
+        }
     }
 
     renderUI() {
         return (
         <>
             <ImageSlider
-                uris={this.props.itemInfo.item.images}
+                uris={this.state.itemInfo.item.images}
                 style={{borderRadius: styleValues.mediumPadding}}
                 minRatio={1}
                 maxRatio={1.5}
@@ -124,23 +145,27 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                                 marginRight: styleValues.mediumPadding*2
                             }}
                             numberOfLines={2}
-                        >{this.props.itemInfo.item.name}</Text>
+                        >{this.state.itemInfo.item.name}</Text>
                         <Text style={{
                             ...textStyles.large,
                             textAlign: "right",
                             }}
-                        >{currencyFormatter.format(this.props.itemInfo.item.priceData.facePrice)}</Text>
+                        >{currencyFormatter.format(
+                            this.state.itemInfo.item.userID == User.getCurrent().uid ?
+                            this.state.itemInfo.item.priceData.minPrice :
+                            this.state.itemInfo.item.priceData.facePrice
+                        )}</Text>
                     </View>
                     {/* Gender / category, distance */}
                     <View style={{flexDirection: "row", justifyContent: 'space-between'}}>
                         <Text style={{...styles.minorText}}>{
-                        capitalizeWords(`${this.props.itemInfo.item.gender !== 'unisex' ? this.props.itemInfo.item.gender + `'s` : ``} ${this.props.itemInfo.item.category !== 'other' ? this.props.itemInfo.item.category : ''}`)
+                        capitalizeWords(`${this.state.itemInfo.item.gender !== 'unisex' ? this.state.itemInfo.item.gender + `'s` : ``} ${this.state.itemInfo.item.category !== 'other' ? this.state.itemInfo.item.category : ''}`)
                         }</Text>
-                        <Text style={{...styles.minorText, textAlign: "right"}}>{`within ${this.props.itemInfo.distance} km`}</Text>
+                        <Text style={{...styles.minorText, textAlign: "right"}}>{`within ${this.state.itemInfo.distance} km`}</Text>
                     </View>
                 </View>
                 {/* Popular item? */}
-                {this.props.itemInfo.item.likeCount >= 0 ?
+                {this.state.itemInfo.item.likeCount >= 0 ?
                 <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: styleValues.minorPadding}}>
                     <Icons.MaterialCommunityIcons
                         name="fire"
@@ -162,7 +187,7 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                             marginRight: styleValues.minorPadding
                         }}
                     />
-                    <Text style={styles.minorText}>{`${capitalizeWords(this.props.itemInfo.item.condition)} condition`}</Text>
+                    <Text style={styles.minorText}>{`${capitalizeWords(this.state.itemInfo.item.condition)} condition`}</Text>
                 </View>
                 {/* Size and fit */}
                 <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: styleValues.minorPadding}}>
@@ -174,7 +199,7 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                             marginRight: styleValues.minorPadding
                         }}
                     />
-                    <Text style={styles.minorText}>{`${capitalizeWords(this.props.itemInfo.item.size)}${this.props.itemInfo.item.fit !== 'proper' ? ` (Fits ${this.props.itemInfo.item.fit})` : ``}`}</Text>
+                    <Text style={styles.minorText}>{`${capitalizeWords(this.state.itemInfo.item.size)}${this.state.itemInfo.item.fit !== 'proper' ? ` (Fits ${this.state.itemInfo.item.fit})` : ``}`}</Text>
                 </View>
             </View>
             {/* Buttons */}
@@ -184,7 +209,7 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                 justifyContent: 'space-between',
                 paddingHorizontal: styleValues.mediumPadding
             }}>
-                {this.props.disableViewCloset ? <View></View> :
+                {this.props.hideButtons ? <View></View> :
                 <CustomImageButton
                     iconSource={icons.hangers}
                     buttonStyle={{
@@ -199,7 +224,7 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                     iconStyle={{tintColor: colors.grey}}
                     buttonProps={{animationType: 'shadow'}}
                     onPress={async () => {
-                        const userItems = await Item.getFromUser(this.props.itemInfo.item.userID)
+                        const userItems = await Item.getFromUser(this.state.itemInfo.item.userID)
                         if (this.props.navigation) {
                             this.props.navigation.navigate('viewItems', {items: userItems})
                         }
@@ -213,7 +238,7 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
     }
 
     renderLoading() {
-        if (this.props.itemInfo.item === undefined || !this.state.imageLoaded) {
+        if (this.state.itemInfo.item === undefined || !this.state.imageLoaded) {
             return (
                 <LoadingCover style={{backgroundColor: colors.white}}/>
             )

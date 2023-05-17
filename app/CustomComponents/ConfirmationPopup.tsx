@@ -1,83 +1,57 @@
 import React from "react";
-import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-import { colors, defaultStyles, fonts, icons, screenHeight, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { Modal, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
+import { colors, defaultStyles, fonts, icons, screenHeight, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImageButton from "./CustomImageButton";
 import TextButton from "./TextButton";
+import { BlurView } from "expo-blur";
+
+export type ConfirmationPopupConfig = {
+    
+}
 
 type Props = {
-    type: "save" | "delete",
-    showConfirmLoading?: boolean,
-    showDenyLoading?: boolean,
+    visible: boolean,
+    headerText?: string,
+    infoText: string,
+    confirmText?: string,
+    denyText?: string,
+    confirmButtonStyle?: ViewStyle,
+    denyButtonStyle?: ViewStyle,
+    confirmTextStyle?: TextStyle,
+    denyTextStyle?: TextStyle,
     onConfirm?: () => void,
-    onDeny?: () => void,
-    onExit?: () => void
+    onDeny?: () => void
 }
 
 type State = {}
 
 export default class ConfirmationPopup extends CustomComponent<Props, State> {
 
-    headerText: string
-    descriptionText: string
-    denyText: string
-    confirmText: string
-    denyButtonStyle: ViewStyle
-    denyTextStyle: TextStyle
-    confirmButtonStyle: ViewStyle
-    confirmTextStyle: TextStyle
-
     constructor(props: Props) {
         super(props)
         this.state = {
-
-        }
-        // Set save text
-        if (props.type === "save") {
-            this.headerText = "Unsaved changes"
-            this.descriptionText = "You have unsaved changes. Would you like to save before continuing?"
-            this.denyText = "Don't save"
-            this.confirmText = "Save"
-            this.denyButtonStyle = {...defaultStyles.roundedBox}
-            this.denyTextStyle = {color: colors.invalid}
-            this.confirmButtonStyle = {...defaultStyles.roundedBox, backgroundColor: colors.main}
-            this.confirmTextStyle = {
-                color: colors.white,
-                fontFamily: fonts.medium
-            }
-        } else {
-            this.headerText = "Delete"
-            this.descriptionText = "Are you sure you would like to delete?"
-            this.denyText = "Cancel"
-            this.confirmText = "Delete"
-            this.denyButtonStyle = {...defaultStyles.roundedBox}
-            this.denyTextStyle = {color: colors.black}
-            this.confirmButtonStyle = {...defaultStyles.roundedBox}
-            this.confirmTextStyle = {
-                color: colors.invalid,
-                fontFamily: fonts.medium
-            }
         }
     }
 
     renderConfirmButton() {
         return (
             <TextButton
-                text={this.confirmText}
+                text={this.props.confirmText || 'Confirm'}
                 buttonStyle={{
                     flex: 1,
-                    ...this.confirmButtonStyle
+                    ...this.props.confirmButtonStyle
                 }}
                 textStyle={{
-                    ...textStyles.medium,
-                    ...this.confirmTextStyle
+                    ...textStyles.small,
+                    ...this.props.confirmTextStyle
                 }}
                 onPress={async () => {
                     if (this.props.onConfirm) {
                         await this.props.onConfirm()
                     }
                 }}
-                showLoading={this.props.showConfirmLoading ? this.props.showConfirmLoading : true}
+                showLoading
             />
         )
     }
@@ -85,87 +59,80 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
     renderDenyButton() {
         return (
             <TextButton
-                text={this.denyText}
+                text={this.props.denyText || 'Cancel'}
                 textStyle={{
-                    ...textStyles.medium,
-                    ...this.denyTextStyle
+                    ...textStyles.small,
+                    ...this.props.denyTextStyle
                 }}
                 buttonStyle={{
                     flex: 1,
-                    ...this.denyButtonStyle
+                    ...this.props.denyButtonStyle
                 }}
                 onPress={async () => {
                     if (this.props.onDeny) {
                         await this.props.onDeny()
                     }
                 }}
-                showLoading={this.props.showDenyLoading ? this.props.showDenyLoading : true}
+                showLoading
             />
         )
     }
 
-    renderExitButton() {
-        if (this.props.onExit) {
-            return (
-                <CustomImageButton
-                    iconSource={icons.cross}
-                    buttonStyle={styles.exitButton}
-                    iconStyle={{tintColor: colors.white}}
-                    onPress={() => this.props.onExit!()}
-                />
-            )
-        }
-    }
-
     render() {
         return (
-            <View
-                style={styles.container}
+            <Modal
+                animationType={"fade"}
+                transparent={true}
+                visible={this.props.visible}
             >
-                <View
-                    style={styles.outsideTouchable}
-                />
                 <View style={{
-                    position: "absolute",
-                    padding: styleValues.iconSmallSize,
-                    paddingBottom: styleValues.iconSmallSize + styleValues.mediumHeight,
-                    maxWidth: screenWidth*0.8
-                }}>
-                    <View
+                    ...defaultStyles.fill,
+                    paddingHorizontal: styleValues.mediumPadding,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+                    onStartShouldSetResponder={() => true}
+                >
+                    <BlurView
                         style={{
-                            ...defaultStyles.inputBox,
-                            height: undefined,
-                            width: "100%",
-                            padding: styleValues.mediumPadding,
+                            ...defaultStyles.fill,
                         }}
-                    >
-                        <Text
+                        tint={'default'}
+                        intensity={15}
+                    />
+                    <View style={{
+                        ...shadowStyles.medium,
+                        ...defaultStyles.roundedBox,
+                        paddingBottom: 0,
+                        position: "absolute",
+                        maxWidth: screenWidth*0.8
+                    }}>
+                        {/* Header */}
+                        {this.props.headerText ?
+                            <Text style={textStyles.medium}>
+                                {this.props.headerText}
+                            </Text>
+                        : undefined}
+                        {/* Info / description */}
+                        <Text style={{...textStyles.small, textAlign: 'left', marginBottom: styleValues.mediumPadding}}>
+                            {this.props.infoText}
+                        </Text>
+                        {/* Buttons */}
+                        <View 
                             style={{
-                                ...textStyles.largeHeader,
-                                marginTop: 0,
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                width: "100%"
                             }}
-                        >{this.headerText}</Text>
-                        <Text
-                            style={{
-                                ...defaultStyles.inputText,
-                            }}
-                        >{this.descriptionText}</Text>
+                        >
+                            {this.renderDenyButton()}
+                            <View style={{width: styleValues.mediumPadding}}/>
+                            {this.renderConfirmButton()}
+                        </View>
                     </View>
-                    <View 
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            width: "100%"
-                        }}
-                    >
-                        {this.renderDenyButton()}
-                        <View style={{width: styleValues.mediumPadding}}/>
-                        {this.renderConfirmButton()}
-                    </View>
-                    {this.renderExitButton()}
                 </View>
-            </View>
+            </Modal>
         )
     }
 }

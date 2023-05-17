@@ -19,6 +19,7 @@ type Props = {
 }
 
 type State = {
+    itemInfo: ItemInfo,
     status: "highestPrice" | "outbid" | "unliked",
     statusText: string,
     imageLoaded: boolean
@@ -29,6 +30,7 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
+            itemInfo: props.itemInfo,
             status: 'highestPrice',
             statusText: '',
             imageLoaded: props.itemInfo.item.images.length === 0
@@ -41,9 +43,9 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
 
     // Update the status of the like on this item
     updateStatus = () => {
-        if (!this.props.itemInfo.likePrice) {
+        if (!this.state.itemInfo.likePrice) {
             this.setState({status: 'unliked', statusText: 'Not liked'})
-        } else if (this.props.itemInfo.likePrice >= this.props.itemInfo.item.priceData.lastFacePrice) {
+        } else if (this.state.itemInfo.likePrice >= this.state.itemInfo.item.priceData.basePrice) {
             this.setState({status: 'highestPrice', statusText: 'Most recent like'})
         } else {
             this.setState({status: 'outbid', statusText: 'Liked by other shopper'})
@@ -51,7 +53,7 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
     }
 
     renderUI() {
-        const priceText = currencyFormatter.format(this.state.status === 'highestPrice' ? this.props.itemInfo.likePrice! : this.props.itemInfo.item.priceData.facePrice )
+        const priceText = currencyFormatter.format(this.state.status === 'highestPrice' ? this.state.itemInfo.likePrice! : this.state.itemInfo.item.priceData.facePrice )
         const priceColor = this.state.status === 'outbid' ? colors.invalid : colors.black 
         const statusColor = this.state.status === 'highestPrice' ? colors.valid : colors.invalid
         return (
@@ -67,7 +69,7 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
                 imageProps={{
                     resizeMode: "cover"
                 }}
-                source={{uri: this.props.itemInfo.item.images[0]}}
+                source={{uri: this.state.itemInfo.item.images[0]}}
                 onLoad={() => {
                     this.setState({imageLoaded: true}, () => {
                         if (this.props.onLoadEnd) {
@@ -84,7 +86,7 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
                     <Text
                         style={{...styles.headerText, flex: 1, marginRight: styleValues.mediumPadding}}
                         numberOfLines={1}
-                    >{this.props.itemInfo.item.name}</Text>
+                    >{this.state.itemInfo.item.name}</Text>
                     {/* PRICE */}
                     <View style={{flexDirection: "row", alignItems: "center"}}>
                         {this.state.status === 'outbid' ?
@@ -130,14 +132,30 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
                         iconStyle={{tintColor: this.state.status === 'highestPrice' ? colors.valid : colors.grey}}
                         onPress={() => {
                             // Unlike
-                            if (this.props.itemInfo.likePrice && this.props.itemInfo.likePrice >= this.props.itemInfo.item.priceData.lastFacePrice) {
-                                Item.unlike(this.props.itemInfo)
+                            if (this.state.itemInfo.likePrice && this.state.itemInfo.likePrice >= this.state.itemInfo.item.priceData.basePrice) {
+                                const newItemInfo: ItemInfo = {
+                                    ...this.state.itemInfo,
+                                    likeTime: null,
+                                    likePrice: null
+                                }
+                                this.setState({itemInfo: newItemInfo})
+                                Item.unlike(this.state.itemInfo).then(() => {
+                                    Item.getFromIDs([this.state.itemInfo.item.itemID], true).then((itemInfos) => {
+                                        this.setState({itemInfo: itemInfos[0]})
+                                    });
+                                })
                                 if (this.props.onPressLike) {
                                     this.props.onPressLike(false)
                                 }
                             } // Like
                             else {
-                                Item.like(this.props.itemInfo)
+                                const newItemInfo: ItemInfo = {
+                                    ...this.state.itemInfo,
+                                    likeTime: Date.now(),
+                                    likePrice: this.state.itemInfo.item.priceData.basePrice
+                                }
+                                this.setState({itemInfo: newItemInfo})
+                                Item.like(this.state.itemInfo)
                                 if (this.props.onPressLike) {
                                     this.props.onPressLike(true)
                                 }

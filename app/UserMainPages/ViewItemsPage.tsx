@@ -9,6 +9,7 @@ import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
 import { bottomInset, colors, icons, screenHeight, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
+import CustomIconButton from "../CustomComponents/CustomIconButton";
 
 type ViewItemsNavigationProp = StackNavigationProp<UserMainStackParamList, "viewItems">;
 
@@ -21,8 +22,12 @@ type ViewItemsProps = {
 
 type State = {
     //Index of the item to show a detailed view
+    items?: ItemInfo[],
+    addedItems: string[],
     showDetailCard?: ItemInfo,
-    errorDidOccur: boolean
+    isLoading: boolean,
+    imagesLoaded: number,
+    errorMessage?: string
 }
 
 //const AnimatedFilterScrollBar = Animated.createAnimatedComponent(FilterScrollBar);
@@ -34,49 +39,112 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
     constructor(props: ViewItemsProps) {
         super(props)
         this.state = {
+            items: undefined,
+            addedItems: props.route.params.addedItems || [],
             showDetailCard: undefined,
-            errorDidOccur: false
+            isLoading: true,
+            imagesLoaded: 0,
+            errorMessage: undefined
         }
+        this.props.navigation.addListener('state', (e) => {
+          const routes = e.data.state.routes;
+          if (routes[routes.length - 1].name === 'viewItems') {
+            this.refreshData()
+          }
+        })
+    }
+
+    async refreshData() {
+      try {
+        this.setState({isLoading: true, errorMessage: undefined});
+        const itemInfos = await this.props.route.params.getItems()
+        this.setState({items: itemInfos})
+      } catch (e) {
+        this.handleError(e)
+      }
+      this.setState({isLoading: false})
     }
 
     renderUI() {
-        return (
-            <>
-                <CustomModal
-                    visible={!!this.state.showDetailCard}
-                    onClose={() => this.setState({showDetailCard: undefined})}
-                >
-                    {this.state.showDetailCard ?
-                    <ItemLargeCard
-                        itemInfo={this.state.showDetailCard}
-                        style={{
-                            //width: '50%',
-                            height: screenHeight*0.7
-                        }}
-                        disableViewCloset
-                    />
-                    : undefined}
-                </CustomModal>
+        if (this.state.items) {
+            return (
                 <FlatList
-                    data={this.props.route.params.items}
-                    style={{overflow: 'visible'}}
+                    data={this.state.items}
+                    style={{overflow: 'visible', marginTop: styleValues.mediumPadding}}
                     renderItem={({item, index}) => (
-                        <ItemSmallCard
-                            itemInfo={item}
-
-                            onPress={() => this.setState({showDetailCard: item})}
-                        />
+                        <View>
+                            <ItemSmallCard
+                                itemInfo={item}
+                                onPress={() => this.setState({showDetailCard: item})}
+                                onLoadEnd={() => this.setState({imagesLoaded: this.state.imagesLoaded + 1})}
+                            />
+                            {this.props.route.params.addItem && !this.state.addedItems.includes(item.item.itemID) ?
+                            <CustomIconButton
+                                name="plus"
+                                type="Feather"
+                                buttonStyle={{
+                                    position: 'absolute',
+                                    top: styleValues.mediumPadding,
+                                    right: styleValues.mediumPadding,
+                                    backgroundColor: colors.main,
+                                    height: styleValues.iconMediumSize,
+                                    borderRadius: styleValues.iconMediumSize,
+                                    padding: styleValues.minorPadding
+                                }}
+                                iconStyle={{color: colors.white}}
+                                onPress={async () => {
+                                  await this.props.route.params.addItem!(item)
+                                  this.setState({addedItems: this.state.addedItems.concat(item.item.itemID)})
+                                }}
+                            />  
+                          : undefined}
+                          </View>
                     )}
                 />
-            </>
-        )
+            )
+        }
+    }
+    renderLoading() {
+      if (
+        this.state.isLoading
+        || !this.state.items
+        || this.state.imagesLoaded < this.state.items.length
+        || this.state.errorMessage
+        ) {
+          return (
+            <LoadingCover
+              size={"large"}
+              showError={!!this.state.errorMessage}
+              errorText={this.state.errorMessage}
+              onErrorRefresh={() => this.refreshData()}
+          />
+          );
+        }
     }
 
     render() {
       try {
         return (
-            <PageContainer>
+            <PageContainer
+              headerText={this.props.route.params.header}
+            >
               {this.renderUI()}
+              <CustomModal
+                  visible={!!this.state.showDetailCard}
+                  onClose={() => this.setState({showDetailCard: undefined})}
+              >
+                  {this.state.showDetailCard ?
+                  <ItemLargeCard
+                      itemInfo={this.state.showDetailCard}
+                      style={{
+                          //width: '50%',
+                          height: screenHeight*0.7
+                      }}
+                      hideButtons
+                  />
+                  : undefined}
+              </CustomModal>
+              {this.renderLoading()}
               <MenuBar
                 buttonProps={[
                   {

@@ -29,7 +29,9 @@ import CustomModal from "../CustomComponents/CustomModal"
 import CustomBadge from "../CustomComponents/CustomBadge"
 import CustomTextButton from "../CustomComponents/CustomTextButton"
 import OfferSmallCard from "../CustomComponents/OfferSmallCard"
+import OfferLargeCard from "../CustomComponents/OfferLargeCard"
 import CustomCameraModal from "../CustomComponents/CustomCameraModal"
+import ColorDropdown from "../CustomComponents/ColorDropdown"
 
 export {
     MenuBar,
@@ -63,5 +65,6 @@ export {
     CustomBadge,
     CustomTextButton,
     OfferSmallCard,
-    CustomCameraModal
+    CustomCameraModal,
+    ColorDropdown
 };

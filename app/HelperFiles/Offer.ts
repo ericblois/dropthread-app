@@ -18,27 +18,29 @@ export default abstract class Offer {
     public static async getWithUser() {
         return (await cloudRun('POST', 'getOffersWithUser', {})) as OfferInfo[]
     }
-    public static createData(userID: string, receivedPayment: number, givenPayment: number) {
+
+    public static async getInfo(offerData: OfferData) {
+        const coords = await User.getLocation()
+        return (await cloudRun('POST', 'getOfferInfo', {offerData: offerData, coords: coords})) as OfferInfo
+    }
+
+    public static createOffer(buyerUserID: string, itemID: string) {
         return {
             offerID: uuid.v4(),
-            fromID: User.getCurrent().uid,
-            toID: userID,
-            fromPayment: givenPayment,
-            toPayment: receivedPayment,
+            fromUserID: User.getCurrent().uid,
+            toUserID: buyerUserID,
+            fromName: '',
+            toName: '',
+            itemIDs: [itemID],
             offerTime: Date.now(),
             responseType: null,
             responseTime: null,
-            counterOfferID: null,
             exchangeID: null
         } as OfferData
     }
 
-    public static async send(offer: OfferData, fromItemIDs: string[], toItemIDs: string[]) {
-        await cloudRun('POST', 'sendOffer', {
-            offerData: offer,
-            fromItemIDs: fromItemIDs,
-            toItemIDs: toItemIDs
-        })
+    public static async send(offer: OfferData) {
+        await cloudRun('POST', 'sendOffer', {offerData: offer})
     }
 
     public static accept(offerID: string) {
@@ -49,7 +51,7 @@ export default abstract class Offer {
         
     }
 
-    public static reject(offerID: string) {
-        
+    public static async reject(offerID: string) {
+        await cloudRun('POST', 'rejectOffer', {offerID: offerID})
     }
 }
