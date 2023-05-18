@@ -6,7 +6,7 @@ import * as geofireSource from 'geofire-common';
 import { CustomImageButton } from './CompIndex';
 import firebaseConfig from './firebase-config.json';
 import { icons } from './StyleSheet';
-import { cloudRunURL } from './config';
+import { requestURL } from './config';
 import * as Device from 'expo-device';
 
 const localhost = Device.isDevice ? '192.168.10.55' : 'localhost'
@@ -41,9 +41,8 @@ export const simpleCurrencyFormatter = new Intl.NumberFormat("en-CA", {
 } as Intl.NumberFormatOptions
 )
 
-//const cloudRunURL = 'localhost:8080'
-export const cloudRun = async (method: 'GET' | 'POST', url: string, data?: any, debug: boolean = false) => {
-  let bgy = cloudRunURL
+//const requestURL = 'localhost:8080'
+export const sendRequest = async (method: 'GET' | 'POST', url: string, data?: any, debug: boolean = false) => {
   // Get auth token
   if (!auth.currentUser) {
     throw new Error('Could not retrieve user');
@@ -61,7 +60,7 @@ export const cloudRun = async (method: 'GET' | 'POST', url: string, data?: any, 
     })}`)
   }
   // Send request
-  const response = await fetch(`${cloudRunURL}/${url}`, {
+  const response = await fetch(`${requestURL}/${url}`, {
     method: method,
     headers: {
       'Accept': 'application/json',

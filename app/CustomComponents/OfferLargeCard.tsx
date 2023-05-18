@@ -1,17 +1,11 @@
 
 import React from "react";
-import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
-import FastImage from "react-native-fast-image";
-import CustomPressable from "./CustomPressable";
+import { Text, View, ViewStyle } from "react-native";
 import { currencyFormatter } from "../HelperFiles/Constants";
-import { ItemData, ItemInfo, OfferData, OfferInfo } from "../HelperFiles/DataTypes";
-import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth, defaultStyles } from "../HelperFiles/StyleSheet";
+import { ItemInfo, OfferInfo } from "../HelperFiles/DataTypes";
+import { colors, shadowStyles, styleValues, textStyles, defaultStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
-import CustomImage from "./CustomImage";
-import LoadingCover from "./LoadingCover";
-import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import * as Icons from "@expo/vector-icons"
-import CustomBadge from "./CustomBadge";
 import User from "../HelperFiles/User";
 import ItemSmallCard from "./ItemSmallCard";
 import CustomIconButton from "./CustomIconButton";
@@ -27,6 +21,7 @@ type Props = {
 }
 
 type State = {
+    isFrom: boolean,
     imagesLoaded: number
 }
 
@@ -35,6 +30,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
+            isFrom: props.offerInfo.offer.fromUserID === User.getCurrent().uid,
             imagesLoaded: 0
         }
     }
@@ -42,14 +38,16 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
 
     renderReceived() {
         if (this.props.offerInfo) {
+            const basePrice = this.state.isFrom ? this.props.offerInfo.toBasePrice : this.props.offerInfo.fromBasePrice;
+            const receivedItems = this.state.isFrom ? this.props.offerInfo.toItemInfos : this.props.offerInfo.fromItemInfos;
             return (
                 <>
                     <Text
                         style={textStyles.mediumHeader}
                     >You receive:</Text>
-                    {this.props.offerInfo.toBasePrice > 0 ? 
+                    {basePrice > 0 ? 
                     <View style={{...shadowStyles.small, ...defaultStyles.roundedBox, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-                        <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Base: ${currencyFormatter.format(this.props.offerInfo.toBasePrice)}`}</Text>
+                        <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Base: ${currencyFormatter.format(basePrice)}`}</Text>
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -62,7 +60,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                 marginTop: styleValues.mediumPadding
                             }}
                         >
-                            <Text style={{...textStyles.small, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(this.props.offerInfo.toBasePrice)}`}</Text>
+                            <Text style={{...textStyles.small, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(basePrice)}`}</Text>
                             <Icons.FontAwesome5
                                 name={'money-bill-wave'}
                                 style={{
@@ -72,7 +70,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                             />
                         </View>
                     </View> : undefined}
-                    {this.props.offerInfo.toItemInfos.map((itemInfo, index) => {
+                    {receivedItems.map((itemInfo, index) => {
                         return (
                             <View key={index.toString()}>
                                 <ItemSmallCard
@@ -90,7 +88,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                         }
                                     })}
                                 />
-                                {this.props.offerInfo!.offer.itemIDs.length > 1 ?
+                                {this.props.offerInfo?.offer.itemIDs.length > 1 && this.props.removeItem ?
                                 <CustomIconButton
                                         name="close"
                                         type="AntDesign"
@@ -105,9 +103,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                         }}
                                         iconStyle={{color: colors.white}}
                                         onPress={() => {
-                                            if (this.props.removeItem) {
-                                                this.props.removeItem(itemInfo)
-                                            }
+                                            this.props.removeItem!(itemInfo)
                                         }}
                                     />
                                 : undefined}
@@ -121,6 +117,10 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
 
     renderGiven() {
         if (this.props.offerInfo) {
+            const basePrice = this.state.isFrom ? this.props.offerInfo.fromBasePrice : this.props.offerInfo.toBasePrice;
+            const feePrice = this.state.isFrom ? this.props.offerInfo.fromFeePrice : this.props.offerInfo.toFeePrice;
+            const facePrice = this.state.isFrom ? this.props.offerInfo.fromFacePrice : this.props.offerInfo.toFacePrice;
+            const givenItems = this.state.isFrom ? this.props.offerInfo.fromItemInfos : this.props.offerInfo.toItemInfos;
             return (
                 <>
                     <View
@@ -140,15 +140,15 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                             }}
                         />
                     </View>
-                    {this.props.offerInfo.fromFacePrice > 0 ?
+                    {facePrice > 0 ?
                         <>
                         <Text style={textStyles.mediumHeader}>You pay:</Text>
                         <View style={{...shadowStyles.small, ...defaultStyles.roundedBox, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-                            {this.props.offerInfo.fromBasePrice > 0 ? 
-                                <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Base: ${currencyFormatter.format(this.props.offerInfo.fromBasePrice)}`}</Text>
+                            {basePrice > 0 ? 
+                                <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Base: ${currencyFormatter.format(basePrice)}`}</Text>
                             : undefined}
-                            {this.props.offerInfo.fromFeePrice > 0 ? 
-                                <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Fee: ${currencyFormatter.format(this.props.offerInfo.fromFeePrice)}`}</Text>
+                            {feePrice > 0 ? 
+                                <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Fee: ${currencyFormatter.format(feePrice)}`}</Text>
                             : undefined}
                             <View
                                 style={{
@@ -162,7 +162,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                     marginTop: styleValues.mediumPadding
                                 }}
                             >
-                                <Text style={{...textStyles.small, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(this.props.offerInfo.fromFacePrice)}`}</Text>
+                                <Text style={{...textStyles.small, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(feePrice)}`}</Text>
                                 <Icons.FontAwesome5
                                     name={'money-bill-wave'}
                                     style={{
@@ -174,10 +174,10 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                         </View>
                         </>
                     : undefined}
-                    {this.props.offerInfo.fromItemInfos.length > 0 ?
+                    {givenItems.length > 0 ?
                         <Text style={textStyles.mediumHeader}>Your items:</Text>
                     : undefined}
-                    {this.props.offerInfo.fromItemInfos.map((itemInfo, index) => {
+                    {givenItems.map((itemInfo, index) => {
                         return (
                             <View key={index.toString()}>
                                 <ItemSmallCard
@@ -195,7 +195,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                         }
                                     })}
                                 />
-                                {this.props.offerInfo!.offer.itemIDs.length > 1 ?
+                                {this.props.offerInfo?.offer.itemIDs.length > 1 && this.props.removeItem ?
                                 <CustomIconButton
                                         name="close"
                                         type="AntDesign"
@@ -210,9 +210,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                         }}
                                         iconStyle={{color: colors.white}}
                                         onPress={() => {
-                                            if (this.props.removeItem) {
-                                                this.props.removeItem(itemInfo)
-                                            }
+                                            this.props.removeItem!(itemInfo)
                                         }}
                                     />
                                 : undefined}

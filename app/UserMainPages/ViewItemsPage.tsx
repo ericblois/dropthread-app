@@ -66,7 +66,7 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
     }
 
     renderUI() {
-        if (this.state.items) {
+        if (this.state.items && this.state.items.length > 0) {
             return (
                 <FlatList
                     data={this.state.items}
@@ -102,6 +102,10 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
                     )}
                 />
             )
+        } else if (this.state.items && this.state.items.length === 0) {
+          return (
+            <Text style={{...textStyles.medium, alignSelf: 'center'}}>No items found.</Text>
+          )
         }
     }
     renderLoading() {

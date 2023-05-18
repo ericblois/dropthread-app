@@ -43,7 +43,6 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
             isLoading: true,
             errorMessage: undefined
         }
-        DeviceEventEmitter.addListener('refreshClosetItemData', () => this.refreshData())
     }
 
     async refreshData() {

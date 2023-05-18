@@ -223,8 +223,7 @@ export type Coords = {
 }
 
 export const percentFee = 10
-export const dollarFee = 1
-export const maxFee = 10
+export const dollarFee = 2
 export const percentIncrease = 5
 export const dollarIncrease = 2
 
@@ -292,7 +291,6 @@ export type DeliveryMethod = (typeof DeliveryMethods)[number] | ""
 export type ItemData = {
   userID: string,
   itemID: string,
-  offerIDs: string[],
   name: string,
   description: string,
   priceData: ItemPriceData,
@@ -317,7 +315,6 @@ export type ItemData = {
 export const DefaultItemData: Readonly<ItemData> = {
   userID: "",
   itemID: "",
-  offerIDs: [],
   name: "",
   description: "",
   priceData: {
@@ -396,7 +393,7 @@ export type ItemPriceHistory = {
   likeUserID: string | null
 }
 
-export type OfferResponse = 'accepted' | 'rejected'
+export type OfferResponse = 'accepted' | 'rejected' | 'cancelled' | 'countered'
 
 export type OfferData = {
   offerID: string,
@@ -426,14 +423,9 @@ export type OfferInfo = {
 
 export type ExchangeData = {
   exchangeID: string,
-  userID1: string,
-  userID2: string,
   offerID: string,
-  deliveryLat: number | null,
-  deliveryLong: number | null,
-  deliveryAddress: string | null,
-  deliveryPlannedTime: number | null,
-  deliveryActualTime: number | null,
-  stripePaymentID: string | null,
-  cancelled: boolean
+  status: 'pending' | 'cancelled' | 'completed',
+  plannedDeliveryTime: number | null,
+  completionTime: number | null,
+  completionImage: string | null
 }

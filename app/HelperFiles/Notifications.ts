@@ -1,4 +1,4 @@
-import { cloudRun } from './Constants';
+import { sendRequest } from './Constants';
 import * as Notifications from 'expo-notifications';
 import * as TaskManager from 'expo-task-manager'
 import { Platform } from 'react-native';
@@ -29,13 +29,13 @@ export async function subscribeNotifications() {
             lightColor: '#FF231F7C',
         });
     }
-    await cloudRun('POST', 'subscribeNotifications', {
+    await sendRequest('POST', 'subscribeNotifications', {
         token: token
     })
 }
 
 export async function disableNotifications() {
-    await cloudRun('POST', 'subscribeNotifications', {
+    await sendRequest('POST', 'subscribeNotifications', {
         token: null
     })
 }

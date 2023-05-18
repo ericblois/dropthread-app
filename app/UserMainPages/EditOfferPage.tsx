@@ -5,7 +5,7 @@ import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import CustomIconButton from "../CustomComponents/CustomIconButton";
-import { CustomCurrencyInput, CustomImage, CustomModal, CustomScrollView, CustomTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { ConfirmationPopup, CustomCurrencyInput, CustomImage, CustomModal, CustomScrollView, CustomTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, ItemPriceData, OfferData, OfferInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -29,6 +29,10 @@ type State = {
     originalItemIDs: string[],
     showDetailCard?: ItemInfo,
     otherLikedItems?: ItemInfo[],
+    isFrom: boolean,
+    hasChanged: boolean,
+    showAcceptPopup: boolean,
+    showRejectPopup: boolean,
     isLoading: boolean,
     imagesLoaded: boolean,
     errorMessage?: string
@@ -44,9 +48,13 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
         super(props)
         this.state = {
             offerInfo: props.route.params.offerInfo,
-            originalItemIDs: props.route.params.offerInfo.offer.itemIDs,
+            originalItemIDs: props.route.params.offerInfo.offer.itemIDs.sort(),
             showDetailCard: undefined,
             otherLikedItems: undefined,
+            isFrom: props.route.params.offerInfo.offer.fromUserID === User.getCurrent().uid,
+            hasChanged: false,
+            showAcceptPopup: false,
+            showRejectPopup: false,
             isLoading: false,
             imagesLoaded: false,
             errorMessage: undefined
@@ -59,7 +67,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
             // Get offer info
             let [offerInfo, otherLikedItems] = await Promise.all([
                 Offer.getInfo(this.state.offerInfo?.offer),
-                Item.getLiked(this.state.offerInfo?.offer.toUserID)
+                Item.getLiked(this.state.isFrom ? this.state.offerInfo?.offer.toUserID : this.state.offerInfo?.offer.fromUserID)
             ]);
             otherLikedItems = otherLikedItems.filter((itemInfo) => !offerInfo.offer.itemIDs.includes(itemInfo.item.itemID))
             this.setState({offerInfo: offerInfo, otherLikedItems: otherLikedItems, offerData: offerInfo.offer})
@@ -69,23 +77,37 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
         this.setState({isLoading: false})
     }
 
+    isSameAsOriginal(newItemIDs: string[]) {
+        return newItemIDs.sort().join(',') === this.state.originalItemIDs.join(',')
+    }
+
     addItem(itemInfo: ItemInfo) {
-        const newOfferData: OfferData = {
-            ...this.state.offerInfo?.offer,
-            itemIDs: this.state.offerInfo?.offer.itemIDs.concat([itemInfo.item.itemID])
+        const newOfferInfo: OfferInfo = {
+            ...this.state.offerInfo,
+            offer: {
+                ...this.state.offerInfo.offer,
+                itemIDs: this.state.offerInfo?.offer.itemIDs.concat([itemInfo.item.itemID])
+            }
         }
-        this.setState({offerData: newOfferData}, () => {
+
+        this.setState({
+            offerInfo: newOfferInfo,
+            hasChanged: !this.isSameAsOriginal(newOfferInfo.offer.itemIDs)
+        }, () => {
             this.refreshData()
         })
     }
 
     removeItem(itemInfo: ItemInfo) {
-        const newOfferData: OfferData = this.state.offerInfo?.offer
-        const itemIndex = newOfferData.itemIDs.indexOf(itemInfo.item.itemID)
+        const newOfferInfo: OfferInfo = this.state.offerInfo
+        const itemIndex = newOfferInfo.offer.itemIDs.indexOf(itemInfo.item.itemID)
         if (itemIndex !== -1) {
-            newOfferData.itemIDs.splice(itemIndex, 1)
+            newOfferInfo.offer.itemIDs.splice(itemIndex, 1)
         }
-        this.setState({offerData: newOfferData}, () => {
+        this.setState({
+            offerInfo: newOfferInfo,
+            hasChanged: !this.isSameAsOriginal(newOfferInfo.offer.itemIDs)
+        }, () => {
             this.refreshData()
         })
     }
@@ -95,45 +117,47 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
             <CustomScrollView
                 contentContainerStyle={{paddingBottom: styleValues.mediumHeight + styleValues.mediumPadding}}
             >
-                <CustomTextButton
-                    text={`Browse ${this.state.offerInfo?.offer.toName}'s items`}
-                    textStyle={{color: colors.grey}}
-                    rightChildren={
-                        <Entypo
-                            name="chevron-thin-right"
-                            style={{
-                                fontSize: styleValues.mediumTextSize,
-                                color: colors.grey
-                            }}
-                        />
-                    }
-                    onPress={() => {
-                        this.props.navigation.navigate('viewItems', {
-                            getItems: () => Item.getFromUser(this.state.offerInfo?.offer.toUserID),
-                            addItem: async (itemInfo: ItemInfo) => {
-                                await Item.like(itemInfo);
-                                this.addItem(itemInfo);
-                            },
-                            addedItems: this.state.offerInfo?.offer.itemIDs,
-                            header: 'Add Items to Offer'
-                        })
-                    }}
-                />
+                    <CustomTextButton
+                        text={`Browse ${this.state.isFrom ? this.state.offerInfo?.offer.toName : this.state.offerInfo?.offer.fromName}'s items`}
+                        textStyle={{color: colors.grey}}
+                        rightChildren={
+                            <Entypo
+                                name="chevron-thin-right"
+                                style={{
+                                    fontSize: styleValues.mediumTextSize,
+                                    color: colors.grey
+                                }}
+                            />
+                        }
+                        onPress={() => {
+                            this.props.navigation.navigate('viewItems', {
+                                getItems: () => Item.getFromUser(this.state.isFrom ? this.state.offerInfo.offer.toUserID : this.state.offerInfo.offer.fromUserID),
+                                addItem: !this.state.isFrom ? 
+                                async (itemInfo: ItemInfo) => {
+                                    await Item.like(itemInfo);
+                                    this.addItem(itemInfo);
+                                } : undefined,
+                                addedItems: !this.state.isFrom ? this.state.offerInfo?.offer.itemIDs : undefined,
+                                header: !this.state.isFrom ? 'Add Items to Offer' : `${this.state.isFrom ? this.state.offerInfo.offer.toName : this.state.offerInfo.offer.fromName}'s Items`
+                            })
+                        }}
+                    />
                 <OfferLargeCard
                     offerInfo={this.state.offerInfo!}
                     onPressItem={(itemInfo) => this.setState({showDetailCard: itemInfo})}
                     onLoadEnd={() => this.setState({imagesLoaded: true})}
-                    removeItem={(itemInfo) => this.removeItem(itemInfo)}
+                    removeItem={!this.state.isFrom ? (itemInfo) => this.removeItem(itemInfo) : undefined}
                 />
                 {/* Other liked items */}
-                {this.state.otherLikedItems && this.state.otherLikedItems.length > 0 ?
+                {!this.state.isFrom && this.state.otherLikedItems && this.state.otherLikedItems.length > 0 ?
                     <>
-                        <Text style={{...textStyles.smallHeader, color: colors.grey}}>{`${this.state.offerInfo?.offer.toName} has also liked:`}</Text>
+                        <Text style={{...textStyles.smallHeader, color: colors.grey}}>{`${this.state.isFrom ? this.state.offerInfo?.offer.toName : this.state.offerInfo?.offer.fromName} has also liked:`}</Text>
                         {this.state.otherLikedItems.map((itemInfo, index) => {
                             return (
                                 <View key={index.toString()}>
                                     <ItemSmallCard
                                         itemInfo={itemInfo}
+                                        showCustomPrice={itemInfo.likePrice!}
                                         onPress={() => this.setState({showDetailCard: itemInfo})}
                                     />
                                     <CustomIconButton
@@ -180,7 +204,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
       try {
         return (
             <PageContainer
-                headerText={'Send Offer'}
+                headerText={'Edit Offer'}
             >
                 {this.renderUI()}
                 <View style={{
@@ -191,8 +215,8 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                     alignItems: 'center'
                 }}>
                     <CustomIconButton
-                        name={'close'}
-                        type={'MaterialCommunityIcons'}
+                        name={'chevron-thin-left'}
+                        type={'Entypo'}
                         animationType={'shadowSmall'}
                         buttonStyle={{
                             ...defaultStyles.roundedBox,
@@ -202,25 +226,36 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                         }}
                         onPress={() => this.props.navigation.goBack()}
                     />
-                    <CustomTextButton
-                        text={'Send'}
-                        appearance={'color'}
-                        showLoading
-                        wrapperStyle={{
-                            flex: 1
-                        }}
-                        buttonStyle={{
-                            height: styleValues.mediumHeight
-                        }}
-                        textStyle={{
-                            fontSize: styleValues.mediumTextSize
-                        }}
-                        onPress={async () => {
-                            
-                            await Offer.send(this.state.offerInfo!.offer)
-                            this.props.navigation.goBack()
-                        }}
-                    />
+                        <CustomTextButton
+                            text={this.state.isFrom ? 'Cancel' : 'Reject'}
+                            appearance={'color'}
+                            showLoading
+                            wrapperStyle={{flex: 1}}
+                            buttonStyle={{
+                                height: styleValues.mediumHeight,
+                                backgroundColor: this.state.isFrom ? colors.background : colors.invalid,
+                                marginRight: styleValues.mediumPadding
+                            }}
+                            textStyle={{fontSize: styleValues.mediumTextSize, color: this.state.isFrom ? colors.invalid : colors.white}}
+                            onPress={async () => this.setState({showRejectPopup: true})}
+                        />
+                    {!this.state.isFrom ?
+                        <CustomTextButton
+                            text={this.state.hasChanged ? 'Send' : 'Accept'}
+                            appearance={'color'}
+                            showLoading
+                            wrapperStyle={{
+                                flex: 1
+                            }}
+                            buttonStyle={{
+                                height: styleValues.mediumHeight
+                            }}
+                            textStyle={{
+                                fontSize: styleValues.mediumTextSize
+                            }}
+                            onPress={async () => this.setState({showAcceptPopup: true})}
+                        />
+                    : undefined}
               </View>
               <CustomModal
                     visible={!!this.state.showDetailCard}
@@ -237,6 +272,36 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                     />
                     : undefined}
                 </CustomModal>
+                <ConfirmationPopup
+                    visible={this.state.showRejectPopup}
+                    headerText={`${this.state.isFrom ? 'Cancel' : 'Reject'} Offer`}
+                    infoText={`Are you sure you would like to ${this.state.isFrom ? 'cancel' : 'reject'} this offer?`}
+                    confirmText={this.state.isFrom ? 'Cancel' : 'Reject'}
+                    confirmButtonStyle={{backgroundColor: colors.invalid}}
+                    confirmTextStyle={{color: colors.white}}
+                    onConfirm={async () => {
+                        await Offer.reject(this.state.offerInfo.offer.offerID);
+                        this.props.navigation.goBack()
+                    }}
+                    onDeny={() => this.setState({showRejectPopup: false})}
+                />
+                <ConfirmationPopup
+                    visible={this.state.showAcceptPopup}
+                    headerText={this.state.hasChanged ? 'Send Offer' : 'Accept Offer'}
+                    infoText={`Are you sure you would like to ${this.state.hasChanged ? 'send' : 'accept'} this offer?`}
+                    confirmText={this.state.hasChanged ? 'Send' : 'Accept'}
+                    confirmButtonStyle={{backgroundColor: colors.main}}
+                    confirmTextStyle={{color: colors.white}}
+                    onConfirm={async () => {
+                        if (this.state.hasChanged) {
+                            await Offer.send(this.state.offerInfo!.offer)
+                        } else {
+                            await Offer.accept(this.state.offerInfo.offer.offerID);
+                        }
+                        this.props.navigation.goBack()
+                    }}
+                    onDeny={() => this.setState({showAcceptPopup: false})}
+                />
                 {this.renderLoading()}
             </PageContainer>
         );
@@ -245,7 +310,3 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
       }
     }
 }
-
-const styles = StyleSheet.create({
-
-})

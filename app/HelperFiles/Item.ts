@@ -1,8 +1,9 @@
 import { httpsCallable } from "firebase/functions"
 import { ItemData, dollarIncrease, ItemFilter, ItemInfo, ItemInteraction, percentIncrease, ItemCategories, ItemGenders, ItemFits, ItemConditions, countriesList, DefaultItemData, ItemPriceData, ItemColor } from "../HelperFiles/DataTypes"
-import { cloudRun, functions } from "./Constants"
+import { sendRequest, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import User from "./User"
+import { imageToBase64 } from "./ClientFunctions"
 
 export default abstract class Item {
 
@@ -20,7 +21,7 @@ export default abstract class Item {
             this is an initial refresh and should
             use itemIDs, otherwise just use refreshIDs
         */
-        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 || forceRefresh ? (await cloudRun('POST', "getItemsFromIDs", {
+        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 || forceRefresh ? (await sendRequest('POST', "getItemsFromIDs", {
             itemIDs: cacheResult.validItems.length === 0 || forceRefresh ? itemIDs : cacheResult.refreshIDs,
             coords: coords
         })) : []
@@ -37,7 +38,7 @@ export default abstract class Item {
         // Determine which item IDs should be refresh vs retrieved from cache
         const cacheResult = LocalCache.getItems(id)
         const coords = await User.getLocation()
-        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 || forceRefresh ? (await cloudRun('POST', "getUserItems", {
+        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 || forceRefresh ? (await sendRequest('POST', "getUserItems", {
             requestingUserID: User.getCurrent().uid,
             targetUserID: id,
             coords: coords
@@ -57,7 +58,7 @@ export default abstract class Item {
             IMPLEMENT CACHE GET
         */
         const coords = await User.getLocation()
-        const result: ItemInfo[] = await cloudRun('POST', "getLikedItems", {
+        const result: ItemInfo[] = await sendRequest('POST', "getLikedItems", {
             targetUserID: targetUserID,
             coords: coords
         })
@@ -71,7 +72,7 @@ export default abstract class Item {
         // Determine which item IDs should be refresh vs retrieved from cache
         const cacheResult = LocalCache.getItems(filters)
         const coords = await User.getLocation()
-        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await cloudRun('POST', "getFilteredItems", {
+        const result: ItemInfo[] = cacheResult.refreshIDs.length > 0 || cacheResult.validItems.length === 0 ? (await sendRequest('POST', "getFilteredItems", {
             filters: filters,
             coords: coords
         })) : []
@@ -84,21 +85,28 @@ export default abstract class Item {
     }
     // Create a new item
     public static async create(itemData: ItemData) {
-        // Create item
-        let u = User.getCurrent()
+        // Check item id
         if (itemData.userID !== User.getCurrent().uid) {
             throw new Error("User not permitted to create this item")
         }
+        let base64Images: string[] = [];
+        // Convert images to base64
+        if (itemData.images.length > 0) {
+            base64Images = await Promise.all(itemData.images.map(async (img) => {
+                return await imageToBase64(img);
+            }))
+        }
         // Upload item data
-        const newItemID = (await cloudRun('POST', "createItem", {
-            itemData: itemData
+        const newItemID = (await sendRequest('POST', "createItem", {
+            itemData: itemData,
+            base64Images: base64Images
         })) as string
-        // Upload images after item ID is generated
+        /*// Upload images after item ID is generated
         if (itemData.images.length > 0) {
             // Upload images (server will update item data)
             const imgURLs = await User.uploadItemImages(newItemID, itemData.images)
             await Item.update({itemID: newItemID, images: imgURLs})
-        }
+        }*/
         return newItemID
     }
     // Update an item's information
@@ -138,7 +146,7 @@ export default abstract class Item {
             })
         }
         // Update item
-        await cloudRun('POST', "updateItem", {
+        await sendRequest('POST', "updateItem", {
             itemData: itemData
         })
         // Reload this item in cache
@@ -150,7 +158,7 @@ export default abstract class Item {
             throw new Error("User not permitted to delete this item")
         }
         // Delete item
-        await cloudRun('POST', "deleteItem", {
+        await sendRequest('POST', "deleteItem", {
             itemData: itemData
         })
         //Delete images
@@ -161,7 +169,7 @@ export default abstract class Item {
     // Update the view times for multiple items
     public static async updateItemViewTimes(viewTimes: {[itemID: string]: number}) {
         // Send view times to server
-        await cloudRun('POST', "updateItemViewTimes", {
+        await sendRequest('POST', "updateItemViewTimes", {
             viewTimes: viewTimes
         })
     }
@@ -169,7 +177,7 @@ export default abstract class Item {
     // Like an item, return like time, update local version and server version
     public static async like(itemInfo: ItemInfo) {
         // Send like to server
-        const likeTime = await cloudRun('POST', "likeItem", {
+        const likeTime = await sendRequest('POST', "likeItem", {
             itemID: itemInfo.item.itemID,
             itemLoadTime: itemInfo.loadTime
         })
@@ -178,13 +186,13 @@ export default abstract class Item {
     // Unlike an item, update local version and server version
     public static async unlike(itemInfo: ItemInfo) {
         // Send like to server
-        await cloudRun('POST', "unlikeItem", {
+        await sendRequest('POST', "unlikeItem", {
             itemID: itemInfo.item.itemID
         })
     }
     public static async getLikes(itemID: string) {
         // Get likes from server
-        return (await cloudRun('POST', "getItemLikes", {
+        return (await sendRequest('POST', "getItemLikes", {
             itemID: itemID
         })) as ItemInteraction[]
     }

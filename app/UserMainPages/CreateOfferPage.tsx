@@ -119,12 +119,14 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                         })
                     }}
                 />
-                <OfferLargeCard
-                    offerInfo={this.state.offerInfo!}
-                    onPressItem={(itemInfo) => this.setState({showDetailCard: itemInfo})}
-                    onLoadEnd={() => this.setState({imagesLoaded: true})}
-                    removeItem={(itemInfo) => this.removeItem(itemInfo)}
-                />
+                {this.state.offerInfo ?
+                    <OfferLargeCard
+                        offerInfo={this.state.offerInfo}
+                        onPressItem={(itemInfo) => this.setState({showDetailCard: itemInfo})}
+                        onLoadEnd={() => this.setState({imagesLoaded: true})}
+                        removeItem={(itemInfo) => this.removeItem(itemInfo)}
+                    />
+                : undefined}
                 {/* Other liked items */}
                 {this.state.otherLikedItems && this.state.otherLikedItems.length > 0 ?
                     <>

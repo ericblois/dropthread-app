@@ -40,6 +40,8 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                 text={this.props.confirmText || 'Confirm'}
                 buttonStyle={{
                     flex: 1,
+                    height: styleValues.smallHeight,
+                    padding: styleValues.minorPadding,
                     ...this.props.confirmButtonStyle
                 }}
                 textStyle={{
@@ -66,6 +68,8 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                 }}
                 buttonStyle={{
                     flex: 1,
+                    height: styleValues.smallHeight,
+                    padding: styleValues.minorPadding,
                     ...this.props.denyButtonStyle
                 }}
                 onPress={async () => {

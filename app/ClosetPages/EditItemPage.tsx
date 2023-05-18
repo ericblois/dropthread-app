@@ -104,13 +104,11 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                 // Create new item
                 await Item.create(newItemData)
                 // Signal to previous pages in stack to refresh their data
-                DeviceEventEmitter.emit('refreshClosetItemData')
                 this.props.navigation.goBack()
             } else {
                 // Send only changes if not missing any props, otherwise update all props
                 await Item.update(this.state.itemChanges)
                 // Signal to previous pages in stack to refresh their data
-                DeviceEventEmitter.emit('refreshClosetItemData')
                 this.props.navigation.goBack()
             }
         } catch (e) {

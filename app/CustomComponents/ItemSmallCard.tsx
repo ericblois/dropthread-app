@@ -20,6 +20,7 @@ type Props = {
     style?: ViewStyle,
     badgeNumber?: number,
     hidePrice?: boolean,
+    showCustomPrice?: number,
     onLoadEnd?: () => void,
     onPress?: (event?: GestureResponderEvent) => void
 }
@@ -82,9 +83,12 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
                             textAlign: 'right',
                         }}
                         numberOfLines={1}
-                        >{currencyFormatter.format(this.props.itemInfo.item.userID === User.getCurrent().uid
-                            ? this.props.itemInfo.item.priceData.minPrice
-                            : this.props.itemInfo.item.priceData.facePrice)
+                        >{currencyFormatter.format(this.props.showCustomPrice !== undefined
+                            ? this.props.showCustomPrice
+                            : (this.props.itemInfo.item.userID === User.getCurrent().uid
+                                ? this.props.itemInfo.item.priceData.minPrice
+                                : this.props.itemInfo.item.priceData.facePrice
+                            ))
                             .substring(0, 9)}
                         </Text>
                     : undefined}

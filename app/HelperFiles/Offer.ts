@@ -1,27 +1,27 @@
 import { DeliveryMethod, OfferData, OfferInfo } from "./DataTypes";
 import uuid from 'react-native-uuid'
 import User from "./User";
-import { cloudRun } from "./Constants";
+import { sendRequest } from "./Constants";
 
 export default abstract class Offer {
 
     public static async getWithIDs(offerIDs: string[]) {
-        return (await cloudRun('POST', 'getOffersWithIDs', {
+        return (await sendRequest('POST', 'getOffersWithIDs', {
             offerIDs: offerIDs
         })) as OfferInfo[]
     }
     public static async getWithItem(itemID: string) {
-        return (await cloudRun('POST', 'getOffersWithItem', {
+        return (await sendRequest('POST', 'getOffersWithItem', {
             itemID: itemID
         })) as OfferInfo[]
     }
     public static async getWithUser() {
-        return (await cloudRun('POST', 'getOffersWithUser', {})) as OfferInfo[]
+        return (await sendRequest('POST', 'getOffersWithUser', {})) as OfferInfo[]
     }
 
     public static async getInfo(offerData: OfferData) {
         const coords = await User.getLocation()
-        return (await cloudRun('POST', 'getOfferInfo', {offerData: offerData, coords: coords})) as OfferInfo
+        return (await sendRequest('POST', 'getOfferInfo', {offerData: offerData, coords: coords})) as OfferInfo
     }
 
     public static createOffer(buyerUserID: string, itemID: string) {
@@ -40,18 +40,14 @@ export default abstract class Offer {
     }
 
     public static async send(offer: OfferData) {
-        await cloudRun('POST', 'sendOffer', {offerData: offer})
+        await sendRequest('POST', 'sendOffer', {offerData: offer})
     }
 
-    public static accept(offerID: string) {
-        
-    }
-
-    public static counter(offerID: string, receivedItems: string[], givenItems: string[], receivedPayment: number, givenPayment: number, deliveryMethod: DeliveryMethod) {
-        
+    public static async accept(offerID: string) {
+        await sendRequest('POST', 'acceptOffer', {offerID: offerID})
     }
 
     public static async reject(offerID: string) {
-        await cloudRun('POST', 'rejectOffer', {offerID: offerID})
+        await sendRequest('POST', 'rejectOffer', {offerID: offerID})
     }
 }

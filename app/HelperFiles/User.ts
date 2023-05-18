@@ -2,7 +2,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { httpsCallable } from "firebase/functions"
 import uuid from "react-native-uuid"
 import { Coords, ItemData, UserData } from "../HelperFiles/DataTypes"
-import { auth, cloudRun, functions } from "./Constants"
+import { auth, sendRequest, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import ServerData from "./ServerData"
 import * as Location from "expo-location"
@@ -15,7 +15,7 @@ export default abstract class User {
         const cred = await createUserWithEmailAndPassword(auth, userData.email, pass)
         // Add name to user account
         await updateProfile(cred.user, { displayName: userData.name })
-        await cloudRun('POST', "createUser", {
+        await sendRequest('POST', "createUser", {
             userData: {
                 ...userData,
                 userID: cred.user.uid
@@ -38,7 +38,7 @@ export default abstract class User {
         if (cacheResult) {
             return cacheResult
         }
-        const result = await cloudRun('POST', "getUser", {
+        const result = await sendRequest('POST', "getUser", {
             userID: User.getCurrent().uid
         }) as UserData
         LocalCache.saveUser(User.getCurrent().uid, result);
@@ -50,7 +50,7 @@ export default abstract class User {
         if (!data.userID) {
             throw new Error('No user ID provided for update')
         }
-        await cloudRun('POST', "updateUser", {
+        await sendRequest('POST', "updateUser", {
             userData: data
         })
         // Reload this user in cache

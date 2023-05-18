@@ -1,6 +1,13 @@
 import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from 'expo-image-picker';
 import { Image } from "react-native";
+import RNFetchBlob from "rn-fetch-blob";
+import RNFS from 'react-native-fs'
+
+const fs = RNFetchBlob.fs;
+RNFetchBlob.config({
+    fileCache: true
+})
 
 // List of cached image URLs
 let cachedImages: string[] = [];
@@ -123,4 +130,15 @@ export function hexToRGBA(hex: string, alpha: number) {
         return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     return "rgba(255, 255, 255, 1)"
+}
+
+// Convert image URL to base64 string
+export async function imageToBase64(url: string) {
+    if (url.startsWith("file://")) {
+        return await RNFS.readFile(url, 'base64');
+    }
+    const response = await RNFetchBlob.fetch('GET', url)
+    const imgPath = response.path();
+    const base64 = await response.readFile('base64');
+    return base64 as string
 }

@@ -4,6 +4,7 @@ import { defaultStyles, shadowStyles, styleValues } from "../HelperFiles/StyleSh
 import CustomComponent from "./CustomComponent";
 import GradientView from "./GradientView";
 import CustomImage from "./CustomImage";
+import FastImage from "react-native-fast-image";
 
 type ImageInfo = {
     uri: string,
@@ -17,8 +18,7 @@ export type ImageSliderProps = {
     minRatio?: number,
     maxRatio?: number,
     fadeColor?: string,
-    onImagesLoaded?: () => void,
-    onRatiosLoaded?: () => void
+    onImagesLoaded?: () => void
 }
 
 export type ImageSliderState = {
@@ -31,7 +31,6 @@ export type ImageSliderState = {
 export default class ImageSlider extends CustomComponent<ImageSliderProps, ImageSliderState> {
 
     loadCount: number
-    ratioCount: number
 
     constructor(props: ImageSliderProps) {
         super(props)
@@ -42,51 +41,17 @@ export default class ImageSlider extends CustomComponent<ImageSliderProps, Image
             galleryHeight: undefined
         }
         this.loadCount = 0
-        this.ratioCount = 0
     }
     componentDidMount() {
         if (this.props.uris.length === 0) {
-            if (this.props.onRatiosLoaded) {
-                this.props.onRatiosLoaded()
-            }
             if (this.props.onImagesLoaded) {
                 this.props.onImagesLoaded()
             }
         }
-        this.getImageRatios()
         super.componentDidMount()
-    }
-    // On mount, get the aspect ratio of each image in the slider
-    getImageRatios() {
-        this.props.uris.forEach((uri, index) => {
-            Image.getSize(uri, (width, height) => {
-                // --- IMPORTANT: iOS gives width as height and vice versa ---
-                const stateUpdate = this.state.images
-                stateUpdate[index] = {uri: uri, ratio: width / height}
-
-                this.setState({images: stateUpdate}, () => {
-                    // Check if gallery height still needs to be set
-                    if (index === 0 && this.state.galleryWidth && this.state.galleryHeight === undefined) {
-                        this.setGalleryHeight()
-                    }
-                    this.ratioCount += 1
-                    if (this.ratioCount === this.props.uris.length && this.props.onRatiosLoaded) {
-                        this.props.onRatiosLoaded()
-                    }
-                })
-            }, (e) => {
-                this.ratioCount += 1
-                if (this.ratioCount === this.props.uris.length && this.props.onRatiosLoaded) {
-                    this.props.onRatiosLoaded()
-                }
-                console.error(e)
-            })
-            
-        })
     }
     // Format the gallery height to match the aspect ratio of the first gallery image
     setGalleryHeight() {
-        
         // Check for gallery width
         if (this.state.galleryWidth === undefined) {
             return
@@ -96,7 +61,6 @@ export default class ImageSlider extends CustomComponent<ImageSliderProps, Image
         if (ratio === -1) {
             return
         }
-        
         // Set the gallery height
         if (this.props.maxRatio && ratio > this.props.maxRatio) {
             ratio = this.props.maxRatio
@@ -108,26 +72,35 @@ export default class ImageSlider extends CustomComponent<ImageSliderProps, Image
     }
 
     renderImage(item: ImageInfo, index: number) {
-        if (item.uri !== "" && this.state.galleryWidth && this.state.galleryHeight) {
+        if (item.uri !== "" && this.state.galleryWidth) {
             let ratio = item.ratio
             // Ensure that first image fills gallery
             if (index === 0) {
-                ratio = (this.state.galleryWidth - styleValues.mediumPadding*2) / (this.state.galleryHeight - styleValues.mediumPadding*2)
+                ratio = (this.state.galleryWidth - styleValues.mediumPadding*2) / ((this.state.galleryHeight || 0) - styleValues.mediumPadding*2)
             }
             return (
                 <CustomImage
                     source={{uri: item.uri, priority: index === 0 ? 'high' : 'normal'}}
                     style={{
                         ...shadowStyles.small,
-                        width: ratio * (this.state.galleryHeight - styleValues.mediumPadding*2),
-                        height: this.state.galleryHeight - styleValues.mediumPadding*2,
+                        width: ratio * ((this.state.galleryHeight || 0) - styleValues.mediumPadding*2),
+                        height: (this.state.galleryHeight || 0) - styleValues.mediumPadding*2,
                         borderRadius: styleValues.mediumPadding,
                         marginHorizontal: styleValues.minorPadding,
                     }}
                     imageStyle={{
                         borderRadius: styleValues.mediumPadding,
                     }}
-                    onLoad={() => {
+                    onLoad={(width, height) => {
+                        // Get image ratio
+                        const imgInfos = this.state.images
+                        imgInfos[index].ratio = width / height
+                        this.setState({images: imgInfos}, () => {
+                            // Check if gallery height still needs to be set
+                            if (index === 0 && this.state.galleryWidth && this.state.galleryHeight === undefined) {
+                                this.setGalleryHeight()
+                            }
+                        })
                         if (this.props.onImagesLoaded) {
                             this.loadCount += 1
                             if (this.loadCount === this.state.images.length) {

@@ -15,7 +15,7 @@ import User from "../HelperFiles/User";
 
 type ExchangesNavigationProp = CompositeNavigationProp<
     StackNavigationProp<ExchangesStackParamList, "main">,
-    StackNavigationProp<RootStackParamList>
+    StackNavigationProp<UserMainStackParamList>
 >
 
 type ExchangesRouteProp = RouteProp<ExchangesStackParamList, "main">;
@@ -60,11 +60,8 @@ export default class ViewExchangesPage extends CustomComponent<ExchangesProps, S
                     return (
                         <OfferSmallCard
                             offerInfo={offerInfo}
-                            onPress={() => this.props.navigation.navigate('userDetail', {
-                                screen: 'viewOffer',
-                                params: {
-                                    offerInfo: offerInfo
-                                }
+                            onPress={() => this.props.navigation.navigate('editOffer', {
+                                offerInfo: offerInfo
                             })}
                             key={index.toString()}
                         />

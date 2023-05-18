@@ -52,11 +52,6 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
             errorMessage: undefined
         }
         this.state = initialState
-        DeviceEventEmitter.addListener('refreshClosetItemData', () => {
-            this.setState(initialState, () => {
-                this.refreshData()
-            })
-        })
     }
 
     async refreshData() {
@@ -93,10 +88,10 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
         try {
             this.setState({isLoading: true, errorMessage: undefined})
             await Item.delete(this.state.itemInfo!.item)
-            DeviceEventEmitter.emit('refreshClosetItemData')
             this.props.navigation.goBack()
         } catch (e) {
             this.handleError(e)
+            this.props.navigation.goBack()
         }
         this.setState({isLoading: false})
     }
@@ -225,7 +220,9 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                                         />
                                     }
                                     onPress={() => {
-                                        this.props.navigation.navigate('createOffer', {offer: Offer.createOffer(interaction.userID, interaction.itemID)})
+                                        this.props.navigation.navigate('createOffer', {
+                                            offer: Offer.createOffer(interaction.userID, interaction.itemID)
+                                        })
                                     }}
                                 />
                             </View>
@@ -246,9 +243,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                         return (
                             <OfferSmallCard
                                 offerInfo={offerInfo}
-                                onPress={() => {
-
-                                }}
+                                onPress={() => this.props.navigation.navigate('editOffer', {offerInfo: offerInfo})}
                                 key={index.toString()}
                             />
                         )
@@ -312,8 +307,11 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                     {this.renderOffers()}
                     {/* Delete button */}
                     <TextButton
-                        text={"Delete item"}
-                        textStyle={{color: colors.invalid}}
+                        text={`Delete item${this.state.itemOffers!.length > 0 ? ' (item is in an offer)' : ''}`}
+                        //subtext={this.state.itemOffers!.length > 0 ? `Can't delete item that is in an offer.` : ''}
+                        touchableProps={{disabled: this.state.itemOffers!.length > 0}}
+                        textStyle={{color: this.state.itemOffers!.length > 0 ? colors.lightGrey : colors.invalid}}
+                        subtextStyle={{color: colors.lightGrey}}
                         showLoading={true}
                         onPress={() => this.setState({showDeletePopup: true})}
                     />
