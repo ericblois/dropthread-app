@@ -39,9 +39,6 @@
           "location",
           "remote-notification"
         ]
-      },
-      "config": {
-        "googleMapsApiKey": "AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY"
       }
     },
     "android": {
