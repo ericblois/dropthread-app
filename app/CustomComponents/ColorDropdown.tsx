@@ -3,7 +3,7 @@ import { Animated, TextStyle, View, ViewStyle } from "react-native";
 import { colors, defaultStyles, fonts, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import TextButton from "./TextButton";
-import { CustomPressable, CustomTextButton } from "../HelperFiles/CompIndex";
+import { BloisPressable, CustomTextButton } from "../HelperFiles/CompIndex";
 import { ItemColor, ItemColorValues, ItemColors } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 
@@ -161,7 +161,7 @@ export default class ColorDropdown extends CustomComponent<ColorDropdownProps, S
                         }}
                     >
                 {ItemColors.map((value, index) => {
-                    return (<CustomPressable
+                    return (<BloisPressable
                         style={{
                             width: '20%',
                             height: '25%',
@@ -186,9 +186,7 @@ export default class ColorDropdown extends CustomComponent<ColorDropdownProps, S
                                 this.setState({
                                     selections: newSelections
                                 }, () => {
-                                    if (this.props.onSelect) {
-                                        this.props.onSelect(this.state.selections);
-                                    }
+                                    this.props.onSelect?.(this.state.selections);
                                     // Check validity
                                     if (this.props.showValidSelection) {
                                         if (this.state.selections.length > 0) {
@@ -203,11 +201,7 @@ export default class ColorDropdown extends CustomComponent<ColorDropdownProps, S
                                 this.setState({
                                     selections: [value],
                                     expanded: false
-                                }, () => {
-                                    if (this.props.onSelect) {
-                                        this.props.onSelect(this.state.selections)
-                                    }
-                                })
+                                }, () => this.props.onSelect?.(this.state.selections))
                                 if (this.props.showValidSelection) {
                                     this.animateValidate()
                                 }
@@ -237,7 +231,7 @@ export default class ColorDropdown extends CustomComponent<ColorDropdownProps, S
                             ></View>
                         </View>
                         
-                    </CustomPressable>)
+                    </BloisPressable>)
                 })}
             </Animated.View>
         )

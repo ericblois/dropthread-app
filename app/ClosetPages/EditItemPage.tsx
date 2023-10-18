@@ -4,8 +4,8 @@ import React from "react";
 import { DeviceEventEmitter, StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
-import { CustomCurrencyInput, ImageSliderSelector, LoadingCover, MenuBar, PageContainer, ScrollContainer, TagInputBox, TextDropdownAnimated, CustomTextInput, ToggleSwitch, CustomScrollView, ColorDropdown } from "../HelperFiles/CompIndex";
-import { DefaultItemData, ItemCategories, ItemConditions, ItemData, ItemFits, ItemGenders, ItemPriceData, UserData } from "../HelperFiles/DataTypes";
+import { CustomCurrencyInput, ImageSliderSelector, LoadingCover, MenuBar, PageContainer, ScrollContainer, TagInputBox, TextDropdownAnimated, BloisTextInput, ToggleSwitch, CustomScrollView, ColorDropdown } from "../HelperFiles/CompIndex";
+import { DefaultItemData, DeliveryMethods, ItemCategories, ItemConditions, ItemData, ItemFits, ItemGenders, ItemPriceData, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList } from "../HelperFiles/Navigation";
 import { colors, icons, screenWidth, styleValues } from "../HelperFiles/StyleSheet";
@@ -137,8 +137,8 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
 
     renderNameInput() {
         return (
-            <CustomTextInput
-                validateFunc={(text) => Item.validateProperty('name', text)}
+            <BloisTextInput
+                checkValidity={(text) => Item.validateProperty('name', text)}
                 indicatorType={'shadowSmall'}
                 placeholder={"Name"}
                 maxLength={Item.maxNameLength}
@@ -153,7 +153,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
         if (this.state.itemData) {
             return (
                 <CustomCurrencyInput
-                    validateFunc={() => {
+                    checkValidity={() => {
                         let change = true
                         if (this.state.itemChanges.priceData) {
                             change = Item.validatePriceData(this.state.itemChanges.priceData)
@@ -182,8 +182,8 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
 
     renderSizeInput() {
         return (
-            <CustomTextInput
-                validateFunc={(text) => Item.validateProperty('size', text)}
+            <BloisTextInput
+                checkValidity={(text) => Item.validateProperty('size', text)}
                 indicatorType={'shadowSmall'}
                 placeholder={"Size"}
                 maxLength={Item.maxSizeLength}
@@ -280,6 +280,26 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
         )
     }
 
+    renderDeliveryDropdown() {
+        return (
+            <TextDropdownAnimated
+                items={DeliveryMethods.map((method) => {
+                    let text = capitalizeWords(method)
+                    return {text: text, value: method}
+                })}
+                showValidSelection={true}
+                enableMultiple={true}
+                indicatorType={'shadowSmall'}
+                ignoreInitialValidity={!this.state.validityFlag}
+                placeholderText="Delivery Methods"
+                defaultValue={this.state.itemChanges.deliveryMethods || this.state.itemData!.deliveryMethods}
+                onSelect={(selections) => {
+                    this.updateItem({deliveryMethods: selections.map((sel) => sel.value)})
+                }}
+            />
+        )
+    }
+
     renderStylesInput() {
         return (
             <TagInputBox
@@ -329,6 +349,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                     {this.renderColorDropdown()}
                     {this.renderFitDropdown()}
                     {this.renderPriceInput()}
+                    {this.renderDeliveryDropdown()}
                     {this.renderStylesInput()}
                     {this.renderVisibilitySwitch()}
                 </CustomScrollView>

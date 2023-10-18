@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import CustomIconButton from "../CustomComponents/CustomIconButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 import { LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { auth } from "../HelperFiles/Constants";
 import { DefaultItemData, ItemData, UserData } from "../HelperFiles/DataTypes";
@@ -90,7 +90,7 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
                             justifyContent: 'center'
                         }}
                     >
-                    <CustomIconButton
+                    <BloisIconButton
                         name={"plus"}
                         type={"MaterialCommunityIcons"}
                         buttonStyle={{
@@ -101,7 +101,7 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
                         animationType={'shadowSmall'}
                     />
                     </View>
-                    <CustomIconButton
+                    <BloisIconButton
                         name={"plus"}
                         type={"MaterialCommunityIcons"}
                         buttonStyle={{

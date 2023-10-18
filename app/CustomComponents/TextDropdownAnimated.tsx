@@ -187,7 +187,7 @@ export default class TextDropdownAnimated extends CustomComponent<TextDropdownAn
                                     })
                                     if (optionIndex > -1) {
                                         // Remove selection
-                                        newSelections.splice(optionIndex)
+                                        newSelections.splice(optionIndex, 1)
                                     } else {
                                         // Add selection
                                         newSelections.push({text: text, value: value})
@@ -218,7 +218,9 @@ export default class TextDropdownAnimated extends CustomComponent<TextDropdownAn
     }
 
     render() {
-        let mainText = this.state.selections.length > 0 ? `${this.props.placeholderText}: ${this.state.selections[0].text}` : this.props.placeholderText
+        let mainText = this.state.selections.length > 0
+            ? `${this.props.placeholderText}: ${this.state.selections.map((sel) => sel.text).join(', ')}`
+            : this.props.placeholderText
         // Check validity of input
         if (this.props.showValidSelection && this.props.ignoreInitialValidity === false) {
             if (this.state.selections.length > 0) {

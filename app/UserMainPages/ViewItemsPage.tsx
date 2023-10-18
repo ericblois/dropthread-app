@@ -9,7 +9,7 @@ import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
 import { bottomInset, colors, icons, screenHeight, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
-import CustomIconButton from "../CustomComponents/CustomIconButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 
 type ViewItemsNavigationProp = StackNavigationProp<UserMainStackParamList, "viewItems">;
 
@@ -79,7 +79,7 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
                                 onLoadEnd={() => this.setState({imagesLoaded: this.state.imagesLoaded + 1})}
                             />
                             {this.props.route.params.addItem && !this.state.addedItems.includes(item.item.itemID) ?
-                            <CustomIconButton
+                            <BloisIconButton
                                 name="plus"
                                 type="Feather"
                                 buttonStyle={{

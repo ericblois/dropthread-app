@@ -7,7 +7,7 @@ import CustomComponent from "./CustomComponent";
 import GradientView from "./GradientView";
 import CustomImageButton from "./CustomImageButton";
 import CustomImage from "./CustomImage";
-import CustomIconButton from "./CustomIconButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 import { AutoFocus, Camera, FlashMode } from 'expo-camera';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomModal from "./CustomModal";
@@ -275,7 +275,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     key={index.toString()}
                 >
                     {/* Add a delete button */}
-                    <CustomIconButton
+                    <BloisIconButton
                         name={'close'}
                         type={'MaterialCommunityIcons'}
                         buttonStyle={{
@@ -340,7 +340,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
     // Render a button to add an image
     renderAddButton() {
         return (
-            <CustomIconButton
+            <BloisIconButton
                 name="camera-plus-outline"
                 type="MaterialCommunityIcons"
                 buttonStyle={{

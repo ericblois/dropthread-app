@@ -1,4 +1,4 @@
-import { DeliveryMethod, OfferData, OfferInfo } from "./DataTypes";
+import { Coords, DeliveryMethod, OfferData, OfferInfo } from "./DataTypes";
 import uuid from 'react-native-uuid'
 import User from "./User";
 import { sendRequest } from "./Constants";
@@ -22,6 +22,10 @@ export default abstract class Offer {
     public static async getInfo(offerData: OfferData) {
         const coords = await User.getLocation()
         return (await sendRequest('POST', 'getOfferInfo', {offerData: offerData, coords: coords})) as OfferInfo
+    }
+
+    public static async getMeetupLocation(offerData: OfferData) {
+        return await sendRequest('POST', 'getOfferMeetupLocation', {offerData: offerData}) as Coords
     }
 
     public static createOffer(buyerUserID: string, itemID: string) {

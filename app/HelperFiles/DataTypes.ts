@@ -108,43 +108,32 @@ export const regionsList = [
 ] as const
 export type Region = (typeof regionsList)[number] | ""
 
-export type ShippingInfo = {
-    name: string,
-    streetAddress: string,
-    city: string,
+export type AddressData = {
+    userID: string | null,
+    name: string | null,
+    streetAddress: string | null,
+    city: string | null,
     region: string | null,
-    country: string,
-    postalCode: string,
+    country: string | null,
+    postalCode: string | null,
     apartment: string | null,
     message: string | null,
+    lat: number,
+    long: number
 }
 
-export const DefaultShippingInfo: Readonly<ShippingInfo> = {
-  name: "",
-  streetAddress: "",
-  city: "",
+export const DefaultAddressData: Readonly<AddressData> = {
+  userID: null,
+  name: null,
+  streetAddress: null,
+  city: null,
   region: null,
-  country: "",
-  postalCode: "",
+  country: null,
+  postalCode: null,
   apartment: null,
   message: null,
-}
-
-export type OrderStatus = "accepted" | "cancelled" | "completed" | "received"
-export type DeliveryType = "exchange" | "shipping"
-
-export type OrderData = {
-  sellerID: string,
-  buyerID: string,
-  orderID: string,
-  subtotalPrice: number,
-  totalPrice: number,
-  shippingInfo?: ShippingInfo,
-  deliveryMethod: DeliveryType,
-  deliveryPrice: number,
-  creationTime: string,
-  completionTime: string | null,
-  status: OrderStatus
+  lat: 0,
+  long: 0
 }
 
 export type NotificationData = {
@@ -406,6 +395,8 @@ export type OfferData = {
   offerTime: number,
   responseType: OfferResponse | null,
   responseTime: number | null,
+  deliveryMethod: DeliveryMethod,
+  deliveryAddress: AddressData | null,
   exchangeID: string | null
 }
 

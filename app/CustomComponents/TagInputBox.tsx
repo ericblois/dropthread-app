@@ -4,7 +4,7 @@ import { colors, defaultStyles, icons, shadowStyles, styleValues, textStyles } f
 import CustomComponent from "./CustomComponent";
 import CustomImageButton from "./CustomImageButton";
 import ScrollContainer from "./ScrollContainer";
-import CustomIconButton from "./CustomIconButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 import Item from "../HelperFiles/Item";
 
 type TagInputBoxProps = {
@@ -60,7 +60,7 @@ export default class TagInputBox extends CustomComponent<TagInputBoxProps, State
                         ...this.props.textStyle
                     }}
                 >{text}</Text>
-                <CustomIconButton
+                <BloisIconButton
                     name="close"
                     type="MaterialIcons"
                     buttonStyle={{

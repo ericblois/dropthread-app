@@ -3,14 +3,14 @@ import { ActivityIndicator, Animated, GestureResponderEvent, Pressable, Pressabl
 import FastImage, { FastImageProps, ImageStyle, Source } from "react-native-fast-image";
 import { colors, defaultStyles, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
-import CustomPressable from './CustomPressable'
+import BloisPressable from '../BloisComponents/BloisPressable'
 
 type CustomImageButtonProps = {
   iconSource: Source,
   iconStyle?: ImageStyle,
   buttonStyle?: ViewStyle,
   onPress?: (event?: GestureResponderEvent) => void | Promise<void>
-  buttonProps?: CustomPressable['props'],
+  buttonProps?: BloisPressable['props'],
   iconProps?: Partial<FastImageProps>,
   showLoading?: boolean,
   showBadge?: boolean,
@@ -82,7 +82,7 @@ export default class CustomImageButton extends CustomComponent<CustomImageButton
 
   render() {
     return (
-        <CustomPressable
+        <BloisPressable
           style={[iconButtonStyles.defaultButton, this.props.buttonStyle]}
           onPress={async () => {
             if (this.props.onPress) {
@@ -145,7 +145,7 @@ export default class CustomImageButton extends CustomComponent<CustomImageButton
             </View> : undefined
           }
           {this.renderInfo()}
-        </CustomPressable>
+        </BloisPressable>
     )
   }
 }

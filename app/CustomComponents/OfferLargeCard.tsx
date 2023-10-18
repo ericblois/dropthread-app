@@ -8,7 +8,7 @@ import CustomComponent from "./CustomComponent";
 import * as Icons from "@expo/vector-icons"
 import User from "../HelperFiles/User";
 import ItemSmallCard from "./ItemSmallCard";
-import CustomIconButton from "./CustomIconButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 
 
 type Props = {
@@ -89,7 +89,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                     })}
                                 />
                                 {this.props.offerInfo?.offer.itemIDs.length > 1 && this.props.removeItem ?
-                                <CustomIconButton
+                                <BloisIconButton
                                         name="close"
                                         type="AntDesign"
                                         buttonStyle={{
@@ -196,7 +196,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                     })}
                                 />
                                 {this.props.offerInfo?.offer.itemIDs.length > 1 && this.props.removeItem ?
-                                <CustomIconButton
+                                <BloisIconButton
                                         name="close"
                                         type="AntDesign"
                                         buttonStyle={{

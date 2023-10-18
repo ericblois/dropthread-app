@@ -238,7 +238,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
             return (
                 <View style={{marginBottom: styleValues.mediumPadding}}>
                     {/* Views / likes */}
-                    <Text style={{...textStyles.mediumHeader, marginTop: 0}}>Offers</Text>
+                    <Text style={{...textStyles.mediumHeader, marginTop: 0}}>Active Offers</Text>
                     {this.state.itemOffers.map((offerInfo, index) => {
                         return (
                             <OfferSmallCard

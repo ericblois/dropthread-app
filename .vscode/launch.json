@@ -1,13 +1,21 @@
 {
     "configurations": [
         {
+            "name": "Debug in Exponent",
+            "request": "launch",
+            "type": "reactnative",
+            "cwd": "${workspaceFolder}",
+            "platform": "exponent",
+            "expoHostType": "local"
+        },
+        {
             "name": "Debug on Simulator iOS",
             "request": "attach",
             "type": "reactnative",
             "cwd": "${workspaceFolder}",
             "sourceMaps": true,
             "preLaunchTask": "Expo Run iOS",
-            "postDebugTask": "React Native: Stop Packager",
+            "postDebugTask": "React Native: Stop Packager"
         },
         {
             "name": "Debug on Device iOS",
@@ -16,14 +24,14 @@
             "cwd": "${workspaceFolder}",
             "sourceMaps": true,
             "preLaunchTask": "Expo Run iOS Device",
-            "postDebugTask": "React Native: Stop Packager",
+            "postDebugTask": "React Native: Stop Packager"
         },
         {
             "name": "Attach to App iOS",
             "request": "attach",
             "type": "reactnative",
             "cwd": "${workspaceFolder}",
-            "sourceMaps": true,
+            "sourceMaps": true
         }
     ]
 }

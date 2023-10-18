@@ -11,7 +11,7 @@ import CustomComponent from "./CustomComponent";
 import CustomImageButton from "./CustomImageButton";
 import ScrollContainer from "./ScrollContainer";
 import TextButton from "./TextButton";
-import CustomTextInput from "./CustomTextInput";
+import BloisTextInput from "../BloisComponents/BloisTextInput";
 
 type Props = {
     style?: ViewStyle,
@@ -575,7 +575,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                             flex: this.searchBarFlex,
                             opacity: this.searchBarOpacity
                     }}>
-                        <CustomTextInput
+                        <BloisTextInput
                             boxStyle={{marginBottom: undefined}}
                             textProps={{
                                 textAlign: "left",

@@ -6,10 +6,10 @@ import React from "react";
 import { LayoutRectangle, Text, View } from "react-native";
 import { bottomInset, colors, defaultStyles, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
-import CustomIconButton from "./CustomIconButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 import CustomModal from "./CustomModal";
 import CustomImage from "./CustomImage";
-import CustomPressable from "./CustomPressable";
+import BloisPressable from "../BloisComponents/BloisPressable";
 
 type CustomCameraModalProps = {
   visible: boolean,
@@ -59,9 +59,7 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
 
     close() {
         this.setState({ready: false, image: undefined});
-        if (this.props.onClose) {
-            this.props.onClose()
-        }
+        this.props.onClose?.()
     }
 
     render() {
@@ -119,7 +117,7 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
                     />
                 }
                 {/* FLASH */}
-                    <CustomIconButton
+                    <BloisIconButton
                         name={this.state.flashMode === FlashMode.auto
                             ? 'ios-flash-outline'
                             : this.state.flashMode === FlashMode.on
@@ -161,7 +159,7 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
                         overflow: 'hidden',
                     }}
                 >
-                    <CustomIconButton
+                    <BloisIconButton
                         name='close'
                         type='AntDesign'
                         buttonStyle={{
@@ -172,7 +170,7 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
                         }}
                         onPress={() => this.close()}
                     />
-                    <CustomPressable
+                    <BloisPressable
                         style={{
                             width: styleValues.largeHeight,
                             height: styleValues.largeHeight,
@@ -206,8 +204,8 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
                                 opacity: !this.state.image ? 0 : 1
                             }}
                         />
-                    </CustomPressable>
-                    <CustomIconButton
+                    </BloisPressable>
+                    <BloisIconButton
                         name={!this.state.image ? 'camera-reverse-outline' : 'camera-outline'}
                         type={'Ionicons'}
                         buttonStyle={{

@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import CustomIconButton from "../CustomComponents/CustomIconButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 import { ConfirmationPopup, CustomCurrencyInput, CustomImage, CustomModal, CustomScrollView, CustomTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, ItemPriceData, OfferData, OfferInfo, UserData } from "../HelperFiles/DataTypes";
@@ -160,7 +160,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                                         showCustomPrice={itemInfo.likePrice!}
                                         onPress={() => this.setState({showDetailCard: itemInfo})}
                                     />
-                                    <CustomIconButton
+                                    <BloisIconButton
                                         name="plus"
                                         type="Feather"
                                         buttonStyle={{
@@ -214,7 +214,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                     flexDirection: 'row',
                     alignItems: 'center'
                 }}>
-                    <CustomIconButton
+                    <BloisIconButton
                         name={'chevron-thin-left'}
                         type={'Entypo'}
                         animationType={'shadowSmall'}

@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { DeviceEventEmitter, RefreshControl, StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import CustomIconButton from "../CustomComponents/CustomIconButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 import { ItemSmallCard, CustomImageButton, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
 import { DefaultItemData, ItemData, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -68,7 +68,7 @@ export default class ClosetMainPage extends CustomComponent<ClosetMainProps, Sta
                 })
             }}
           />*/
-          <CustomIconButton
+          <BloisIconButton
             name="tag-plus-outline"
             type="MaterialCommunityIcons"
             buttonStyle={{

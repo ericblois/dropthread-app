@@ -48,11 +48,7 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                     ...textStyles.small,
                     ...this.props.confirmTextStyle
                 }}
-                onPress={async () => {
-                    if (this.props.onConfirm) {
-                        await this.props.onConfirm()
-                    }
-                }}
+                onPress={async () =>  await this.props.onConfirm?.()}
                 showLoading
             />
         )
@@ -72,11 +68,7 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                     padding: styleValues.minorPadding,
                     ...this.props.denyButtonStyle
                 }}
-                onPress={async () => {
-                    if (this.props.onDeny) {
-                        await this.props.onDeny()
-                    }
-                }}
+                onPress={async () => await this.props.onDeny?.()}
                 showLoading
             />
         )

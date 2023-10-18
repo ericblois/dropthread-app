@@ -5,10 +5,11 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from "react-native";
 import CustomComponent from "./CustomComponents/CustomComponent";
-import { CustomImageButton, PageContainer, TextButton } from "./HelperFiles/CompIndex";
+import { BloisTextInput, CustomImageButton, PageContainer, TextButton } from "./HelperFiles/CompIndex";
 import { auth } from "./HelperFiles/Constants";
 import { RootStackParamList } from "./HelperFiles/Navigation";
 import { icons, screenWidth, styleValues, textStyles } from "./HelperFiles/StyleSheet";
+import BloisIconButton from "./BloisComponents/BloisIconButton";
 
 type StartNavigationProp = StackNavigationProp<RootStackParamList, "start">;
 
@@ -150,6 +151,34 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                 onPress={() => {
                     this.props.navigation.navigate("userSignup")
                 }}
+            />
+            <BloisIconButton
+                type={'AntDesign'}
+                name={'addfolder'}
+                tooltip={{
+                    text: 'example text blah blah blahhahahahahahhahaha',
+                    posX: 'center',
+                    posY: 'below'
+                }}
+                style={{width: styleValues.smallHeight*1.5}}
+            />
+            <BloisTextInput
+                style={{}}
+            />
+            <BloisTextInput
+                style={{}}
+            />
+            <BloisTextInput
+                style={{}}
+            />
+            <BloisTextInput
+                style={{}}
+            />
+            <BloisTextInput
+                style={{}}
+            />
+            <BloisTextInput
+                style={{}}
             />
             {this.renderLoginInput()}
         </PageContainer>

@@ -2,7 +2,7 @@ import { BlurView } from "expo-blur";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import CustomImageButton from "../CustomComponents/CustomImageButton";
-import CustomTextInput from "../CustomComponents/CustomTextInput";
+import BloisTextInput from "../BloisComponents/BloisTextInput";
 import { colors, icons, screenHeight, screenWidth, styleValues } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
@@ -10,7 +10,7 @@ type Props = {
     initialText?: string,
     onTapAway?: () => void,
     onSaveText?: (text: string) => void,
-    textInputProps?: CustomTextInput['props']
+    textInputProps?: BloisTextInput['props']
 }
 
 type State = {
@@ -52,7 +52,7 @@ export default class TextInputPopup extends CustomComponent<Props, State> {
                     style={styles.outsideTouchable}
                     onPress={this.props.onTapAway}
                 >
-                    <CustomTextInput
+                    <BloisTextInput
                         boxStyle={{...buttonStyles.noColor, ...styles.textInput}}
                         focusOnStart={true}
                         {...this.props.textInputProps}

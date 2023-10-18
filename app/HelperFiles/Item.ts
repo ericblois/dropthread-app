@@ -1,5 +1,5 @@
 import { httpsCallable } from "firebase/functions"
-import { ItemData, dollarIncrease, ItemFilter, ItemInfo, ItemInteraction, percentIncrease, ItemCategories, ItemGenders, ItemFits, ItemConditions, countriesList, DefaultItemData, ItemPriceData, ItemColor } from "../HelperFiles/DataTypes"
+import { ItemData, dollarIncrease, ItemFilter, ItemInfo, ItemInteraction, percentIncrease, ItemCategories, ItemGenders, ItemFits, ItemConditions, countriesList, DefaultItemData, ItemPriceData, ItemColor, DeliveryMethods } from "../HelperFiles/DataTypes"
 import { sendRequest, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import User from "./User"
@@ -35,6 +35,9 @@ export default abstract class Item {
     // Retrieve all items from a specific user
     public static async getFromUser(userID?: string, forceRefresh?: boolean) {
         const id = userID ? userID : User.getCurrent().uid
+        if (forceRefresh) {
+            LocalCache.forceReloadUser(id)
+        }
         // Determine which item IDs should be refresh vs retrieved from cache
         const cacheResult = LocalCache.getItems(id)
         const coords = await User.getLocation()
@@ -260,6 +263,9 @@ export default abstract class Item {
                 break
             case "country":
                 if (!value || value === "" || !countriesList.includes(value)) return false
+                break
+            case "deliveryMethods":
+                if (!value || value.length === 0) return false
                 break
             case "userID":
                 if (!value || value === "") return false

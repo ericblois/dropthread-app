@@ -39,6 +39,9 @@
           "location",
           "remote-notification"
         ]
+      },
+      "config": {
+        "googleMapsApiKey": "AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY"
       }
     },
     "android": {
@@ -52,7 +55,12 @@
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.NOTIFICATIONS"
       ],
-      "package": "com.ericblois.dropthread"
+      "package": "com.ericblois.dropthread",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

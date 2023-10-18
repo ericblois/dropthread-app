@@ -4,7 +4,7 @@ import { currencyFormatter, simpleCurrencyFormatter } from "../HelperFiles/Const
 import { colors, defaultStyles, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
-type CustomTextInputProps = Omit<TextInputProps, 'defaultValue'> & {
+type CustomCurrencyInputProps = Omit<TextInputProps, 'defaultValue'> & {
     boxStyle?: ViewStyle,
     boxProps?: KeyboardAvoidingView['props'],
     focusOnStart?: boolean,
@@ -14,7 +14,7 @@ type CustomTextInputProps = Omit<TextInputProps, 'defaultValue'> & {
     minValue?: number,
     maxValue?: number,
     onChangeValue?: (value: number | null) => void,
-    validateFunc?: (value: number | null) => boolean,
+    checkValidity?: (value: number | null) => boolean,
     indicatorType?: 'shadowSmall' | 'shadow' | 'outline',
     ignoreInitialValidity?: boolean
 }
@@ -23,7 +23,7 @@ type State = {
     value: number | null,
 }
 
-export default class CustomTextInput extends CustomComponent<CustomTextInputProps, State> {
+export default class CustomCurrencyInput extends CustomComponent<CustomCurrencyInputProps, State> {
 
     progress: Animated.Value;
     animationTime: number;
@@ -32,12 +32,12 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
 
     textInput: TextInput | null = null
 
-    constructor(props: CustomTextInputProps) {
+    constructor(props: CustomCurrencyInputProps) {
         super(props)
         let isValid = false
-        if (props.validateFunc) {
+        if (props.checkValidity) {
             if (props.defaultValue) {
-                isValid = props.validateFunc(props.defaultValue)
+                isValid = props.checkValidity(props.defaultValue)
             }
         }
         this.state = {
@@ -97,8 +97,8 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
 
     render() {
         // Check validity of input
-        if (this.props.validateFunc && !this.props.ignoreInitialValidity) {
-            if (this.props.validateFunc(this.state.value)) {
+        if (this.props.checkValidity && !this.props.ignoreInitialValidity) {
+            if (this.props.checkValidity(this.state.value)) {
                 this.animateValidate();
             } else {
                 this.animateInvalidate();
@@ -175,8 +175,8 @@ export default class CustomTextInput extends CustomComponent<CustomTextInputProp
                                 parsedText = parsedText.substring(0, parsedText.lastIndexOf('.'))
                             }
                         }
-                        if (this.props.validateFunc) {
-                            if (this.props.validateFunc(parsedValue)) {
+                        if (this.props.checkValidity) {
+                            if (this.props.checkValidity(parsedValue)) {
                                 this.animateValidate()
                             } else {
                                 this.animateInvalidate()

@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import CustomIconButton from "../CustomComponents/CustomIconButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 import { CustomCurrencyInput, CustomModal, CustomScrollView, CustomTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, OfferData, UserData } from "../HelperFiles/DataTypes";
@@ -192,7 +192,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                 flexDirection: 'row',
                 alignItems: 'center'
             }}>
-                <CustomIconButton
+                <BloisIconButton
                     name={'arrow-u-left-bottom'}
                     type={'MaterialCommunityIcons'}
                     animationType={'shadowSmall'}
@@ -207,7 +207,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                 />
                 {this.state.wasSent ?
                 <>
-                    <CustomIconButton
+                    <BloisIconButton
                         name={'close'}
                         type={'MaterialCommunityIcons'}
                         animationType={'shadowSmall'}
@@ -223,7 +223,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                         }}
                         onPress={() => this.props.navigation.goBack()}
                     />
-                    <CustomIconButton
+                    <BloisIconButton
                         name={'arrow-switch'}
                         type={'Octicons'}
                         animationType={'shadowSmall'}
@@ -242,7 +242,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                         }}
                         onPress={() => this.props.navigation.goBack()}
                     />
-                    <CustomIconButton
+                    <BloisIconButton
                         name={'check'}
                         type={'Octicons'}
                         animationType={'shadowSmall'}

@@ -50,6 +50,7 @@ export const colors = {
   yellow: "#FFCF56",
   flame: '#FF6933',
   altBlue: '#306bf0',
+  markerBlue: 'rgba(0,0,255,0.5)',
   background: "#eee",
   majorTextColor: "#000",
   mediumTextColor: "#555",

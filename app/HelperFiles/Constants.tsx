@@ -4,12 +4,21 @@ import { connectStorageEmulator, getStorage } from 'firebase/storage'
 import { getFunctions } from 'firebase/functions';
 import * as geofireSource from 'geofire-common';
 import { CustomImageButton } from './CompIndex';
-import firebaseConfig from './firebase-config.json';
 import { icons } from './StyleSheet';
 import { requestURL } from './config';
 import * as Device from 'expo-device';
+import Config from 'react-native-config';
 
 const localhost = Device.isDevice ? '192.168.10.55' : 'localhost'
+
+const firebaseConfig = {
+  apiKey: Config.FIREBASE_API_KEY,
+  appId: Config.FIREBASE_APP_ID,
+  authDomain: Config.FIREBASE_AUTH_DOMAIN,
+  messagingSenderId: Config.FIREBASE_MESSAGING_SENDER_ID,
+  projectId: Config.FIREBASE_PROJECT_ID,
+  storageBucket: Config.FIREBASE_STORAGE_BUCKET
+}
 
 // Initialize Firebase
 if (getApps().length < 1) {

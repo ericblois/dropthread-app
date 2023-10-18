@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { httpsCallable } from "firebase/functions"
 import uuid from "react-native-uuid"
-import { Coords, ItemData, UserData } from "../HelperFiles/DataTypes"
+import { Coords, AddressData, ItemData, UserData } from "../HelperFiles/DataTypes"
 import { auth, sendRequest, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import ServerData from "./ServerData"
@@ -57,6 +57,7 @@ export default abstract class User {
         LocalCache.forceReloadUser(data.userID)
         return
     }
+
     // Delete the current user
     /*static async deleteAccount() {
             const currentUser = User.getCurrent()

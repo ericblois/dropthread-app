@@ -17,7 +17,7 @@ import CustomScrollView from "./CustomScrollView";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
-import CustomIconButton from "./CustomIconButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 import User from "../HelperFiles/User";
 
 type Props = {

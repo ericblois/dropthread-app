@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { Animated, GestureResponderEvent, Pressable, PressableProps, PressableStateCallbackType, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import FastImage, { ImageStyle } from "react-native-fast-image";
-import CustomPressable from "./CustomPressable";
+import BloisPressable from "../BloisComponents/BloisPressable";
 import { colors, defaultStyles, fonts, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import LoadingCover from "./LoadingCover";
@@ -10,7 +10,7 @@ type Props = {
     text: string,
     textStyle?: TextStyle,
     appearance?: "light" | "color" | "no-color",
-    animationType?: CustomPressable['props']['animationType'],
+    animationType?: BloisPressable['props']['animationType'],
     subtext?: string,
     subtextStyle?: TextStyle,
     leftChildren?: ReactNode,
@@ -20,7 +20,7 @@ type Props = {
     onPress?: (event?: GestureResponderEvent) => void,
     textProps?: Text['props'],
     subtextProps?: Text['props'],
-    touchableProps?: CustomPressable['props'],
+    touchableProps?: BloisPressable['props'],
     showLoading?: boolean,
 }
 
@@ -63,7 +63,7 @@ export default class TextButton extends CustomComponent<Props, State> {
             defaultTextStyle.fontFamily = fonts.medium
         }
         return (
-            <CustomPressable
+            <BloisPressable
                 animationType={this.props.animationType || 'shadowSmall'}
                 onPress={async () => {
                     if (this.props.onPress) {
@@ -109,7 +109,7 @@ export default class TextButton extends CustomComponent<Props, State> {
                         />
                     }
                 </Animated.View>
-            </CustomPressable>
+            </BloisPressable>
         )
     }
 }

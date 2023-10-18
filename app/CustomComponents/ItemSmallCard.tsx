@@ -2,7 +2,7 @@
 import React from "react";
 import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 import FastImage from "react-native-fast-image";
-import CustomPressable from "./CustomPressable";
+import BloisPressable from "../BloisComponents/BloisPressable";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo } from "../HelperFiles/DataTypes";
 import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth } from "../HelperFiles/StyleSheet";
@@ -40,7 +40,7 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
 
     renderUI() {
         return (
-        <CustomPressable
+        <BloisPressable
             style={{...styles.cardContainer, ...this.props.style}}
             animationType={"shadowSmall"}
             onPress={this.props.onPress}
@@ -113,7 +113,7 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
             <CustomBadge number={this.props.badgeNumber}/>
             : undefined}
             
-        </CustomPressable>
+        </BloisPressable>
         );
     }
 

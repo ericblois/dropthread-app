@@ -7,7 +7,7 @@ import { ItemInfo } from "../HelperFiles/DataTypes";
 import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth, icons, defaultStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImage from "./CustomImage";
-import CustomPressable from "./CustomPressable";
+import BloisPressable from "../BloisComponents/BloisPressable";
 import CustomImageButton from "./CustomImageButton";
 import Item from "../HelperFiles/Item";
 
@@ -57,7 +57,7 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
         const priceColor = this.state.status === 'outbid' ? colors.invalid : colors.black 
         const statusColor = this.state.status === 'highestPrice' ? colors.valid : colors.invalid
         return (
-        <CustomPressable
+        <BloisPressable
             style={styles.cardContainer}
             animationType={"shadow"}
             onPress={this.props.onPress}
@@ -165,7 +165,7 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
                     />
                 </View>
             </View>
-        </CustomPressable>
+        </BloisPressable>
         );
     }
 

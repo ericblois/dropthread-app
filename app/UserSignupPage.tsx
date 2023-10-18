@@ -4,9 +4,9 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { StyleSheet, Text, TextInput } from "react-native";
 import CustomComponent from "./CustomComponents/CustomComponent";
-import { alphanumericSpecialRegex, emailRegex, nameRegex, passwordRegex } from './CustomComponents/CustomTextInput';
+import { alphanumericSpecialRegex, emailRegex, nameRegex, passwordRegex } from './BloisComponents/BloisTextInput';
 import { capitalizeWords } from "./HelperFiles/ClientFunctions";
-import { DateScrollPicker, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton, TextDropdownAnimated, CustomTextInput, CustomTextButton } from "./HelperFiles/CompIndex";
+import { DateScrollPicker, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton, TextDropdownAnimated, BloisTextInput, CustomTextButton } from "./HelperFiles/CompIndex";
 import { geofire } from "./HelperFiles/Constants";
 import { countriesList, Country, DefaultUserData, UserData, UserGender, UserGenders } from "./HelperFiles/DataTypes";
 import { RootStackParamList } from "./HelperFiles/Navigation";
@@ -33,12 +33,12 @@ type State = {
 
 export default class UserSignupPage extends CustomComponent<UserSignupProps, State> {
 
-    defaultTextInputProps: CustomTextInput['props'] = {
+    defaultTextInputProps: BloisTextInput['props'] = {
         autoCorrect: false,
         autoCapitalize: "none",
         clearButtonMode: "while-editing",
     }
-    confirmInput: CustomTextInput | null = null
+    confirmInput: BloisTextInput | null = null
 
     constructor(props: UserSignupProps) {
         super(props)
@@ -162,11 +162,11 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
         return (
             <ScrollContainer>
                 {/* Name */}
-                <CustomTextInput
+                <BloisTextInput
                     {...this.defaultTextInputProps}
                     // Allow letters and quotes
                     allowedCharacters={nameRegex}
-                    validateFunc={(text) => this.validateName(text)}
+                    checkValidity={(text) => this.validateName(text)}
                     indicatorType={'shadowSmall'}
                     onChangeText={async (text) => this.setState({userData: {...this.state.userData, name: text} as UserData})}
                     placeholder={"Name"}
@@ -174,11 +174,11 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     textContentType={"name"}
                 />
                 {/* Email */}
-                <CustomTextInput
+                <BloisTextInput
                     {...this.defaultTextInputProps}
                     allowedCharacters={emailRegex}
                     indicatorType={'shadowSmall'}
-                    validateFunc={(text) => this.validateEmail(text)}
+                    checkValidity={(text) => this.validateEmail(text)}
                     onChangeText={(text) => this.setState({userData: {...this.state.userData, email: text} as UserData})}
                     placeholder={"Email"}
                     textContentType={"emailAddress"}
@@ -188,11 +188,11 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     Use at least 6 characters in your password.
                 </Text>
                 {/* Password */}
-                <CustomTextInput
+                <BloisTextInput
                     {...this.defaultTextInputProps}
                     allowedCharacters={passwordRegex}
                     indicatorType={'shadowSmall'}
-                    validateFunc={(text) => this.validatePass(text)}
+                    checkValidity={(text) => this.validatePass(text)}
                     onChangeText={(text) => {
                         this.setState({password: text})
                         if (!this.validateConfirm(this.state.passwordConfirm) && this.state.passwordConfirm && this.state.passwordConfirm.length > 0) {
@@ -206,12 +206,12 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     secureTextEntry={true}
                 />
                 {/* Confirm password */}
-                <CustomTextInput
+                <BloisTextInput
                     {...this.defaultTextInputProps}
                     allowedCharacters={passwordRegex}
                     ref={(textInput) => {this.confirmInput = textInput}}
                     indicatorType={'shadowSmall'}
-                    validateFunc={(text) => this.validateConfirm(text)}
+                    checkValidity={(text) => this.validateConfirm(text)}
                     onChangeText={(text) => this.setState({passwordConfirm: text})}
                     placeholder={"Confirm password"}
                     textContentType={"newPassword"}

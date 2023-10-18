@@ -2,7 +2,7 @@
 import React from "react";
 import { GestureResponderEvent, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import FastImage from "react-native-fast-image";
-import CustomPressable from "./CustomPressable";
+import BloisPressable from "../BloisComponents/BloisPressable";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo } from "../HelperFiles/DataTypes";
 import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth, defaultStyles } from "../HelperFiles/StyleSheet";
@@ -10,7 +10,7 @@ import CustomComponent from "./CustomComponent";
 import CustomImage from "./CustomImage";
 import LoadingCover from "./LoadingCover";
 import { BlurView, BlurViewProps } from "expo-blur";
-import CustomIconButton from "./CustomIconButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 
 type Props = {
     visible: boolean,
@@ -63,7 +63,7 @@ export default class CustomModal extends CustomComponent<Props, State> {
                     : undefined }
                     {this.props.children}
                     {!this.props.disableExitButton ? 
-                        <CustomIconButton
+                        <BloisIconButton
                             name="close"
                             type="AntDesign"
                             buttonStyle={{

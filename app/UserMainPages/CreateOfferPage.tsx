@@ -4,8 +4,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import CustomIconButton from "../CustomComponents/CustomIconButton";
-import { CustomCurrencyInput, CustomImage, CustomModal, CustomScrollView, CustomTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
+import { CustomCurrencyInput, CustomImage, CustomModal, CustomScrollView, CustomTextButton, ExchangeLocation, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, ItemPriceData, OfferData, OfferInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -29,6 +29,7 @@ type State = {
     offerInfo?: OfferInfo,
     showDetailCard?: ItemInfo,
     otherLikedItems?: ItemInfo[],
+    validityFlag: boolean,
     isLoading: boolean,
     imagesLoaded: boolean,
     errorMessage?: string
@@ -47,6 +48,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
             offerInfo: undefined,
             showDetailCard: undefined,
             otherLikedItems: undefined,
+            validityFlag: false,
             isLoading: false,
             imagesLoaded: false,
             errorMessage: undefined
@@ -61,6 +63,8 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                 Offer.getInfo(this.state.offerData),
                 Item.getLiked(this.state.offerData.toUserID)
             ]);
+            // Get all unique delivery methods for user's items
+            
             otherLikedItems = otherLikedItems.filter((itemInfo) => !offerInfo.offer.itemIDs.includes(itemInfo.item.itemID))
             this.setState({offerInfo: offerInfo, otherLikedItems: otherLikedItems, offerData: offerInfo.offer})
         } catch (e) {
@@ -120,12 +124,28 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                     }}
                 />
                 {this.state.offerInfo ?
+                <>
+                {/* Offer card */}
                     <OfferLargeCard
                         offerInfo={this.state.offerInfo}
                         onPressItem={(itemInfo) => this.setState({showDetailCard: itemInfo})}
                         onLoadEnd={() => this.setState({imagesLoaded: true})}
                         removeItem={(itemInfo) => this.removeItem(itemInfo)}
                     />
+                    {/* Delivery Method */}
+                    <ExchangeLocation
+                        offerData={this.state.offerInfo.offer}
+                        showValidity={this.state.validityFlag}
+                        onChange={(address => {
+                            this.setState({offerData:
+                                {
+                                    ...this.state.offerData,
+                                    deliveryAddress: address
+                                }
+                            })
+                        })}
+                    />
+                </>
                 : undefined}
                 {/* Other liked items */}
                 {this.state.otherLikedItems && this.state.otherLikedItems.length > 0 ?
@@ -138,7 +158,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                                         itemInfo={itemInfo}
                                         onPress={() => this.setState({showDetailCard: itemInfo})}
                                     />
-                                    <CustomIconButton
+                                    <BloisIconButton
                                         name="plus"
                                         type="Feather"
                                         buttonStyle={{
@@ -192,7 +212,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                     flexDirection: 'row',
                     alignItems: 'center'
                 }}>
-                    <CustomIconButton
+                    <BloisIconButton
                         name={'close'}
                         type={'MaterialCommunityIcons'}
                         animationType={'shadowSmall'}
@@ -212,15 +232,19 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                             flex: 1
                         }}
                         buttonStyle={{
-                            height: styleValues.mediumHeight
+                            height: styleValues.mediumHeight,
+                            backgroundColor: this.state.offerData.deliveryAddress ? colors.main : colors.lightestGrey
                         }}
                         textStyle={{
                             fontSize: styleValues.mediumTextSize
                         }}
                         onPress={async () => {
-                            
-                            await Offer.send(this.state.offerInfo!.offer)
-                            this.props.navigation.goBack()
+                            if (this.state.offerData.deliveryAddress) {
+                                await Offer.send(this.state.offerInfo!.offer)
+                                this.props.navigation.goBack()
+                            } else {
+                                this.setState({validityFlag: true})
+                            }
                         }}
                     />
               </View>
