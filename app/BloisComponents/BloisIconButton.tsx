@@ -33,8 +33,8 @@ type State = {};
 export default class BloisIconButton extends Component<BloisIconButtonProps, State> {
 
     DCIcon = Icons[this.props.type] as Icon<
-        typeof this.props.name,
-        typeof this.props.type
+        BloisIconButton['props']['name'],
+        BloisIconButton['props']['type']
     >;
 
     render() {
