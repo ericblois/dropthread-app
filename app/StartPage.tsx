@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from "react-native";
 import CustomComponent from "./CustomComponents/CustomComponent";
-import { BloisTextInput, CustomImageButton, PageContainer, TextButton } from "./HelperFiles/CompIndex";
+import { BloisBadge, BloisTextInput, CustomImageButton, PageContainer, TextButton } from "./HelperFiles/CompIndex";
 import { auth } from "./HelperFiles/Constants";
 import { RootStackParamList } from "./HelperFiles/Navigation";
 import { icons, screenWidth, styleValues, textStyles } from "./HelperFiles/StyleSheet";
@@ -161,10 +161,17 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                     posY: 'below'
                 }}
                 style={{width: styleValues.smallHeight*1.5}}
-            />
+            >
+                <BloisBadge
+                    number={1}
+                />
+            </BloisIconButton>
             <BloisTextInput
-                style={{}}
-            />
+                label={'Name:'}
+                placeholder="JohnSmith"
+                prefix={'fgf'}
+            >
+            </BloisTextInput>
             <BloisTextInput
                 style={{}}
             />

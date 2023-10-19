@@ -4,6 +4,7 @@ import { colors, defaultStyles, shadowStyles, styleValues, textStyles } from "..
 import CustomComponent from "../CustomComponents/CustomComponent";
 
 type BloisTextInputProps = {
+    label?: string,
     placeholder?: string,
     // For positioning, use containerStyle
     style?: ViewStyle,
@@ -152,19 +153,20 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                         height: styleValues.smallHeight,
                         flexDirection: 'row',
                         justifyContent: 'flex-start',
+                        paddingVertical: 0,
                         ...(this.animatedStyles[this.props.indicatorType || 'shadowSmall']),
                         ...this.props.style
                     }}
                 >
-                    {this.props.placeholder ?
+                    {this.props.label ?
                         <Text style={{
-                            ...textStyles.small,
+                            ...textStyles.smaller,
                             color: colors.grey,
                             marginRight: styleValues.mediumPadding
-                        }}>{this.props.placeholder}</Text>    
+                        }}>{this.props.label}</Text>    
                     : undefined}
                     {this.props.prefix ?
-                        <Text style={{...textStyles.medium, ...this.props.textStyle}}>{this.props.prefix}</Text>    
+                        <Text style={{...textStyles.small, ...this.props.textStyle}}>{this.props.prefix}</Text>    
                     : undefined}
                     <TextInput
                         textAlign={"left"}
@@ -175,10 +177,11 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                         disableFullscreenUI={true}
                         focusable={true}
                         style={{...textStyles.small, textAlign: 'left', flex: 1, ...this.props.textStyle}}
-                        placeholder={undefined}
+                        placeholder={this.props.placeholder}
                         value={this.state.text}
                         onChangeText={(text) => {
-                            this.props.onChangeText?.(this.handleText(text))
+                            const newText = this.handleText(text)
+                            this.props.onChangeText?.(newText)
                         }}
                         onFocus={() => {
                             this.setState({isFocused: true})

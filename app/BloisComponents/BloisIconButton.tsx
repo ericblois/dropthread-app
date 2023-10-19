@@ -24,6 +24,7 @@ type BloisIconButtonProps = IconSelect & {
         posY?: "above" | "below"
         width?: number;
     };
+    children?: React.ReactNode;
 };
 
 type State = {};
@@ -92,6 +93,7 @@ export default class BloisIconButton extends Component<BloisIconButtonProps, Sta
                         ...this.props.iconStyle,
                     }}
                 />
+                {this.props.children}
             </BloisPressable>
         );
     }

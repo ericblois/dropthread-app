@@ -11,7 +11,7 @@ import CustomImage from "./CustomImage";
 import LoadingCover from "./LoadingCover";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import * as Icons from "@expo/vector-icons"
-import CustomBadge from "./CustomBadge";
+import BloisBadge from "../BloisComponents/BloisBadge";
 import User from "../HelperFiles/User";
 
 
@@ -110,7 +110,7 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
                 }}
             />
             {this.props.badgeNumber ?
-            <CustomBadge number={this.props.badgeNumber}/>
+            <BloisBadge number={this.props.badgeNumber}/>
             : undefined}
             
         </BloisPressable>
