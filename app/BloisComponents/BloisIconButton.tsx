@@ -28,8 +28,6 @@ type BloisIconButtonProps = IconSelect & {
 
 type State = {};
 
-
-
 export default class BloisIconButton extends Component<BloisIconButtonProps, State> {
 
     DCIcon = Icons[this.props.type] as Icon<
