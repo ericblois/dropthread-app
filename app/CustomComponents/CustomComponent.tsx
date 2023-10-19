@@ -4,6 +4,7 @@ import { auth } from "../HelperFiles/Constants";
 import { EventListenerCallback, NavigationProp } from "@react-navigation/native";
 
 type Props = {
+    children?: React.ReactNode,
     navigation?: {[key: string]: any},
     route?: {[key: string]: any},
     refreshOnNavigate?: boolean
