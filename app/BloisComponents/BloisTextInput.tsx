@@ -1,5 +1,5 @@
 import React from "react";
-import { Animated, KeyboardAvoidingView, ScrollView, Text, TextInput, TextInputProps, TextStyle, View, ViewStyle } from "react-native";
+import { Animated, KeyboardAvoidingView, ScrollView, ScrollViewProps, Text, TextInput, TextInputProps, TextStyle, View, ViewStyle } from "react-native";
 import { colors, defaultStyles, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "../CustomComponents/CustomComponent";
 
@@ -11,7 +11,7 @@ type BloisTextInputProps = {
     textInputProps?: TextInputProps,
     // Use this style for any positioning
     containerStyle?: ViewStyle,
-    containerProps?: ScrollView['props'],
+    containerProps?: ScrollViewProps,
     animationTime?: number,
     prefix?: string,
     allowedCharacters?: RegExp,
