@@ -136,7 +136,9 @@ export default class BloisPressable extends CustomComponent<BloisPressableProps,
                         bottom: posY === "above" ? this.pressableHeight + styleValues.minorPadding : undefined,
                         left: posX === "right" ? 0 : undefined,
                         right: posX === "left" ? 0 : undefined,
-                        alignSelf: posX === "center" ? "center" : undefined
+                        alignSelf: posX === "center" ? "center" : undefined,
+                        elevation: 100,
+                        zIndex: 100
                     }}
                 >
                     <View
@@ -180,7 +182,11 @@ export default class BloisPressable extends CustomComponent<BloisPressableProps,
                     this.animPressIn();
                     this.props.pressableProps?.onPressIn?.(event)
                 }}
-                onPress={this.props.onPress}
+                onPress={async (event) => {
+                    this.setState({showLoading: true})
+                    await this.props.onPress?.(event)
+                    this.setState({ showLoading: false})
+                }}
                 onLongPress={(event) => {
                     this.setState({ showInfo: true });
                     this.props.pressableProps?.onLongPress?.(event);

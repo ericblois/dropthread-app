@@ -3,7 +3,7 @@ import { Animated, TextStyle, View, ViewStyle } from "react-native";
 import { colors, defaultStyles, fonts, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import TextButton from "./TextButton";
-import { CustomTextButton } from "../HelperFiles/CompIndex";
+import { BloisTextButton } from "../HelperFiles/CompIndex";
 
 type TextDropdownAnimatedProps = {
     placeholderText: string,
@@ -235,7 +235,7 @@ export default class TextDropdownAnimated extends CustomComponent<TextDropdownAn
                 width: "100%",
                 ...this.props.style
             }}>
-                <CustomTextButton
+                <BloisTextButton
                     text={mainText}
                     buttonStyle={{
                         ...defaultStyles.roundedBox,

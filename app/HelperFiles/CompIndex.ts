@@ -27,7 +27,7 @@ import TagInputBox from "../CustomComponents/TagInputBox";
 import BloisPressable from "../BloisComponents/BloisPressable"
 import CustomModal from "../CustomComponents/CustomModal"
 import BloisBadge from "../BloisComponents/BloisBadge"
-import CustomTextButton from "../CustomComponents/CustomTextButton"
+import BloisTextButton from "../BloisComponents/BloisTextButton"
 import OfferSmallCard from "../CustomComponents/OfferSmallCard"
 import OfferLargeCard from "../CustomComponents/OfferLargeCard"
 import CustomCameraModal from "../CustomComponents/CustomCameraModal"
@@ -66,7 +66,7 @@ export {
     CustomScrollView,
     CustomModal,
     BloisBadge,
-    CustomTextButton,
+    BloisTextButton,
     OfferSmallCard,
     CustomCameraModal,
     ColorDropdown,

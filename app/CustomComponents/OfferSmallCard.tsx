@@ -13,7 +13,7 @@ import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import * as Icons from "@expo/vector-icons"
 import BloisBadge from "../BloisComponents/BloisBadge";
 import User from "../HelperFiles/User";
-import { CustomTextButton } from "../HelperFiles/CompIndex";
+import { BloisTextButton } from "../HelperFiles/CompIndex";
 
 
 type Props = {

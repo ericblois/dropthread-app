@@ -3,7 +3,7 @@ import { Animated, TextStyle, View, ViewStyle } from "react-native";
 import { colors, defaultStyles, fonts, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import TextButton from "./TextButton";
-import { BloisPressable, CustomTextButton } from "../HelperFiles/CompIndex";
+import { BloisPressable, BloisTextButton } from "../HelperFiles/CompIndex";
 import { ItemColor, ItemColorValues, ItemColors } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 
@@ -252,7 +252,7 @@ export default class ColorDropdown extends CustomComponent<ColorDropdownProps, S
                 width: "100%",
                 ...this.props.style
             }}>
-                <CustomTextButton
+                <BloisTextButton
                     text={`Colors${this.state.selections.length > 0 ? ': ' : ''}`}
                     buttonStyle={{
                         ...defaultStyles.roundedBox,

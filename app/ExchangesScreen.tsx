@@ -7,7 +7,7 @@ import ViewLikesPage from "./LikesPages/ViewLikesPage";
 import { ExchangesStack, UserMainStackParamList } from "./HelperFiles/Navigation";
 import ViewExchangesPage from "./LikesPages/ViewExchangesPage";
 import { colors, fonts, screenWidth, shadowStyles, styleValues, topInset } from "./HelperFiles/StyleSheet";
-import CustomTextButton from "./CustomComponents/CustomTextButton";
+import BloisTextButton from "./BloisComponents/BloisTextButton";
 
 type ExchangesNavigationProp = StackNavigationProp<UserMainStackParamList, "exchanges">;
 
@@ -51,7 +51,7 @@ export default class ExchangesScreen extends CustomComponent<ExchangesProp, Stat
                                 backgroundColor: colors.background
                             }}
                         >
-                            <CustomTextButton
+                            <BloisTextButton
                                 text={'Liked items'}
                                 wrapperStyle={{marginRight: styleValues.mediumPadding, flex: 1}}
                                 textStyle={{
@@ -64,7 +64,7 @@ export default class ExchangesScreen extends CustomComponent<ExchangesProp, Stat
                                     }
                                 }}
                             />
-                            <CustomTextButton
+                            <BloisTextButton
                                 text={'Exchanges'}
                                 wrapperStyle={{flex: 1}}
                                 textStyle={{

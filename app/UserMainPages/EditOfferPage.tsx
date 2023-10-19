@@ -5,7 +5,7 @@ import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
-import { ConfirmationPopup, CustomCurrencyInput, CustomImage, CustomModal, CustomScrollView, CustomTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { ConfirmationPopup, CustomCurrencyInput, CustomImage, CustomModal, CustomScrollView, BloisTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, ItemPriceData, OfferData, OfferInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -117,7 +117,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
             <CustomScrollView
                 contentContainerStyle={{paddingBottom: styleValues.mediumHeight + styleValues.mediumPadding}}
             >
-                    <CustomTextButton
+                    <BloisTextButton
                         text={`Browse ${this.state.isFrom ? this.state.offerInfo?.offer.toName : this.state.offerInfo?.offer.fromName}'s items`}
                         textStyle={{color: colors.grey}}
                         rightChildren={
@@ -226,7 +226,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                         }}
                         onPress={() => this.props.navigation.goBack()}
                     />
-                        <CustomTextButton
+                        <BloisTextButton
                             text={this.state.isFrom ? 'Cancel' : 'Reject'}
                             appearance={'color'}
                             showLoading
@@ -240,7 +240,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                             onPress={async () => this.setState({showRejectPopup: true})}
                         />
                     {!this.state.isFrom ?
-                        <CustomTextButton
+                        <BloisTextButton
                             text={this.state.hasChanged ? 'Send' : 'Accept'}
                             appearance={'color'}
                             showLoading

@@ -5,7 +5,7 @@ import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
-import { CustomCurrencyInput, CustomImage, CustomModal, CustomScrollView, CustomTextButton, ExchangeLocation, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { CustomCurrencyInput, CustomImage, CustomModal, CustomScrollView, BloisTextButton, ExchangeLocation, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, ItemPriceData, OfferData, OfferInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -99,7 +99,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
             <CustomScrollView
                 contentContainerStyle={{paddingBottom: styleValues.mediumHeight + styleValues.mediumPadding}}
             >
-                <CustomTextButton
+                <BloisTextButton
                     text={`Browse ${this.state.offerInfo?.offer.toName}'s items`}
                     textStyle={{color: colors.grey}}
                     rightChildren={
@@ -224,7 +224,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                         }}
                         onPress={() => this.props.navigation.goBack()}
                     />
-                    <CustomTextButton
+                    <BloisTextButton
                         text={'Send'}
                         appearance={'color'}
                         showLoading

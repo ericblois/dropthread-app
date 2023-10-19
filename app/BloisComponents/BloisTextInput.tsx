@@ -4,6 +4,7 @@ import { colors, defaultStyles, shadowStyles, styleValues, textStyles } from "..
 import CustomComponent from "../CustomComponents/CustomComponent";
 
 type BloisTextInputProps = {
+    defaultValue?: string,
     label?: string,
     placeholder?: string,
     // For positioning, use containerStyle
@@ -19,7 +20,7 @@ type BloisTextInputProps = {
     checkValidity?: (text: string) => boolean,
     indicatorType?: 'shadowSmall' | 'shadow' | 'outline',
     showInitialValidity?: boolean,
-    onChangeText?: (text: string) => void
+    onChangeText?: (text: string) => void,
 }
 
 type State = {
@@ -51,7 +52,7 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
             }
         }
         this.state = {
-            text: props.textInputProps?.defaultValue || "",
+            text: props.defaultValue || "",
             isFocused: false
         }
         this.progress = new Animated.Value(props.showInitialValidity ? (isValid ? 1 : 0) : 1)
@@ -139,8 +140,8 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                 style={{
                     ...this.props.containerStyle,
                     overflow: 'visible',
-                    zIndex: 1000,
-                    elevation: 1000,
+                    zIndex: this.state.isFocused ? 1000 : 0,
+                    elevation: this.state.isFocused ? 1000 : 0,
                     flexGrow: 0,
                     width: '100%'
                 }}
@@ -174,6 +175,7 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                         autoCorrect={false}
                         clearButtonMode={"while-editing"}
                         {...this.props.textInputProps}
+                        defaultValue={this.props.defaultValue}
                         disableFullscreenUI={true}
                         focusable={true}
                         style={{...textStyles.small, textAlign: 'left', flex: 1, ...this.props.textStyle}}
@@ -190,6 +192,7 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                             this.setState({isFocused: false})
                         }}
                     />
+                    {this.props.children}
                 </Animated.View>
             </ScrollView>
         )

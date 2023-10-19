@@ -8,7 +8,7 @@ import { DefaultAddressData, AddressData } from "../HelperFiles/DataTypes";
 import CustomModal from "./CustomModal";
 import BloisPressable from "../BloisComponents/BloisPressable";
 import User from "../HelperFiles/User";
-import { CustomTextButton, BloisTextInput, TextButton } from "../HelperFiles/CompIndex";
+import { BloisTextButton, BloisTextInput, TextButton } from "../HelperFiles/CompIndex";
 import { AntDesign } from "@expo/vector-icons";
 import Address from "../HelperFiles/Address";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';

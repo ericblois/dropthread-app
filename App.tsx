@@ -14,7 +14,7 @@ import GeoPermPage from "./app/EntryPages/GeoPermPage"
 import EntryLoadingPage from './app/EntryPages/EntryLoadingPage';
 import FastImage from "react-native-fast-image";
 import { defaultStyles, fonts, textStyles } from "./app/HelperFiles/StyleSheet";
-import CustomTextButton from "./app/CustomComponents/CustomTextButton";
+import BloisTextButton from "./app/BloisComponents/BloisTextButton";
 
 //LogBox.ignoreLogs(['Calling getNode()', 'VirtualizedLists should never be nested'])
 
@@ -119,7 +119,7 @@ export default class App extends Component<Props, State> {
                 alignSelf: 'center',
             }}
         >The app experienced an error.</Text>
-        <CustomTextButton
+        <BloisTextButton
           text={"Reload"}
           onPress={() => this.setState({errorCaught: false})}
         />

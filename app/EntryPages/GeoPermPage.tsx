@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { CustomImageButton, CustomTextButton, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { CustomImageButton, BloisTextButton, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { auth } from "../HelperFiles/Constants";
 import { RootStackParamList } from "../HelperFiles/Navigation";
 import { icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
@@ -40,7 +40,7 @@ export default class GeoPermPage extends CustomComponent<StartProps, State> {
                 {this.state.permDenied ? 
                 <Text style={textStyles.small}>{"Please enable location services in Settings > dropcloset > Location services."}</Text>
                 : 
-                <CustomTextButton
+                <BloisTextButton
                     text={"Click here to request location permissions!"}
                     onPress={async () => {
                         const result = await AppUtils.requestLocationPermission()

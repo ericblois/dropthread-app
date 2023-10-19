@@ -13,7 +13,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import { AppState, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { CustomImage, CustomImageButton, CustomTextButton, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { CustomImage, CustomImageButton, BloisTextButton, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { auth } from "../HelperFiles/Constants";
 import { RootStackParamList } from "../HelperFiles/Navigation";
 import { defaultStyles, fonts, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";

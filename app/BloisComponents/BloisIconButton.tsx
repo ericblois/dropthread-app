@@ -11,12 +11,12 @@ import * as Icons from "@expo/vector-icons";
 import { Icon, IconProps } from "@expo/vector-icons/build/createIconSet";
 import BloisPressable from "./BloisPressable";
 
-type BloisIconButtonProps = IconSelect & {
+type BloisIconButtonProps = {
+    icon: IconSelect,
     style?: ViewStyle;
     iconStyle?: TextStyle;
     onPress?: (event: GestureResponderEvent) => void | Promise<void>;
     pressableProps?: PressableProps;
-    showLoading?: boolean;
     shadow?: boolean;
     tooltip?: {
         text: string;
@@ -31,13 +31,21 @@ type State = {};
 
 export default class BloisIconButton extends Component<BloisIconButtonProps, State> {
 
-    DCIcon = Icons[this.props.type] as Icon<
-        BloisIconButton['props']['name'],
-        BloisIconButton['props']['type']
-    >;
+    DCIcon;
+
+    constructor(props: BloisIconButtonProps) {
+        super(props)
+        this.DCIcon = Icons[this.props.icon.type] as Icon<
+            typeof this.props.icon.name,
+            typeof this.props.icon.type
+        >;
+    }
 
     render() {
-        
+        const DCIcon = Icons[this.props.icon.type] as Icon<
+            typeof this.props.icon.name,
+            typeof this.props.icon.type
+        >;
         return (
             <BloisPressable
                 style={{
@@ -52,33 +60,13 @@ export default class BloisIconButton extends Component<BloisIconButtonProps, Sta
                 }}
                 animType={this.props.shadow !== false ? 'shadowSmall' : 'opacity'}
                 tooltip={this.props.tooltip}
-                onPress={async (e) => {
-                    if (this.props.onPress) {
-                        if (this.props.showLoading) {
-                            this.setState({ showLoading: true });
-                        }
-                        await this.props.onPress(e);
-                        if (this.props.showLoading) {
-                            this.setState({ showLoading: false });
-                        }
-                    }
-                }}
-                pressableProps={{
-                    onLongPress: (event) => {
-                        this.setState({ showInfo: true });
-                        this.props.pressableProps?.onLongPress?.(event);
-                    },
-                    onPressOut: (event) => {
-                        this.setState({ showInfo: false });
-                        this.props.pressableProps?.onPressOut?.(event);
-                    },
-                }}
+                onPress={this.props.onPress}
             >
-                <this.DCIcon
+                <DCIcon
                     adjustsFontSizeToFit
-                    {...this.props.iconProps}
-                    name={this.props.name}
-                    type={this.props.type}
+                    {...this.props.icon.iconProps}
+                    name={this.props.icon.name}
+                    type={this.props.icon.type}
                     style={{
                         height: "100%",
                         width: "100%",
@@ -100,7 +88,7 @@ export default class BloisIconButton extends Component<BloisIconButtonProps, Sta
 }
 
 export type IconSelect =
-    | {
+    {
           type: "AntDesign";
           name: keyof typeof Icons.AntDesign.glyphMap;
           iconProps?: Partial<IconProps<keyof typeof Icons.AntDesign.glyphMap>>;

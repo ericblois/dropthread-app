@@ -280,6 +280,11 @@ export const defaultStyles = StyleSheet.create({
     bottom: 0,
     right: 0,
     left: 0
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 });
 

@@ -8,7 +8,7 @@ import { Coords, DefaultAddressData, AddressData, DeliveryMethod, OfferData } fr
 import CustomModal from "./CustomModal";
 import BloisPressable from "../BloisComponents/BloisPressable";
 import User from "../HelperFiles/User";
-import { AddressCard, CustomAddressInput, CustomTextButton, BloisTextInput, TextButton } from "../HelperFiles/CompIndex";
+import { AddressCard, CustomAddressInput, BloisTextButton, BloisTextInput, TextButton } from "../HelperFiles/CompIndex";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import MapView, { Circle, MapMarker, Marker, Overlay, PROVIDER_GOOGLE, Polygon } from "react-native-maps"
 import Offer from "../HelperFiles/Offer";
@@ -289,7 +289,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                     </View>
                 </View>
                 <Text style={{...textStyles.small, color: colors.grey, textAlign: 'left', marginBottom: styleValues.mediumPadding}}>The highlighted area is a recommended meetup area to reduce travel time for each of you.</Text>
-                <CustomTextButton
+                <BloisTextButton
                     text={"Select this meetup location"}
                     textStyle={{color: !this.state.meetupSelection ? colors.lightGrey : colors.black}}
                     touchableProps={{disabled: !this.state.meetupSelection}}

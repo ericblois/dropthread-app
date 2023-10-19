@@ -6,7 +6,7 @@ import React from "react";
 import { DeviceEventEmitter, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
-import { ConfirmationPopup, CustomScrollView, CustomTextButton, ImageSlider, LoadingCover, MenuBar, OfferSmallCard, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
+import { ConfirmationPopup, CustomScrollView, BloisTextButton, ImageSlider, LoadingCover, MenuBar, OfferSmallCard, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo, ItemInteraction, OfferData, OfferInfo } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -199,7 +199,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                                     <Text style={{...textStyles.small, textAlign: 'left'}}>{`within ${interaction.distance} km`}</Text>
                                     <Text style={{...textStyles.smaller, textAlign: 'left', color: colors.grey}}>{timeText}</Text>
                                 </View>
-                                <CustomTextButton
+                                <BloisTextButton
                                     text={'Send offer'}
                                     wrapperStyle={{width: '30%'}}
                                     buttonStyle={{

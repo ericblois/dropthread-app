@@ -6,7 +6,7 @@ import { StyleSheet, Text, TextInput } from "react-native";
 import CustomComponent from "./CustomComponents/CustomComponent";
 import { alphanumericSpecialRegex, emailRegex, nameRegex, passwordRegex } from './BloisComponents/BloisTextInput';
 import { capitalizeWords } from "./HelperFiles/ClientFunctions";
-import { DateScrollPicker, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton, TextDropdownAnimated, BloisTextInput, CustomTextButton } from "./HelperFiles/CompIndex";
+import { DateScrollPicker, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton, TextDropdownAnimated, BloisTextInput, BloisTextButton } from "./HelperFiles/CompIndex";
 import { geofire } from "./HelperFiles/Constants";
 import { countriesList, Country, DefaultUserData, UserData, UserGender, UserGenders } from "./HelperFiles/DataTypes";
 import { RootStackParamList } from "./HelperFiles/Navigation";
@@ -256,7 +256,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     onSelect={(selections) => this.setState({userData: {...this.state.userData, country: selections[0].value as Country} as UserData})}
                 />
                 <Text style={{...styles.inputDescription, fontSize: styleValues.smallestTextSize}}>Your location is required to view items near you. Location data is never shared with other users without your permission.</Text>
-                <CustomTextButton
+                <BloisTextButton
                     text={"Location"}
                     wrapperStyle={{
                         width: '100%'
