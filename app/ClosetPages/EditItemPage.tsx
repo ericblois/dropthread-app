@@ -4,7 +4,7 @@ import React from "react";
 import { DeviceEventEmitter, StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
-import { CustomCurrencyInput, ImageSliderSelector, LoadingCover, MenuBar, PageContainer, ScrollContainer, TagInputBox, TextDropdownAnimated, BloisTextInput, ToggleSwitch, CustomScrollView, ColorDropdown } from "../HelperFiles/CompIndex";
+import { CustomCurrencyInput, ImageSliderSelector, LoadingCover, BloisMenuBar, PageContainer, ScrollContainer, TagInputBox, TextDropdownAnimated, BloisTextInput, ToggleSwitch, CustomScrollView, ColorDropdown } from "../HelperFiles/CompIndex";
 import { DefaultItemData, DeliveryMethods, ItemCategories, ItemConditions, ItemData, ItemFits, ItemGenders, ItemPriceData, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList } from "../HelperFiles/Navigation";
@@ -382,7 +382,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                 <PageContainer headerText={"Edit Item"}>
                     {this.renderUI()}
                     {this.renderLoading()}
-                    <MenuBar
+                    <BloisMenuBar
                         buttonProps={[
                         {
                             iconSource: icons.chevron,
@@ -402,7 +402,7 @@ export default class EditItemPage extends CustomComponent<EditItemProps, State> 
                         },
                         ]}
                     
-                    ></MenuBar>
+                    ></BloisMenuBar>
                 </PageContainer>
             );
         } catch (e) {

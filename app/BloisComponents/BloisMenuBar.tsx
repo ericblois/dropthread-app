@@ -1,11 +1,16 @@
 import React from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import { StyleSheet, TextStyle, View, ViewStyle } from "react-native";
 import { colors, menuBarStyles, shadowStyles } from "../HelperFiles/StyleSheet";
-import CustomComponent from "./CustomComponent";
-import CustomImageButton from "./CustomImageButton";
+import CustomComponent from "../CustomComponents/CustomComponent";
+import CustomImageButton from "../CustomComponents/CustomImageButton";
+import BloisIconButton, { IconSelect } from "./BloisIconButton";
 
 type Props = {
-  buttonProps: CustomImageButton['props'][],
+  buttons: {
+    icon: IconSelect,
+    onPress: () => void,
+    iconStyle?: TextStyle
+  }[]
   menuBarStyle?: ViewStyle,
   buttonStyle?: ViewStyle,
   shadow?: boolean
@@ -13,7 +18,7 @@ type Props = {
 
 type State = {}
 
-export default class MenuBar extends CustomComponent<Props, State> {
+export default class BloisMenuBar extends CustomComponent<Props, State> {
 
   styles: {
     menuBarStyle: ViewStyle;
@@ -37,9 +42,14 @@ export default class MenuBar extends CustomComponent<Props, State> {
         }}
       >
         {
-          this.props.buttonProps.map((props, index) => {
-            return <CustomImageButton iconStyle={{tintColor: colors.darkGrey}} {...props} key={index}/>;
-          })
+          this.props.buttons.map((buttonData, index) => (
+            <BloisIconButton
+              icon={buttonData.icon}
+              iconStyle={{color: colors.darkGrey, ...buttonData.iconStyle}}
+              shadow={false}
+              onPress={buttonData.onPress}
+            />
+          ))
         }
         {this.props.children}
       </View>

@@ -1,5 +1,5 @@
 import { RouteProp } from "@react-navigation/core";
-import { StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import AccountScreen from "./AccountScreen";
@@ -9,116 +9,169 @@ import { RootStackParamList, UserMainStack } from "./HelperFiles/Navigation";
 import { subscribeNotifications } from "./HelperFiles/Notifications";
 import ExchangesScreen from "./ExchangesScreen";
 import ViewItemsPage from "./UserMainPages/ViewItemsPage";
-import * as Notifications from 'expo-notifications'
+import * as Notifications from "expo-notifications";
 import BrowsePage from "./UserMainPages/BrowsePage";
 import CreateOfferPage from "./UserMainPages/CreateOfferPage";
-import MenuBar from "./CustomComponents/MenuBar";
-import { bottomInset, colors, displayHeight, icons, screenHeight, screenWidth, styleValues } from "./HelperFiles/StyleSheet";
+import BloisMenuBar from "./BloisComponents/BloisMenuBar";
+import {
+    bottomInset,
+    colors,
+    displayHeight,
+    icons,
+    screenHeight,
+    screenWidth,
+    styleValues,
+} from "./HelperFiles/StyleSheet";
 import EditOfferPage from "./UserMainPages/EditOfferPage";
 
-type UserMainNavigationProp = StackNavigationProp<RootStackParamList, "userMain">;
+type UserMainNavigationProp = StackNavigationProp<
+    RootStackParamList,
+    "userMain"
+>;
 
 type UserMainRouteProp = RouteProp<RootStackParamList, "userMain">;
 
 type UserMainProps = {
-    navigation: UserMainNavigationProp,
-    route: UserMainRouteProp
-}
+    navigation: UserMainNavigationProp;
+    route: UserMainRouteProp;
+};
 
-type State = {
-}
+type State = {};
 
-export default class UserMainScreen extends CustomComponent<UserMainProps, State> {
-
+export default class UserMainScreen extends CustomComponent<
+    UserMainProps,
+    State
+> {
     constructor(props: UserMainProps) {
-        super(props)
-        this.state = {
-
-        }
+        super(props);
+        this.state = {};
     }
 
     componentDidMount() {
-        subscribeNotifications()
+        subscribeNotifications();
         Notifications.addNotificationReceivedListener((event) => {
-            console.log(event.request)
-        })
-        super.componentDidMount()
+            console.log(event.request);
+        });
+        super.componentDidMount();
     }
 
-  render() {
-    return (
+    render() {
+        return (
             <UserMainStack.Navigator
                 screenOptions={{
                     header: (props) => {
                         //console.log(props.route)
-                        if (['browse', 'exchanges', 'closet', 'account'].includes(props.route.name)) {
+                        if (
+                            [
+                                "browse",
+                                "exchanges",
+                                "closet",
+                                "account",
+                            ].includes(props.route.name)
+                        ) {
                             return (
-                            <MenuBar
-                                menuBarStyle={{
-                                    bottom: undefined,
-                                    top: displayHeight - bottomInset - styleValues.mediumHeight - styleValues.mediumPadding
-                                }}
-                                buttonProps={[
-                                    {
-                                    iconSource: icons.shoppingBag,
-                                    iconStyle: {
-                                        tintColor: props.route.name === 'browse' ? colors.main : colors.darkGrey
-                                    },
-                                    onPress: () => {
-                                        if (props.route.name !== 'browse') {
-                                            props.navigation.navigate('browse')
-                                        }
-                                    }
-                                    },
-                                    {
-                                    iconSource: icons.hollowHeart,
-                                    iconStyle: {
-                                        tintColor: props.route.name === 'exchanges' ? colors.main : colors.darkGrey
-                                    },
-                                    onPress: () => {
-                                        if (props.route.name !== 'exchanges') {
-                                            props.navigation.navigate('exchanges')
-                                        }
-                                    }
-                                    },
-                                    {
-                                    iconSource: icons.closet,
-                                    iconStyle: {
-                                        tintColor: props.route.name === 'closet' ? colors.main : colors.darkGrey
-                                    },
-                                    onPress: () => {
-                                        if (props.route.name !== 'closet') {
-                                            props.navigation.navigate('closet')
-                                        }
-                                    }
-                                    },
-                                    {
-                                    iconSource: icons.profile,
-                                    iconStyle: {
-                                        tintColor: props.route.name === 'account' ? colors.main : colors.darkGrey
-                                    },
-                                    onPress: () => {
-                                        if (props.route.name !== 'account') {
-                                            props.navigation.navigate('account')
-                                        }
-                                    }
-                                    },
-                                ]}
-                            />
-                            )
+                                <BloisMenuBar
+                                    menuBarStyle={{
+                                        bottom: undefined,
+                                        top:
+                                            displayHeight -
+                                            bottomInset -
+                                            styleValues.mediumHeight -
+                                            styleValues.mediumPadding,
+                                    }}
+                                    buttons={[
+                                        {
+                                            icon: {
+                                                type: "MaterialCommunityIcons",
+                                                name: "shopping-search",
+                                            },
+                                            iconStyle: {
+                                                color: props.route.name === "browse" ? colors.valid : colors.darkGrey
+                                            },
+                                            onPress: () => {
+                                                if (
+                                                    props.route.name !==
+                                                    "browse"
+                                                ) {
+                                                    props.navigation.navigate(
+                                                        "browse"
+                                                    );
+                                                }
+                                            },
+                                        },
+                                        {
+                                            icon: {
+                                                type: "MaterialCommunityIcons",
+                                                name: "handshake-outline",
+                                            },
+                                            iconStyle: {
+                                                color: props.route.name === "exchanges" ? colors.valid : colors.darkGrey
+                                            },
+                                            onPress: () => {
+                                                if (
+                                                    props.route.name !==
+                                                    "exchanges"
+                                                ) {
+                                                    props.navigation.navigate(
+                                                        "exchanges"
+                                                    );
+                                                }
+                                            },
+                                        },
+                                        {
+                                            icon: {
+                                                type: "MaterialCommunityIcons",
+                                                name: "hanger",
+                                            },
+                                            iconStyle: {
+                                                color: props.route.name === "closet" ? colors.valid : colors.darkGrey
+                                            },
+                                            onPress: () => {
+                                                if (
+                                                    props.route.name !==
+                                                    "closet"
+                                                ) {
+                                                    props.navigation.navigate(
+                                                        "closet"
+                                                    );
+                                                }
+                                            },
+                                        },
+                                        {
+                                            icon: {
+                                                type: "Ionicons",
+                                                name: "person-circle-outline",
+                                            },
+                                            iconStyle: {
+                                                color: props.route.name === "account" ? colors.valid : colors.darkGrey
+                                            },
+                                            onPress: () => {
+                                                if (
+                                                    props.route.name !==
+                                                    "account"
+                                                ) {
+                                                    props.navigation.navigate(
+                                                        "account"
+                                                    );
+                                                }
+                                            },
+                                        },
+                                    ]}
+                                />
+                            );
                         }
                     },
                     headerStyle: {
-                        bottom: bottomInset
+                        bottom: bottomInset,
                     },
-                    animationEnabled: false
+                    animationEnabled: false,
                 }}
                 initialRouteName={"browse"}
             >
-                <UserMainStack.Screen
-                    name={"browse"}
-                >
-                    {props => <BrowsePage {...props} refreshOnNavigate={false}/>}
+                <UserMainStack.Screen name={"browse"}>
+                    {(props) => (
+                        <BrowsePage {...props} refreshOnNavigate={false} />
+                    )}
                 </UserMainStack.Screen>
                 <UserMainStack.Screen
                     name={"exchanges"}
@@ -127,12 +180,10 @@ export default class UserMainScreen extends CustomComponent<UserMainProps, State
                 <UserMainStack.Screen
                     name={"closet"}
                     component={ClosetScreen}
-                    
                 />
                 <UserMainStack.Screen
                     name={"account"}
                     component={AccountScreen}
-                    
                 />
                 <UserMainStack.Screen
                     name={"viewItems"}
@@ -147,10 +198,8 @@ export default class UserMainScreen extends CustomComponent<UserMainProps, State
                     component={EditOfferPage}
                 />
             </UserMainStack.Navigator>
-    );
-  }
+        );
+    }
 }
 
-const styles = StyleSheet.create({
-
-})
+const styles = StyleSheet.create({});

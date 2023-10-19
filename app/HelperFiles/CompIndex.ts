@@ -1,4 +1,4 @@
-import MenuBar from "../CustomComponents/MenuBar";
+import BloisMenuBar from "../BloisComponents/BloisMenuBar";
 import ImageSlider from "../CustomComponents/ImageSlider";
 import CustomImageButton from "../CustomComponents/CustomImageButton";
 import CustomScrollView from "../CustomComponents/CustomScrollView";
@@ -37,7 +37,7 @@ import CustomAddressInput from "../CustomComponents/CustomAddressInput"
 import AddressCard from "../CustomComponents/AddressCard"
 
 export {
-    MenuBar,
+    BloisMenuBar,
     ImageSlider,
     CustomImageButton,
     TextButton,

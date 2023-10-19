@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { CustomModal, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
+import { CustomModal, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, BloisMenuBar, PageContainer } from "../HelperFiles/CompIndex";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
@@ -149,7 +149,7 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
                   : undefined}
               </CustomModal>
               {this.renderLoading()}
-              <MenuBar
+              <BloisMenuBar
                 buttonProps={[
                   {
                     iconSource: icons.chevron,

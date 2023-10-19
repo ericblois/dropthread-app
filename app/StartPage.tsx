@@ -162,7 +162,7 @@ export default class StartPage extends CustomComponent<StartProps, State> {
     render() {
         return (
             <PageContainer>
-                <TextButton
+                <BloisTextButton
                     text={"Go to main page (Tester1)"}
                     onPress={() => {
                         this.setState(
@@ -176,7 +176,7 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                         );
                     }}
                 />
-                <TextButton
+                <BloisTextButton
                     text={"Go to main page (Tester2)"}
                     onPress={() => {
                         this.setState(
@@ -190,7 +190,7 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                         );
                     }}
                 />
-                <TextButton
+                <BloisTextButton
                     text={"Go to main page (Tester3)"}
                     onPress={() => {
                         this.setState(
@@ -204,45 +204,12 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                         );
                     }}
                 />
-                <TextButton
+                <BloisTextButton
                     text={"Go to signup page"}
                     onPress={() => {
                         this.props.navigation.navigate("userSignup");
                     }}
                 />
-                <BloisIconButton
-                    icon={{
-                        type: "AntDesign",
-                        name: "addfolder",
-                    }}
-                    tooltip={{
-                        text: "example text blah blah blahhahahahahahhahaha",
-                    }}
-                    style={{ width: styleValues.smallHeight * 1.5 }}
-                    onPress={() => console.log("sbfs")}
-                >
-                    <BloisBadge number={1} />
-                </BloisIconButton>
-                <BloisTextInput
-                    label={"Name:"}
-                    placeholder="JohnSmith"
-                    prefix={"fgf"}
-                    defaultValue="jdj"
-                />
-                <BloisTextButton
-                    text="button"
-                    subtext="sjsfj"
-                    rightChildren={
-                        <BloisIconButton
-                            icon={{ type: "AntDesign", name: "addfolder" }}
-                        />
-                    }
-                />
-                <BloisTextInput style={{}} />
-                <BloisTextInput style={{}} />
-                <BloisTextInput style={{}} />
-                <BloisTextInput style={{}} />
-                <BloisTextInput style={{}} />
                 {this.renderLoginInput()}
             </PageContainer>
         );

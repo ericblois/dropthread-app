@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { ListRenderItemInfo, StyleSheet, Text } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { ItemLargeCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
+import { ItemLargeCard, LoadingCover, BloisMenuBar, PageContainer } from "../HelperFiles/CompIndex";
 import { ItemData, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
@@ -116,7 +116,7 @@ export default class ItemSwapsPage extends CustomComponent<ItemSwapsProps, State
         <PageContainer>
             {this.renderUI()}
             {this.renderLoading()}
-            <MenuBar
+            <BloisMenuBar
                 buttonProps={[
                 {
                     iconSource: icons.chevron,
@@ -124,7 +124,7 @@ export default class ItemSwapsPage extends CustomComponent<ItemSwapsProps, State
                 },
                 ]}
             
-            ></MenuBar>
+            ></BloisMenuBar>
         </PageContainer>
     );
     }

@@ -6,7 +6,7 @@ import React from "react";
 import { DeviceEventEmitter, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
-import { ConfirmationPopup, CustomScrollView, BloisTextButton, ImageSlider, LoadingCover, MenuBar, OfferSmallCard, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
+import { ConfirmationPopup, CustomScrollView, BloisTextButton, ImageSlider, LoadingCover, BloisMenuBar, OfferSmallCard, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo, ItemInteraction, OfferData, OfferInfo } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -341,7 +341,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
         >
             {this.renderUI()}
             {this.renderLoading()}
-            <MenuBar
+            <BloisMenuBar
                 buttonProps={[
                     {
                         iconSource: icons.chevron,
@@ -362,7 +362,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                     },
                 ]}
             
-            ></MenuBar>
+            ></BloisMenuBar>
             <ConfirmationPopup
                 visible={this.state.showDeletePopup}
                 headerText={"Delete Item"}

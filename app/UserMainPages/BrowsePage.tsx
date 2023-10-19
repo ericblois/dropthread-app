@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useRef } from "react";
 import { AppState, FlatList, Pressable, StyleSheet, Text, View, ViewToken, ViewabilityConfigCallbackPairs } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { CustomImageButton, FilterSearchBar, ItemLargeCard, LoadingCover, MenuBar, PageContainer } from "../HelperFiles/CompIndex";
+import { CustomImageButton, FilterSearchBar, ItemLargeCard, LoadingCover, BloisMenuBar, PageContainer } from "../HelperFiles/CompIndex";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";

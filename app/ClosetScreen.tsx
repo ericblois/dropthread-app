@@ -72,7 +72,3 @@ export default class ClosetScreen extends CustomComponent<ClosetProps, State> {
     );
   }
 }
-
-const styles = StyleSheet.create({
-
-})

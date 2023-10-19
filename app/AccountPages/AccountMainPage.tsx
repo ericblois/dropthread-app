@@ -5,7 +5,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
-import { LoadingCover, MenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { LoadingCover, BloisMenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
 import { auth } from "../HelperFiles/Constants";
 import { DefaultItemData, ItemData, UserData } from "../HelperFiles/DataTypes";
 import { ClosetStackParamList, RootStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";

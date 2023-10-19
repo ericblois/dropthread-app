@@ -6,7 +6,7 @@ import { StyleSheet, Text, TextInput } from "react-native";
 import CustomComponent from "./CustomComponents/CustomComponent";
 import { alphanumericSpecialRegex, emailRegex, nameRegex, passwordRegex } from './BloisComponents/BloisTextInput';
 import { capitalizeWords } from "./HelperFiles/ClientFunctions";
-import { DateScrollPicker, LoadingCover, MenuBar, PageContainer, ScrollContainer, TextButton, TextDropdownAnimated, BloisTextInput, BloisTextButton } from "./HelperFiles/CompIndex";
+import { DateScrollPicker, LoadingCover, BloisMenuBar, PageContainer, ScrollContainer, TextButton, TextDropdownAnimated, BloisTextInput, BloisTextButton } from "./HelperFiles/CompIndex";
 import { geofire } from "./HelperFiles/Constants";
 import { countriesList, Country, DefaultUserData, UserData, UserGender, UserGenders } from "./HelperFiles/DataTypes";
 import { RootStackParamList } from "./HelperFiles/Navigation";
@@ -298,7 +298,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
             {this.renderError()}
             {this.renderInputs()}
             {this.renderLoading()}
-            <MenuBar
+            <BloisMenuBar
                 buttonProps={[
                     {
                         iconSource: icons.chevron,
@@ -315,7 +315,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                         }
                     }
                 ]}
-            ></MenuBar>
+            ></BloisMenuBar>
         </PageContainer>
         );
     }

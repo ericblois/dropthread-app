@@ -5,7 +5,7 @@ import React from "react";
 import { View } from "react-native";
 import { StyleSheet, Text } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { CustomModal, CustomScrollView, ItemLargeCard, ItemLikedCard, LoadingCover, MenuBar, OfferSmallCard, PageContainer, ScrollContainer } from "../HelperFiles/CompIndex";
+import { CustomModal, CustomScrollView, ItemLargeCard, ItemLikedCard, LoadingCover, BloisMenuBar, OfferSmallCard, PageContainer, ScrollContainer } from "../HelperFiles/CompIndex";
 import { ExchangeData, ItemInfo, OfferData, OfferInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ExchangesStackParamList, RootStackParamList, UserDetailStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
