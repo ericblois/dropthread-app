@@ -185,7 +185,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
             /* Loading indictor */
             : <LoadingCover
                 errorText={this.state.errorMessage}
-                showError={!!this.state.errorMessage}
+                
                 size={'large'}
                 onErrorRefresh={() => this.refreshData()}
             />

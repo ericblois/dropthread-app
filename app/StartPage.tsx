@@ -1,7 +1,7 @@
 import { RouteProp } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { CommonActions } from "@react-navigation/native";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import {
     KeyboardAvoidingView,
@@ -75,6 +75,9 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                 this.props.navigation.navigate("userMain");
             },
             (e: any) => {
+                if (__DEV__) {
+                    createUserWithEmailAndPassword(auth, user, pass)
+                }
                 console.error(e);
                 this.setState({
                     hideAll: false,
@@ -171,7 +174,7 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                                 passText: "asdfasdf",
                             },
                             () => {
-                                this.attemptSignin();
+                                this.attemptSignin()
                             }
                         );
                     }}

@@ -4,13 +4,13 @@ import { ActivityIndicator, ActivityIndicatorProps, StyleSheet, Text, View, View
 import { colors, defaultStyles, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImageButton from "./CustomImageButton";
+import BloisIconButton from "../BloisComponents/BloisIconButton";
 
 
 type Props = {
     style?: ViewStyle,
     size?: "small" | "large",
     indicatorProps?: ActivityIndicatorProps,
-    showError?: boolean,
     errorText?: string,
     onErrorRefresh?: () => void
 }
@@ -32,7 +32,7 @@ export default class LoadingCover extends CustomComponent<Props, State> {
                     ...this.props.style
                 }}
             >
-                {this.props.showError === true ? 
+                {this.props.errorText ? 
                 <>
                     <Text
                         style={{
@@ -40,14 +40,18 @@ export default class LoadingCover extends CustomComponent<Props, State> {
                             marginBottom: styleValues.mediumPadding,
                             color: colors.grey
                         }}
-                    >{this.props.errorText ? this.props.errorText : `An error occurred.`}</Text>
-                    <CustomImageButton
-                        iconSource={icons.refresh}
-                        buttonStyle={{
+                    >{this.props.errorText}</Text>
+                    <BloisIconButton
+                        icon={{
+                            type: 'Ionicons',
+                            name: 'refresh'
+                        }}
+                        style={{
                             height: styleValues.iconMediumSize,
                             width: styleValues.iconMediumSize
                         }}
-                        iconStyle={{tintColor: colors.lightGrey}}
+                        shadow={false}
+                        iconStyle={{color: colors.lightGrey}}
                         onPress={this.props.onErrorRefresh}
                     />
                 </> :

@@ -190,7 +190,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
             return (
               <LoadingCover
                 size={"large"}
-                showError={!!this.state.errorMessage}
+                
                 errorText={this.state.errorMessage}
                 onErrorRefresh={() => this.refreshData()}
             />

@@ -68,19 +68,10 @@ export default class ClosetMainPage extends CustomComponent<
 
     renderAddButton() {
         return (
-            /*<TextButton
-            text={"Add a new item"}
-            onPress={() => {
-                this.props.navigation.navigate("editItem", {
-                    itemID: '',
-                    isNew: true
-                })
-            }}
-          />*/
             <BloisIconButton
                 icon={{
                     name: "tag-plus-outline",
-                    type: "MaterialCommunityIcons"
+                    type: "MaterialCommunityIcons",
                 }}
                 style={{
                     position: "absolute",
@@ -137,14 +128,12 @@ export default class ClosetMainPage extends CustomComponent<
     }
 
     renderUI() {
-        if (!this.state.isLoading && !this.state.errorMessage) {
-            return (
-                <>
-                    {this.renderItems()}
-                    {this.renderAddButton()}
-                </>
-            );
-        }
+        return (
+            <>
+                {this.renderItems()}
+                {this.renderAddButton()}
+            </>
+        );
     }
 
     renderLoading() {
@@ -152,8 +141,8 @@ export default class ClosetMainPage extends CustomComponent<
             return (
                 <LoadingCover
                     size={"large"}
-                    showError={!!this.state.errorMessage}
                     errorText={this.state.errorMessage}
+                    onErrorRefresh={() => this.refreshData()}
                 />
             );
         }

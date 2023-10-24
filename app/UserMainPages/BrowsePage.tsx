@@ -174,7 +174,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
             <LoadingCover
               style={{top: styleValues.mediumPadding}}
               size={"large"}
-              showError={!!this.state.errorMessage}
+              
               errorText={this.state.errorMessage}
               onErrorRefresh={() => this.setState({errorMessage: undefined}, () => {
                 this.refreshData()

@@ -192,7 +192,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
             return (
               <LoadingCover
                 size={"large"}
-                showError={!!this.state.errorMessage}
+                
                 errorText={this.state.errorMessage}
                 onErrorRefresh={() => this.refreshData()}
             />

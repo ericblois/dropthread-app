@@ -326,7 +326,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
             return (
               <LoadingCover
                 size={"large"}
-                showError={!!this.state.errorMessage}
+                
                 errorText={this.state.errorMessage}
                 onErrorRefresh={() => this.refreshData()}
             />
