@@ -10,7 +10,6 @@ import ImageSliderSelector from "../CustomComponents/ImageSliderSelector"
 import ToggleSwitch from "../CustomComponents/ToggleSwitch"
 import PageContainer from "../CustomComponents/PageContainer"
 import ScrollContainer from "../CustomComponents/ScrollContainer"
-import CustomCurrencyInput from "../CustomComponents/CustomCurrencyInput";
 import GradientView from "../CustomComponents/GradientView";
 import LoadingCover from "../CustomComponents/LoadingCover";
 import TextInfoPopup from "../CustomComponents/TextInfoPopup";
@@ -48,7 +47,6 @@ export {
     ToggleSwitch,
     PageContainer,
     ScrollContainer,
-    CustomCurrencyInput,
     GradientView,
     LoadingCover,
     TextInfoPopup,

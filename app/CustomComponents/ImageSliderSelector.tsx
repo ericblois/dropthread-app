@@ -276,9 +276,11 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                 >
                     {/* Add a delete button */}
                     <BloisIconButton
-                        name={'close'}
-                        type={'MaterialCommunityIcons'}
-                        buttonStyle={{
+                        icon={{
+                            type: 'MaterialCommunityIcons',
+                            name: 'close'
+                        }}
+                        style={{
                             position: "absolute",
                             width: styleValues.iconMediumSize,
                             height: styleValues.iconMediumSize,
@@ -292,10 +294,10 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                         onPress={() => {
                             this.removeImage(item.uri)
                         }}
-                        infoProps={{
+                        tooltip={{
                             text: "Remove image",
-                            positionHorizontal: "left",
-                            positionVertical: "beside"
+                            posX: "left",
+                            posY: "above"
                         }}
                     />
                 </CustomImage>
@@ -341,9 +343,11 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
     renderAddButton() {
         return (
             <BloisIconButton
-                name="camera-plus-outline"
-                type="MaterialCommunityIcons"
-                buttonStyle={{
+                icon={{
+                    name: "camera-plus-outline",
+                    type: "MaterialCommunityIcons"
+                }}
+                style={{
                     position: 'absolute',
                     bottom: styleValues.mediumPadding*2,
                     right: styleValues.mediumPadding*2,
@@ -352,16 +356,16 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     borderRadius: styleValues.mediumPadding,
                     backgroundColor: colors.background,
                 }}
-                buttonProps={{animationType: 'shadowSmall', disabled: this.state.images.length >= this.state.maxNum}}
+                pressableProps={{disabled: this.state.images.length >= this.state.maxNum}}
                 iconStyle={{
                     color: this.state.images.length >= this.state.maxNum ? colors.lighterGrey : colors.darkerGrey
                 }}
                 onPress={async () => {
                     this.setState({cameraOpen: true})
                 }}
-                infoProps={{
+                tooltip={{
                     text: "Add new image",
-                    positionHorizontal: "left"
+                    posX: "left"
                 }}
             />
         )

@@ -1,7 +1,7 @@
 import { RouteProp } from "@react-navigation/core";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RefreshControl, StyleSheet } from "react-native";
+import { RefreshControl, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
 import {
@@ -16,7 +16,7 @@ import {
     ClosetStackParamList,
     UserMainStackParamList,
 } from "../HelperFiles/Navigation";
-import { bottomInset, colors, styleValues } from "../HelperFiles/StyleSheet";
+import { bottomInset, colors, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type ClosetMainNavigationProp = CompositeNavigationProp<
@@ -78,7 +78,7 @@ export default class ClosetMainPage extends CustomComponent<
                     bottom:
                         bottomInset +
                         styleValues.mediumHeight +
-                        styleValues.mediumPadding * 3,
+                        styleValues.mediumPadding,
                     right: styleValues.mediumPadding,
                     width:
                         styleValues.iconLargerSize +
@@ -87,6 +87,7 @@ export default class ClosetMainPage extends CustomComponent<
                     borderRadius: styleValues.mediumPadding,
                     backgroundColor: colors.background,
                 }}
+                animType={'shadow'}
                 onPress={() => {
                     this.props.navigation.navigate("editItem", {
                         itemID: "",
@@ -98,7 +99,7 @@ export default class ClosetMainPage extends CustomComponent<
     }
 
     renderItems() {
-        if (this.state.itemsInfo) {
+        if (this.state.itemsInfo?.length) {
             return (
                 <ScrollContainer
                     refreshControl={
@@ -124,6 +125,20 @@ export default class ClosetMainPage extends CustomComponent<
                     })}
                 </ScrollContainer>
             );
+        } else {
+            return (
+                <View style={{flex: 1, justifyContent: 'center', paddingBottom: bottomInset + styleValues.mediumHeight}}>
+                    <Text
+                        style={{
+                            ...textStyles.small,
+                            color: colors.grey,
+                            alignSelf: 'center',
+                        }}
+                    >
+                        You have no items in your closet.
+                    </Text>
+                </View>
+            )
         }
     }
 

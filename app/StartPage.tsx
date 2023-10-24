@@ -28,6 +28,8 @@ import {
     textStyles,
 } from "./HelperFiles/StyleSheet";
 import BloisIconButton from "./BloisComponents/BloisIconButton";
+import User from "./HelperFiles/User";
+import { DefaultUserData } from "./HelperFiles/DataTypes";
 
 type StartNavigationProp = StackNavigationProp<RootStackParamList, "start">;
 
@@ -76,7 +78,11 @@ export default class StartPage extends CustomComponent<StartProps, State> {
             },
             (e: any) => {
                 if (__DEV__) {
-                    createUserWithEmailAndPassword(auth, user, pass)
+                    User.create({
+                        ...DefaultUserData,
+                        email: user
+                    }, pass)
+                    //createUserWithEmailAndPassword(auth, user, pass)
                 }
                 console.error(e);
                 this.setState({

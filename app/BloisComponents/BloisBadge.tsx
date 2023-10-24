@@ -2,7 +2,7 @@ import { Component } from "react";
 import { LayoutRectangle, Text, View, ViewStyle } from "react-native";
 import { colors, styleValues, textStyles } from "../HelperFiles/StyleSheet";
 
-type CustomBadgeProps = {
+type BloisBadgeProps = {
     number: number;
     posY?: "right" | "left";
     style?: ViewStyle;
@@ -10,7 +10,7 @@ type CustomBadgeProps = {
 
 type State = {};
 
-export default class BloisBadge extends Component<CustomBadgeProps, State> {
+export default class BloisBadge extends Component<BloisBadgeProps, State> {
     layout: LayoutRectangle | null = null;
 
     render() {

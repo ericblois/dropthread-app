@@ -48,7 +48,7 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
         let isValid = false
         if (props.checkValidity) {
             if (props.textInputProps?.defaultValue) {
-                isValid = props.checkValidity(props.textInputProps.defaultValue)
+                isValid = props.checkValidity(props.defaultValue || '')
             }
         }
         this.state = {
@@ -178,18 +178,20 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                         defaultValue={this.props.defaultValue}
                         disableFullscreenUI={true}
                         focusable={true}
-                        style={{...textStyles.small, textAlign: 'left', flex: 1, ...this.props.textStyle}}
+                        style={{...textStyles.smaller, textAlign: 'left', flex: 1, ...this.props.textStyle}}
                         placeholder={this.props.placeholder}
                         value={this.state.text}
                         onChangeText={(text) => {
                             const newText = this.handleText(text)
                             this.props.onChangeText?.(newText)
                         }}
-                        onFocus={() => {
+                        onFocus={(event) => {
                             this.setState({isFocused: true})
+                            this.props.textInputProps?.onFocus?.(event)
                         }}
-                        onEndEditing={() => {
+                        onEndEditing={(event) => {
                             this.setState({isFocused: false})
+                            this.props.textInputProps?.onEndEditing?.(event)
                         }}
                     />
                     {this.props.children}

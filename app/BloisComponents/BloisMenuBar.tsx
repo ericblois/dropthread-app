@@ -44,9 +44,10 @@ export default class BloisMenuBar extends CustomComponent<Props, State> {
         {
           this.props.buttons.map((buttonData, index) => (
             <BloisIconButton
+              key={index.toString()}
               icon={buttonData.icon}
               iconStyle={{color: colors.darkGrey, ...buttonData.iconStyle}}
-              shadow={false}
+              animType={'opacity'}
               onPress={buttonData.onPress}
             />
           ))

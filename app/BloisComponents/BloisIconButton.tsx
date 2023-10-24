@@ -17,7 +17,7 @@ type BloisIconButtonProps = {
     iconStyle?: TextStyle;
     onPress?: (event: GestureResponderEvent) => void | Promise<void>;
     pressableProps?: PressableProps;
-    shadow?: boolean;
+    animType?: "shadow" | "opacity" | "shadowSmall" | "outline",
     tooltip?: {
         text: string;
         posX?: "center" | "left" | "right";
@@ -49,7 +49,7 @@ export default class BloisIconButton extends Component<BloisIconButtonProps, Sta
         return (
             <BloisPressable
                 style={{
-                    ...(this.props.shadow !== false
+                    ...(this.props.animType !== "opacity"
                         ? defaultStyles.roundedBox
                         : undefined),
                     width: styleValues.smallHeight,
@@ -58,7 +58,7 @@ export default class BloisIconButton extends Component<BloisIconButtonProps, Sta
                     aspectRatio: 1,
                     ...this.props.style,
                 }}
-                animType={this.props.shadow !== false ? 'shadowSmall' : 'opacity'}
+                animType={this.props.animType || 'shadowSmall'}
                 tooltip={this.props.tooltip}
                 onPress={this.props.onPress}
             >

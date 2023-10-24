@@ -254,12 +254,12 @@ export default class ColorDropdown extends CustomComponent<ColorDropdownProps, S
             }}>
                 <BloisTextButton
                     text={`Colors${this.state.selections.length > 0 ? ': ' : ''}`}
-                    buttonStyle={{
+                    style={{
                         ...defaultStyles.roundedBox,
                         padding: styleValues.minorPadding,
                         height: styleValues.smallHeight,
+                        ...(this.props.indicatorType ? this.animatedStyles[this.props.indicatorType] : undefined)
                     }}
-                    wrapperStyle={this.props.indicatorType ? this.animatedStyles[this.props.indicatorType] : undefined}
                     textStyle={{
                         ...(this.state.selections.length > 0 ? textStyles.small : textStyles.smaller),
                         color: this.state.selections.length > 0 ? colors.black : colors.grey,
