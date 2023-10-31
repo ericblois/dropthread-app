@@ -9,8 +9,8 @@ import {
     styleValues,
     textStyles,
 } from "../HelperFiles/StyleSheet";
-import CustomComponent from "./CustomComponent";
-import TextButton from "./TextButton";
+import CustomComponent from "../CustomComponents/CustomComponent";
+import TextButton from "../CustomComponents/TextButton";
 import { BloisPressable, BloisTextButton } from "../HelperFiles/CompIndex";
 import {
     ItemColor,
@@ -18,6 +18,7 @@ import {
     ItemColors,
 } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
+import { Feather } from '@expo/vector-icons'
 
 type ColorDropdownProps = {
     defaultValues?: ItemColor[];
@@ -37,7 +38,7 @@ type State = {
     selections: ItemColor[];
 };
 
-export default class ColorDropdown extends CustomComponent<
+export default class BloisColorDropdown extends CustomComponent<
     ColorDropdownProps,
     State
 > {
@@ -46,7 +47,7 @@ export default class ColorDropdown extends CustomComponent<
     animatedStyles: { [type: string]: Animated.AnimatedProps<ViewStyle> };
 
     maxDropdownHeight = (screenWidth - 2 * styleValues.mediumPadding) * 0.4;
-    dropdownPadding = new Animated.Value(0);
+
     dropdownHeight = new Animated.Value(0);
     dropdownOpacity = new Animated.Value(0);
     dropdownTime = 100;
@@ -56,7 +57,7 @@ export default class ColorDropdown extends CustomComponent<
         this.state = {
             expanded: false,
             maxNum: props.maxNum || Item.maxNumColors,
-            selections: [],
+            selections: props.defaultValues || [],
         };
         let isValid = props.checkValidity
             ? props.defaultValues && props.checkValidity(props.defaultValues)
@@ -106,7 +107,7 @@ export default class ColorDropdown extends CustomComponent<
         super.componentDidMount();
     }
 
-    animateValidate = () => {
+    animValid = () => {
         Animated.timing(this.validity, {
             toValue: 1,
             duration: this.animationTime,
@@ -114,7 +115,7 @@ export default class ColorDropdown extends CustomComponent<
         }).start();
     };
 
-    animateInvalidate = () => {
+    animInvalid = () => {
         Animated.timing(this.validity, {
             toValue: 0,
             duration: this.animationTime,
@@ -125,18 +126,11 @@ export default class ColorDropdown extends CustomComponent<
     expand(callback?: () => void) {
         this.setState({ expanded: true }, () => {
             Animated.sequence([
-                Animated.parallel([
-                    Animated.timing(this.dropdownHeight, {
-                        toValue: this.maxDropdownHeight,
-                        duration: this.dropdownTime,
-                        useNativeDriver: false,
-                    }),
-                    Animated.timing(this.dropdownPadding, {
-                        toValue: styleValues.minorPadding,
-                        duration: this.dropdownTime,
-                        useNativeDriver: false,
-                    }),
-                ]),
+                Animated.timing(this.dropdownHeight, {
+                    toValue: this.maxDropdownHeight,
+                    duration: this.dropdownTime,
+                    useNativeDriver: false,
+                }),
                 Animated.timing(this.dropdownOpacity, {
                     toValue: 1,
                     duration: this.dropdownTime,
@@ -153,26 +147,19 @@ export default class ColorDropdown extends CustomComponent<
                 duration: this.dropdownTime,
                 useNativeDriver: false,
             }),
-            Animated.parallel([
-                Animated.timing(this.dropdownHeight, {
-                    toValue: 0,
-                    duration: this.dropdownTime,
-                    useNativeDriver: false,
-                }),
-                Animated.timing(this.dropdownPadding, {
-                    toValue: 0,
-                    duration: this.dropdownTime,
-                    useNativeDriver: false,
-                }),
-            ]),
+            Animated.timing(this.dropdownHeight, {
+                toValue: 0,
+                duration: this.dropdownTime,
+                useNativeDriver: false,
+            })
         ]).start(() => {
             this.setState({ expanded: false }, () => {
                 // Check validity
                 if (this.props.checkValidity) {
                     if (this.props.checkValidity(this.state.selections)) {
-                        this.animateValidate();
+                        this.animValid();
                     } else {
-                        this.animateInvalidate();
+                        this.animInvalid();
                     }
                 }
             });
@@ -181,11 +168,8 @@ export default class ColorDropdown extends CustomComponent<
     }
 
     handleSelect = (color: ItemColor) => {
-        // Single select
+        // Multiselect
         if (this.props.multiselect !== false) {
-            if (this.state.selections.length >= this.state.maxNum) {
-                return;
-            }
             let newSelections = this.state.selections;
             // Check if option was already selected
             const optionIndex = this.state.selections.findIndex(
@@ -196,6 +180,9 @@ export default class ColorDropdown extends CustomComponent<
                 newSelections.splice(optionIndex, 1);
             } else {
                 // Add selection
+                if (this.state.selections.length >= this.state.maxNum) {
+                    return;
+                }
                 newSelections.push(color);
             }
             this.setState(
@@ -207,9 +194,9 @@ export default class ColorDropdown extends CustomComponent<
                     // Check validity
                     if (this.props.checkValidity) {
                         if (this.props.checkValidity(this.state.selections)) {
-                            this.animateValidate();
+                            this.animValid();
                         } else {
-                            this.animateInvalidate();
+                            this.animInvalid();
                         }
                     }
                 }
@@ -224,70 +211,82 @@ export default class ColorDropdown extends CustomComponent<
     };
 
     renderItems() {
-        return (
-            <Animated.View
-                style={{
-                    ...defaultStyles.roundedBox,
-                    height: this.dropdownHeight,
-                    opacity: this.dropdownOpacity,
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    paddingVertical: this.dropdownPadding,
-                }}
-            >
-                {ItemColors.map((value, index) => {
-                    return (
-                        <BloisPressable
-                            style={{
-                                width: "20%",
-                                height: "25%",
-                                paddingBottom: styleValues.mediumPadding,
-                            }}
-                            key={index.toString()}
-                            onPress={() => this.handleSelect(value)}
-                        >
-                            <View
-                                style={{
-                                    borderColor: colors.black,
-                                    borderWidth: this.state.selections.includes(
-                                        value
-                                    )
-                                        ? styleValues.mediumBorderWidth
-                                        : undefined,
-                                    height: "100%",
-                                    aspectRatio: 1,
-                                    backgroundColor: colors.transparent,
-                                    borderRadius: styleValues.minorPadding,
-                                    padding: styleValues.minorPadding / 2,
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        ...shadowStyles.small,
-                                        height: "100%",
-                                        width: "100%",
-                                        backgroundColor: ItemColorValues[value],
-                                        borderRadius: styleValues.minorPadding,
-                                    }}
-                                ></View>
+        if (this.state.expanded) {
+            const colorRows = [0, 1, 2, 3].map((val) => {
+                return ItemColors.slice(val*5, val*5 + 5)
+            })
+            return (
+                <Animated.View
+                    style={{
+                        ...defaultStyles.roundedBox,
+                        ...shadowStyles.small,
+                        paddingHorizontal: 0,
+                        height: this.dropdownHeight,
+                        opacity: this.dropdownOpacity
+                    }}
+                >
+                    {colorRows.map((row, i) => {
+                        return (
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                                height: '25%'
+                            }} key={i.toString()}>
+                                {row.map((color, index) => (
+                                    <BloisPressable
+                                        style={{
+                                            width: '20%',
+                                            height: '100%',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                        animType={'shadowSmall'}
+                                        key={index.toString()}
+                                        onPress={() => this.handleSelect(color)}
+                                    >
+                                        <View
+                                            style={{
+                                                borderColor: colors.darkGrey,
+                                                borderWidth: this.state.selections.includes(
+                                                    color
+                                                )
+                                                    ? styleValues.mediumBorderWidth
+                                                    : undefined,
+                                                backgroundColor: colors.transparent,
+                                                borderRadius: styleValues.minorPadding*1.5,
+                                                padding: styleValues.minorPadding / 2,
+                                            }}
+                                        >
+                                            <View
+                                                style={{
+                                                    height: styleValues.smallHeight/2,
+                                                    aspectRatio: 1,
+                                                    backgroundColor: ItemColorValues[color],
+                                                    borderRadius: styleValues.minorPadding,
+                                                }}
+                                            ></View>
+                                        </View>
+                                    </BloisPressable>
+                                ))}
                             </View>
-                        </BloisPressable>
-                    );
-                })}
-            </Animated.View>
-        );
+                        )
+                    })}
+                </Animated.View>
+            );
+        }
     }
 
     render() {
         // Check validity of input
         if (
             this.props.checkValidity &&
-            this.props.ignoreInitialValidity === false
+            this.props.showInitialValidity
         ) {
             if (this.props.checkValidity(this.state.selections)) {
-                this.animateValidate();
+                this.animValid();
             } else {
-                this.animateInvalidate();
+                this.animInvalid();
             }
         }
         return (
@@ -299,54 +298,40 @@ export default class ColorDropdown extends CustomComponent<
                     }}
                 >
                     <BloisTextButton
-                        text={`Colors${
-                            this.state.selections.length > 0 ? ": " : ""
-                        }`}
+                        text={'Color'}
                         style={{
                             ...defaultStyles.roundedBox,
-                            padding: styleValues.minorPadding,
                             height: styleValues.smallHeight,
-                            ...(this.props.indicatorType
-                                ? this.animatedStyles[this.props.indicatorType]
-                                : undefined),
+                            justifyContent: 'space-between',
+                            ...this.animatedStyles[this.props.indicatorType || 'shadowSmall'],
+                            ...this.props.style
                         }}
                         textStyle={{
-                            ...(this.state.selections.length > 0
-                                ? textStyles.medium
-                                : textStyles.small),
+                            ...textStyles.medium,
                             color:
                                 this.state.selections.length > 0
                                     ? colors.black
                                     : colors.grey,
                             ...this.props.textStyle,
                         }}
-                        rightChildren={
-                            <View
+                        rightChildren={(
+                            <Animated.View
                                 style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
+                                    transform: [{
+                                        rotate: this.dropdownOpacity.interpolate({
+                                            inputRange: [0, 1],
+                                            outputRange: ['0deg', '180deg'],
+                                        })
+                                    }]
                                 }}
                             >
-                                {this.state.selections.map((value, index) => {
-                                    return (
-                                        <View
-                                            style={{
-                                                ...shadowStyles.small,
-                                                height: styleValues.iconSmallSize,
-                                                width: styleValues.iconSmallSize,
-                                                backgroundColor:
-                                                    ItemColorValues[value],
-                                                borderRadius:
-                                                    styleValues.minorPadding,
-                                                marginLeft:
-                                                    styleValues.minorPadding,
-                                            }}
-                                            key={index.toString()}
-                                        ></View>
-                                    );
-                                })}
-                            </View>
-                        }
+                                <Feather
+                                    name={'chevron-down'}
+                                    style={{fontSize: styleValues.largerTextSize, color: colors.grey}}
+                                    
+                                />
+                            </Animated.View>
+                        )}
                         onPress={() => {
                             if (this.state.expanded) {
                                 this.collapse();
@@ -354,7 +339,26 @@ export default class ColorDropdown extends CustomComponent<
                                 this.expand();
                             }
                         }}
-                    />
+                    >
+                        <View style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            paddingHorizontal: styleValues.mediumPadding,
+                            gap: styleValues.mediumPadding
+                        }}>
+                            {this.state.selections.map((color) => (
+                                <View
+                                    style={{
+                                        ...shadowStyles.small,
+                                        height: styleValues.smallHeight/2,
+                                        aspectRatio: 1,
+                                        backgroundColor: ItemColorValues[color],
+                                        borderRadius: styleValues.minorPadding,
+                                    }}
+                                ></View>
+                            ))}
+                        </View>
+                    </BloisTextButton>
                     {this.renderItems()}
                 </View>
             </>

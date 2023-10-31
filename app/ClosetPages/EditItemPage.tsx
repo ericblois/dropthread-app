@@ -11,7 +11,7 @@ import {
     BloisDropdown,
     BloisTextInput,
     ToggleSwitch,
-    ColorDropdown,
+    BloisColorDropdown,
 } from "../HelperFiles/CompIndex";
 import {
     DefaultItemData,
@@ -269,7 +269,6 @@ export default class EditItemPage extends CustomComponent<
                     return { text: capitalizeWords(category), value: category };
                 })}
                 checkValidity={(selections) => selections.length > 0}
-                indicatorType={"shadowSmall"}
                 showInitialValidity={this.state.validityFlag}
                 label="Category"
                 defaultValue={
@@ -292,7 +291,6 @@ export default class EditItemPage extends CustomComponent<
                     return { text: text, value: gender };
                 })}
                 checkValidity={(selections) => selections.length > 0}
-                indicatorType={"shadowSmall"}
                 showInitialValidity={this.state.validityFlag}
                 label="Gender"
                 defaultValue={
@@ -313,7 +311,6 @@ export default class EditItemPage extends CustomComponent<
                     value: condition,
                 }))}
                 checkValidity={(selections) => selections.length > 0}
-                indicatorType={"shadowSmall"}
                 showInitialValidity={this.state.validityFlag}
                 label={"Condition"}
                 defaultValue={
@@ -329,13 +326,12 @@ export default class EditItemPage extends CustomComponent<
 
     renderColorDropdown() {
         return (
-            <ColorDropdown
-                showValidSelection={true}
-                indicatorType={"shadowSmall"}
-                ignoreInitialValidity={!this.state.validityFlag}
+            <BloisColorDropdown
                 defaultValues={
                     this.state.itemChanges.colors || this.state.itemData!.colors
                 }
+                showInitialValidity={this.state.validityFlag}
+                checkValidity={(selections) => selections.length > 0 && selections.length < 6}
                 onSelect={(selections) => {
                     this.updateItem({ colors: selections });
                 }}
@@ -354,7 +350,6 @@ export default class EditItemPage extends CustomComponent<
                     return { text: text, value: fit };
                 })}
                 checkValidity={(selections) => selections.length > 0}
-                indicatorType={"shadowSmall"}
                 showInitialValidity={this.state.validityFlag}
                 label="Fit"
                 defaultValue={
@@ -376,7 +371,6 @@ export default class EditItemPage extends CustomComponent<
                 })}
                 checkValidity={(selections) => selections.length > 0}
                 multiselect={true}
-                indicatorType={"shadowSmall"}
                 showInitialValidity={this.state.validityFlag}
                 label="Delivery Methods"
                 defaultValue={

@@ -282,9 +282,7 @@ export default class BloisDropdown extends CustomComponent<
                         ...defaultStyles.roundedBox,
                         height: styleValues.smallHeight,
                         justifyContent: 'space-between',
-                        ...(this.props.indicatorType
-                            ? this.animatedStyles[this.props.indicatorType]
-                            : undefined),
+                        ...this.animatedStyles[this.props.indicatorType || 'shadowSmall'],
                         ...this.props.style
                     }}
                     textStyle={{

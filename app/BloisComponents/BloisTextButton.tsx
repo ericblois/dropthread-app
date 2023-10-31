@@ -106,8 +106,8 @@ export default class TextButton extends Component<Props, State> {
                     </Text>
                     {this.renderSubtext()}
                 </View>
-                {this.props.rightChildren}
                 {this.props.children}
+                {this.props.rightChildren}
             </BloisPressable>
         );
     }

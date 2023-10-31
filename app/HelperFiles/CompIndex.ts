@@ -30,7 +30,7 @@ import BloisTextButton from "../BloisComponents/BloisTextButton"
 import OfferSmallCard from "../CustomComponents/OfferSmallCard"
 import OfferLargeCard from "../CustomComponents/OfferLargeCard"
 import CustomCameraModal from "../CustomComponents/CustomCameraModal"
-import ColorDropdown from "../CustomComponents/ColorDropdown"
+import BloisColorDropdown from "../BloisComponents/BloisColorDropdown"
 import ExchangeLocation from "../CustomComponents/ExchangeLocation"
 import CustomAddressInput from "../CustomComponents/CustomAddressInput"
 import AddressCard from "../CustomComponents/AddressCard"
@@ -67,7 +67,7 @@ export {
     BloisTextButton,
     OfferSmallCard,
     CustomCameraModal,
-    ColorDropdown,
+    BloisColorDropdown,
     ExchangeLocation,
     CustomAddressInput,
     OfferLargeCard,
