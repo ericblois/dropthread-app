@@ -31,7 +31,7 @@ export default class ToggleSwitch extends CustomComponent<ToggleSwitchProps, Sta
         if (this.props.text) {
             return (
                 <Text
-                    style={{...textStyles.medium, ...this.props.textStyle}}
+                    style={{...textStyles.large, ...this.props.textStyle}}
                 >
                     {this.props.text}
                 </Text>

@@ -52,15 +52,15 @@ export default class OfferSmallCard extends CustomComponent<Props, State> {
             <View style={{flex: 1, height: '100%', justifyContent: 'space-between'}}>
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                     {/* Names */}
-                    <Text style={textStyles.small}>{`From: ${this.state.isFrom ? 'You' : this.props.offerInfo.offer.fromName}`}</Text>
-                    <Text style={textStyles.small}>{`To: ${this.state.isFrom ? this.props.offerInfo.offer.toName : 'You'}`}</Text>
+                    <Text style={textStyles.medium}>{`From: ${this.state.isFrom ? 'You' : this.props.offerInfo.offer.fromName}`}</Text>
+                    <Text style={textStyles.medium}>{`To: ${this.state.isFrom ? this.props.offerInfo.offer.toName : 'You'}`}</Text>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                     {/* Items */}
-                    <Text style={textStyles.small}>
+                    <Text style={textStyles.medium}>
                         {`${this.props.offerInfo.fromItemInfos.length} item${this.props.offerInfo.fromItemInfos.length === 1 ? '' : 's'}`}
                     </Text>
-                    <Text style={textStyles.small}>
+                    <Text style={textStyles.medium}>
                         {`${this.props.offerInfo.toItemInfos.length} item${this.props.offerInfo.toItemInfos.length === 1 ? '' : 's'}`}
                     </Text>
                 </View>
@@ -74,11 +74,11 @@ export default class OfferSmallCard extends CustomComponent<Props, State> {
                         }}
                     />
                     {/* Price */}
-                    <Text style={{...textStyles.small, textAlign: 'left', marginLeft: styleValues.mediumPadding, flex: 1}}
+                    <Text style={{...textStyles.medium, textAlign: 'left', marginLeft: styleValues.mediumPadding, flex: 1}}
                     >{`${this.state.willPayPrice > 0 ? 'You pay: ' : 'You receive: '}${currencyFormatter.format(this.state.willPayPrice > 0 ? this.state.willPayPrice : this.state.willReceivePrice)}`}</Text>
                     {/* View offer text */}
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={{...textStyles.small, color: colors.grey}}>View offer</Text>
+                        <Text style={{...textStyles.medium, color: colors.grey}}>View offer</Text>
                         <Icons.Feather
                             name={'chevron-right'}
                             style={{
@@ -130,11 +130,11 @@ const styles = StyleSheet.create({
         bottom: 0
     },
     majorText: {
-        ...textStyles.small,
+        ...textStyles.medium,
         textAlign: "left"
     },
     minorText: {
-        ...textStyles.small,
+        ...textStyles.medium,
         color: colors.darkGrey,
         textAlign: "left"
     },

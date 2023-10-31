@@ -100,7 +100,7 @@ export default class TextButton extends CustomComponent<Props, State> {
 
     render() {
         let defaultButtonStyle: ViewStyle = {...defaultStyles.roundedBox, flexDirection: "row"}
-        let defaultTextStyle = {...textStyles.small}
+        let defaultTextStyle = {...textStyles.medium}
         // Color appearance
         if (this.props.appearance === "color") {
             defaultButtonStyle.backgroundColor = colors.main
@@ -167,11 +167,11 @@ export default class TextButton extends CustomComponent<Props, State> {
 
 const styles = StyleSheet.create({
     textStyle: {
-        ...textStyles.medium,
+        ...textStyles.large,
         color: colors.majorTextColor,
     },
     subtextStyle: {
-        ...textStyles.small,
+        ...textStyles.medium,
         color: colors.mediumTextColor
     },
     iconStyle: {

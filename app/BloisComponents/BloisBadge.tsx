@@ -55,7 +55,7 @@ export default class BloisBadge extends Component<BloisBadgeProps, State> {
                 >
                     <Text
                         style={{
-                            ...textStyles.smaller,
+                            ...textStyles.small,
                             color: colors.white,
                             width: "100%",
                         }}

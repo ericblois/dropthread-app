@@ -316,7 +316,7 @@ export const DefaultItemData: Readonly<ItemData> = {
   gender: "",
   size: "",
   colors: [],
-  fit: "",
+  fit: "proper",
   condition: "",
   images: [],
   country: "",

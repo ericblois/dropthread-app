@@ -6,9 +6,9 @@ import {
     ImageSliderSelector,
     LoadingCover,
     BloisMenuBar,
-    PageContainer,
+    BloisPage,
     TagInputBox,
-    TextDropdownAnimated,
+    BloisDropdown,
     BloisTextInput,
     ToggleSwitch,
     ColorDropdown,
@@ -264,28 +264,26 @@ export default class EditItemPage extends CustomComponent<
 
     renderCategoryDropdown() {
         return (
-            <TextDropdownAnimated
+            <BloisDropdown
                 items={ItemCategories.map((category) => {
                     return { text: capitalizeWords(category), value: category };
                 })}
-                showValidSelection={true}
+                checkValidity={(selections) => selections.length > 0}
                 indicatorType={"shadowSmall"}
-                ignoreInitialValidity={!this.state.validityFlag}
-                placeholderText="Category"
+                showInitialValidity={this.state.validityFlag}
+                label="Category"
                 defaultValue={
                     this.state.itemChanges.category ||
                     this.state.itemData!.category
                 }
-                onSelect={(selections) => {
-                    this.updateItem({ category: selections[0].value });
-                }}
+                onSelect={(selections) => this.updateItem({ category: selections[0].value })}
             />
         );
     }
 
     renderGenderDropdown() {
         return (
-            <TextDropdownAnimated
+            <BloisDropdown
                 items={ItemGenders.map((gender) => {
                     let text =
                         gender === "unisex"
@@ -293,10 +291,10 @@ export default class EditItemPage extends CustomComponent<
                             : `${capitalizeWords(gender)}'s`;
                     return { text: text, value: gender };
                 })}
-                showValidSelection={true}
+                checkValidity={(selections) => selections.length > 0}
                 indicatorType={"shadowSmall"}
-                ignoreInitialValidity={!this.state.validityFlag}
-                placeholderText="Gender"
+                showInitialValidity={this.state.validityFlag}
+                label="Gender"
                 defaultValue={
                     this.state.itemChanges.gender || this.state.itemData!.gender
                 }
@@ -309,15 +307,15 @@ export default class EditItemPage extends CustomComponent<
 
     renderConditionDropdown() {
         return (
-            <TextDropdownAnimated
+            <BloisDropdown
                 items={ItemConditions.map((condition) => ({
                     text: capitalizeWords(condition),
                     value: condition,
                 }))}
-                showValidSelection={true}
+                checkValidity={(selections) => selections.length > 0}
                 indicatorType={"shadowSmall"}
-                ignoreInitialValidity={!this.state.validityFlag}
-                placeholderText={"Condition"}
+                showInitialValidity={this.state.validityFlag}
+                label={"Condition"}
                 defaultValue={
                     this.state.itemChanges.condition ||
                     this.state.itemData!.condition
@@ -347,7 +345,7 @@ export default class EditItemPage extends CustomComponent<
 
     renderFitDropdown() {
         return (
-            <TextDropdownAnimated
+            <BloisDropdown
                 items={ItemFits.map((fit) => {
                     let text =
                         fit === "proper"
@@ -355,10 +353,10 @@ export default class EditItemPage extends CustomComponent<
                             : capitalizeWords(fit);
                     return { text: text, value: fit };
                 })}
-                showValidSelection={true}
+                checkValidity={(selections) => selections.length > 0}
                 indicatorType={"shadowSmall"}
-                ignoreInitialValidity={!this.state.validityFlag}
-                placeholderText="Fit"
+                showInitialValidity={this.state.validityFlag}
+                label="Fit"
                 defaultValue={
                     this.state.itemChanges.fit || this.state.itemData!.fit
                 }
@@ -371,16 +369,16 @@ export default class EditItemPage extends CustomComponent<
 
     renderDeliveryDropdown() {
         return (
-            <TextDropdownAnimated
+            <BloisDropdown
                 items={DeliveryMethods.map((method) => {
                     let text = capitalizeWords(method);
                     return { text: text, value: method };
                 })}
-                showValidSelection={true}
-                enableMultiple={true}
+                checkValidity={(selections) => selections.length > 0}
+                multiselect={true}
                 indicatorType={"shadowSmall"}
-                ignoreInitialValidity={!this.state.validityFlag}
-                placeholderText="Delivery Methods"
+                showInitialValidity={this.state.validityFlag}
+                label="Delivery Methods"
                 defaultValue={
                     this.state.itemChanges.deliveryMethods ||
                     this.state.itemData!.deliveryMethods
@@ -509,11 +507,11 @@ export default class EditItemPage extends CustomComponent<
     render() {
         try {
             return (
-                <PageContainer headerText={"Edit Item"}>
+                <BloisPage headerText={"Edit Item"}>
                     {this.renderUI()}
                     {this.renderLoading()}
                     {this.renderMenu()}
-                </PageContainer>
+                </BloisPage>
             );
         } catch (e) {
             this.handleError(e);

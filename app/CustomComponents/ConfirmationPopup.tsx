@@ -45,7 +45,7 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                     ...this.props.confirmButtonStyle
                 }}
                 textStyle={{
-                    ...textStyles.small,
+                    ...textStyles.medium,
                     ...this.props.confirmTextStyle
                 }}
                 onPress={async () =>  await this.props.onConfirm?.()}
@@ -59,7 +59,7 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
             <TextButton
                 text={this.props.denyText || 'Cancel'}
                 textStyle={{
-                    ...textStyles.small,
+                    ...textStyles.medium,
                     ...this.props.denyTextStyle
                 }}
                 buttonStyle={{
@@ -105,12 +105,12 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                     }}>
                         {/* Header */}
                         {this.props.headerText ?
-                            <Text style={textStyles.medium}>
+                            <Text style={textStyles.large}>
                                 {this.props.headerText}
                             </Text>
                         : undefined}
                         {/* Info / description */}
-                        <Text style={{...textStyles.small, textAlign: 'left', marginBottom: styleValues.mediumPadding}}>
+                        <Text style={{...textStyles.medium, textAlign: 'left', marginBottom: styleValues.mediumPadding}}>
                             {this.props.infoText}
                         </Text>
                         {/* Buttons */}

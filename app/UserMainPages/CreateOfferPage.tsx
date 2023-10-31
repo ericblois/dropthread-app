@@ -5,7 +5,7 @@ import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
-import { CustomImage, CustomModal, CustomScrollView, BloisTextButton, ExchangeLocation, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, BloisMenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { CustomImage, CustomModal, CustomScrollView, BloisTextButton, ExchangeLocation, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, BloisMenuBar, BloisPage, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, ItemPriceData, OfferData, OfferInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -150,7 +150,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                 {/* Other liked items */}
                 {this.state.otherLikedItems && this.state.otherLikedItems.length > 0 ?
                     <>
-                        <Text style={{...textStyles.smallHeader, color: colors.grey}}>{`${this.state.offerInfo?.offer.toName} has also liked:`}</Text>
+                        <Text style={{...textStyles.mediumHeader, color: colors.grey}}>{`${this.state.offerInfo?.offer.toName} has also liked:`}</Text>
                         {this.state.otherLikedItems.map((itemInfo, index) => {
                             return (
                                 <View key={index.toString()}>
@@ -201,7 +201,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
     render() {
       try {
         return (
-            <PageContainer
+            <BloisPage
                 headerText={'Send Offer'}
             >
                 {this.renderUI()}
@@ -264,7 +264,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                     : undefined}
                 </CustomModal>
                 {this.renderLoading()}
-            </PageContainer>
+            </BloisPage>
         );
       } catch (e) {
         this.handleError(e);

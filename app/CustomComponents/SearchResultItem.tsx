@@ -109,16 +109,16 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     productName: {
-        ...textStyles.medium,
+        ...textStyles.large,
         textAlign: "left"
     },
     productDescription: {
-        ...textStyles.smaller,
+        ...textStyles.small,
         textAlign: "left",
         color: colors.minorTextColor,
     },
     productPrice: {
-        ...textStyles.medium
+        ...textStyles.large
     },
     productSubInfoArea: {
         width: "100%",

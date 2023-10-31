@@ -161,13 +161,13 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                 >
                     {this.props.label ?
                         <Text style={{
-                            ...textStyles.smaller,
+                            ...textStyles.medium,
                             color: colors.grey,
                             marginRight: styleValues.mediumPadding
                         }}>{this.props.label}</Text>    
                     : undefined}
                     {this.props.prefix ?
-                        <Text style={{...textStyles.small, ...this.props.textStyle}}>{this.props.prefix}</Text>    
+                        <Text style={{...textStyles.medium, ...this.props.textStyle}}>{this.props.prefix}</Text>    
                     : undefined}
                     <TextInput
                         textAlign={"left"}
@@ -178,7 +178,7 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                         defaultValue={this.props.defaultValue}
                         disableFullscreenUI={true}
                         focusable={true}
-                        style={{...textStyles.smaller, textAlign: 'left', flex: 1, ...this.props.textStyle}}
+                        style={{...textStyles.medium, textAlign: 'left', flex: 1, ...this.props.textStyle}}
                         placeholder={this.props.placeholder}
                         value={this.state.text}
                         onChangeText={(text) => {

@@ -150,15 +150,15 @@ const styles = StyleSheet.create({
         bottom: 0
     },
     headerText: {
-        ...textStyles.medium,
+        ...textStyles.large,
         textAlign: "left"
     },
     majorText: {
-        ...textStyles.small,
+        ...textStyles.medium,
         textAlign: "left"
     },
     minorText: {
-        ...textStyles.small,
+        ...textStyles.medium,
         color: colors.darkGrey,
         textAlign: "left",
     },

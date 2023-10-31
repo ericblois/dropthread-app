@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { StyleSheet } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { CustomModal, ItemLargeCard, ItemLikedCard, LoadingCover, BloisMenuBar, PageContainer, ScrollContainer } from "../HelperFiles/CompIndex";
+import { CustomModal, ItemLargeCard, ItemLikedCard, LoadingCover, BloisMenuBar, BloisPage, ScrollContainer } from "../HelperFiles/CompIndex";
 import { ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ExchangesStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
@@ -92,7 +92,7 @@ export default class ViewLikesPage extends CustomComponent<ViewLikesProps, State
 
     render() {
         return (
-            <PageContainer
+            <BloisPage
                 style={{paddingTop: undefined}}
             >
                 <CustomModal
@@ -112,7 +112,7 @@ export default class ViewLikesPage extends CustomComponent<ViewLikesProps, State
                 {this.renderUI()}
                 {this.renderLoading()}
                 
-            </PageContainer>
+            </BloisPage>
         );
     }
 }

@@ -5,7 +5,7 @@ import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
-import { CustomModal, CustomScrollView, BloisTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, BloisMenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { CustomModal, CustomScrollView, BloisTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, BloisMenuBar, BloisPage, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, OfferData, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -74,12 +74,12 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
         return (
             <>
                 <Text
-                    style={textStyles.mediumHeader}
+                    style={textStyles.largeHeader}
                 >You receive:</Text>
                 {(this.state.wasSent ? this.state.toPayment : this.state.fromPayment) ? 
                 <View style={{...shadowStyles.small, ...defaultStyles.roundedBox, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-                    <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Total: ${currencyFormatter.format(totalPrice)}`}</Text>
-                    <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Fee: ${currencyFormatter.format(feeAmount)}`}</Text>
+                    <Text style={{...textStyles.medium, textAlign: 'left', color: colors.darkGrey}}>{`Total: ${currencyFormatter.format(totalPrice)}`}</Text>
+                    <Text style={{...textStyles.medium, textAlign: 'left', color: colors.darkGrey}}>{`Fee: ${currencyFormatter.format(feeAmount)}`}</Text>
                     <View
                         style={{
                             flexDirection: 'row',
@@ -92,7 +92,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                             marginTop: styleValues.mediumPadding
                         }}
                     >
-                        <Text style={{...textStyles.small, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(subtotalPrice)}`}</Text>
+                        <Text style={{...textStyles.medium, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(subtotalPrice)}`}</Text>
                         <FontAwesome5
                             name={'money-bill-wave'}
                             style={{
@@ -139,13 +139,13 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                         }}
                     />
                     <Text
-                        style={textStyles.mediumHeader}
+                        style={textStyles.largeHeader}
                     >For:</Text>
                 </View>
                 {(!this.state.wasSent ? this.state.toPayment : this.state.fromPayment) ? 
                 <View style={{...shadowStyles.small, ...defaultStyles.roundedBox, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-                    <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Total: ${currencyFormatter.format(totalPrice)}`}</Text>
-                    <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Fee: ${currencyFormatter.format(feeAmount)}`}</Text>
+                    <Text style={{...textStyles.medium, textAlign: 'left', color: colors.darkGrey}}>{`Total: ${currencyFormatter.format(totalPrice)}`}</Text>
+                    <Text style={{...textStyles.medium, textAlign: 'left', color: colors.darkGrey}}>{`Fee: ${currencyFormatter.format(feeAmount)}`}</Text>
                     <View
                         style={{
                             flexDirection: 'row',
@@ -158,7 +158,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                             marginTop: styleValues.mediumPadding
                         }}
                     >
-                        <Text style={{...textStyles.small, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(subtotalPrice)}`}</Text>
+                        <Text style={{...textStyles.medium, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(subtotalPrice)}`}</Text>
                         <FontAwesome5
                             name={'money-bill-wave'}
                             style={{
@@ -277,7 +277,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
     render() {
       try {
         return (
-            <PageContainer
+            <BloisPage
                 headerText={`Offer ${this.state.wasSent
                     ? `to ${this.state.offerData.toName}`
                     : `from ${this.state.offerData.fromName}`
@@ -300,7 +300,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                 </CustomModal>
               {this.renderUI()}
               {this.renderActions()}
-            </PageContainer>
+            </BloisPage>
         );
       } catch (e) {
         this.setState({errorDidOccur: true})

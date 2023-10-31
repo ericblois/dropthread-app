@@ -57,13 +57,13 @@ export default class AddressCard extends CustomComponent<Props, State> {
             >
                 <Text
                     style={{
-                        ...textStyles.small,
+                        ...textStyles.medium,
                         textAlign: 'left'
                     }}
                     numberOfLines={1}
                 >{this.props.addressData.name}</Text>
                 <Text style={{
-                    ...textStyles.smaller,
+                    ...textStyles.small,
                     textAlign: 'left',
                     color: colors.grey
                 }}>
@@ -71,7 +71,7 @@ export default class AddressCard extends CustomComponent<Props, State> {
                 </Text>
                 <Text
                     style={{
-                        ...textStyles.smaller,
+                        ...textStyles.small,
                         textAlign: 'left',
                         color: colors.grey
                     }}

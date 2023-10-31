@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { ListRenderItemInfo, StyleSheet, Text } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { ItemLargeCard, LoadingCover, BloisMenuBar, PageContainer } from "../HelperFiles/CompIndex";
+import { ItemLargeCard, LoadingCover, BloisMenuBar, BloisPage } from "../HelperFiles/CompIndex";
 import { ItemData, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
@@ -113,7 +113,7 @@ export default class ItemSwapsPage extends CustomComponent<ItemSwapsProps, State
 
     render() {
     return (
-        <PageContainer>
+        <BloisPage>
             {this.renderUI()}
             {this.renderLoading()}
             <BloisMenuBar
@@ -125,7 +125,7 @@ export default class ItemSwapsPage extends CustomComponent<ItemSwapsProps, State
                 ]}
             
             ></BloisMenuBar>
-        </PageContainer>
+        </BloisPage>
     );
     }
 }

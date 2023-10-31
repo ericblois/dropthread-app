@@ -5,7 +5,7 @@ import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
-import { ConfirmationPopup, CustomImage, CustomModal, CustomScrollView, BloisTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, BloisMenuBar, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { ConfirmationPopup, CustomImage, CustomModal, CustomScrollView, BloisTextButton, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, BloisMenuBar, BloisPage, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, ItemPriceData, OfferData, OfferInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -151,7 +151,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                 {/* Other liked items */}
                 {!this.state.isFrom && this.state.otherLikedItems && this.state.otherLikedItems.length > 0 ?
                     <>
-                        <Text style={{...textStyles.smallHeader, color: colors.grey}}>{`${this.state.isFrom ? this.state.offerInfo?.offer.toName : this.state.offerInfo?.offer.fromName} has also liked:`}</Text>
+                        <Text style={{...textStyles.mediumHeader, color: colors.grey}}>{`${this.state.isFrom ? this.state.offerInfo?.offer.toName : this.state.offerInfo?.offer.fromName} has also liked:`}</Text>
                         {this.state.otherLikedItems.map((itemInfo, index) => {
                             return (
                                 <View key={index.toString()}>
@@ -203,7 +203,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
     render() {
       try {
         return (
-            <PageContainer
+            <BloisPage
                 headerText={'Edit Offer'}
             >
                 {this.renderUI()}
@@ -303,7 +303,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                     onDeny={() => this.setState({showAcceptPopup: false})}
                 />
                 {this.renderLoading()}
-            </PageContainer>
+            </BloisPage>
         );
       } catch (e) {
         this.handleError(e);

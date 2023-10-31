@@ -218,7 +218,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                     marginRight: filterKey === "country" ? 0 : styleValues.mediumPadding,
                     marginBottom: undefined
                 }}
-                textStyle={textStyles.small}
+                textStyle={textStyles.medium}
                 touchableProps={{
                     disabled: !this.state.showSearchBar
                 }}
@@ -279,7 +279,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                                 text={capitalizeWords(label.replaceAll('_', ' '))}
                                 appearance={buttonState ? "color" : "no-color"}
                                 buttonStyle={{height: styleValues.smallHeight}}
-                                textStyle={textStyles.small}
+                                textStyle={textStyles.medium}
                                 onPress={() => {
                                     let newFilters = {} as ItemFilter
                                     if (isMultiselect) {
@@ -419,7 +419,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                                 >
                                     <Text
                                         style={{
-                                            ...textStyles.medium,
+                                            ...textStyles.large,
                                         }}
                                     >{generateLabel([props.oneMarkerValue as number, props.twoMarkerValue as number])}</Text>
                                 </View>

@@ -36,7 +36,7 @@ export default class LoadingCover extends CustomComponent<Props, State> {
                 <>
                     <Text
                         style={{
-                            ...textStyles.small,
+                            ...textStyles.medium,
                             marginBottom: styleValues.mediumPadding,
                             color: colors.grey
                         }}
@@ -50,7 +50,7 @@ export default class LoadingCover extends CustomComponent<Props, State> {
                             height: styleValues.iconMediumSize,
                             width: styleValues.iconMediumSize
                         }}
-                        shadow={false}
+                        animType={'opacity'}
                         iconStyle={{color: colors.lightGrey}}
                         onPress={this.props.onErrorRefresh}
                     />

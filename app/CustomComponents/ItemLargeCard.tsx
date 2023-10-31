@@ -147,7 +147,7 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                             numberOfLines={2}
                         >{this.state.itemInfo.item.name}</Text>
                         <Text style={{
-                            ...textStyles.large,
+                            ...textStyles.larger,
                             textAlign: "right",
                             }}
                         >{currencyFormatter.format(
@@ -270,16 +270,16 @@ export const styles = StyleSheet.create({
         paddingHorizontal: styleValues.mediumPadding
     },
     headerText: {
-        ...textStyles.medium,
+        ...textStyles.large,
         marginBottom: styleValues.minorPadding,
         textAlign: "left"
     },
     majorText: {
-        ...textStyles.small,
+        ...textStyles.medium,
         textAlign: "left"
     },
     minorText: {
-        ...textStyles.small,
+        ...textStyles.medium,
         color: colors.darkGrey,
         textAlign: "left"
     },

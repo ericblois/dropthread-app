@@ -68,7 +68,7 @@ export default class TextInfoPopup extends CustomComponent<Props, State> {
                         {this.props.headerText === undefined ? undefined : 
                         <Text
                             style={{
-                                ...textStyles.largeHeader,
+                                ...textStyles.largerHeader,
                                 marginTop: 0,
                                 ...this.props.textStyle
                             }}

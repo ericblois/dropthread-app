@@ -78,7 +78,7 @@ export default class TagInputBox extends CustomComponent<
             >
                 <Text
                     style={{
-                        ...textStyles.small,
+                        ...textStyles.medium,
                         marginHorizontal: styleValues.minorPadding,
                         ...this.props.textStyle,
                     }}

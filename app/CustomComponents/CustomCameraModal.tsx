@@ -104,7 +104,7 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
                                 ...defaultStyles.fill,
                             }}
                         >
-                            <Text style={textStyles.medium}>No camera access.</Text>
+                            <Text style={textStyles.large}>No camera access.</Text>
                         </View>
                     ) :
                     <CustomImage

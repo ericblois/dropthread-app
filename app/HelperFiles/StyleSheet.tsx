@@ -81,13 +81,13 @@ export const styleValues = {
   iconLargerSize: screenUnit*2,
   iconLargestSize: screenUnit*5/2,
   iconLargesterSize: screenUnit*3,
-  largestTextSize: screenUnit*5/3,
-  largerTextSize: screenUnit*5/4,
-  largeTextSize: screenUnit*9/8,
-  mediumTextSize: screenUnit,
-  smallTextSize: screenUnit*5/6,
-  smallerTextSize: screenUnit*5/7,
-  smallestTextSize: screenUnit*5/8,
+  largestTextSize: screenUnit*10/8,
+  largerTextSize: screenUnit*9/8,
+  largeTextSize: screenUnit*7/8,
+  mediumTextSize: screenUnit*6/8,
+  smallTextSize: screenUnit*5/8,
+  smallerTextSize: screenUnit*4/8,
+  smallestTextSize: screenUnit*3/8,
 };
 // A Text's height will be 1.333x its font size
 
@@ -238,10 +238,10 @@ export const defaultStyles = StyleSheet.create({
     right: 0,
     alignItems: "center",
     backgroundColor: colors.background,
-    padding: styleValues.mediumPadding,
-    paddingTop: topInset + styleValues.mediumPadding,
-    zIndex: 100,
-    elevation: 100
+    padding: styleValues.minorPadding,
+    paddingTop: topInset + styleValues.minorPadding,
+    zIndex: 1000,
+    elevation: 1000
   },
   roundedBox: {
     width: "100%",
@@ -266,7 +266,7 @@ export const defaultStyles = StyleSheet.create({
     justifyContent: "center",
   },
   inputText: {
-    ...textStyles.small,
+    ...textStyles.medium,
     flex: 1,
     width: "100%",
     height: "100%",

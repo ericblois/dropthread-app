@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useRef } from "react";
 import { AppState, FlatList, Pressable, StyleSheet, Text, View, ViewToken, ViewabilityConfigCallbackPairs } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { CustomImageButton, FilterSearchBar, ItemLargeCard, LoadingCover, BloisMenuBar, PageContainer } from "../HelperFiles/CompIndex";
+import { CustomImageButton, FilterSearchBar, ItemLargeCard, LoadingCover, BloisMenuBar, BloisPage } from "../HelperFiles/CompIndex";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
@@ -114,7 +114,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
                 justifyContent: "center"
               }}
             >
-              <Text style={{...textStyles.smallHeader, color: colors.grey}}>No items were found.</Text>
+              <Text style={{...textStyles.mediumHeader, color: colors.grey}}>No items were found.</Text>
               <CustomImageButton
                 iconSource={icons.refresh}
                 buttonStyle={{
@@ -187,7 +187,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
     render() {
       try {
         return (
-            <PageContainer>
+            <BloisPage>
               <FilterSearchBar
                 initialFilter={this.state.searchFilters}
                 contentContainerStyle={{bottom: bottomInset + styleValues.mediumHeight + styleValues.mediumPadding*2}}
@@ -236,7 +236,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
                 {this.renderCarousel()}
                 {this.renderLoading()}
               </FilterSearchBar>
-            </PageContainer>
+            </BloisPage>
         );
       } catch (e) {
         this.handleError(e)

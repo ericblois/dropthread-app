@@ -56,7 +56,7 @@ export default class CustomAddressInput extends CustomComponent<Props, State> {
                 width: '100%'
             }}>
                 {this.state.errorMessage ?
-                    <Text style={{...textStyles.smaller, color: colors.invalid}}>{this.state.errorMessage}</Text>
+                    <Text style={{...textStyles.small, color: colors.invalid}}>{this.state.errorMessage}</Text>
                 : undefined}
                 <BloisTextInput
                     checkValidity={(text) => Address.validateProperty('name', text)}
@@ -94,7 +94,7 @@ export default class CustomAddressInput extends CustomComponent<Props, State> {
                                 ...defaultStyles.roundedBox,
                                 ...shadowStyles.small,
                                 height: this.inputHeight,
-                                ...textStyles.smaller,
+                                ...textStyles.small,
                                 overflow: 'visible',
                                 marginBottom: -styleValues.mediumPadding,
                                 shadowColor: validAddress || !this.state.validityFlag ? colors.black : colors.invalid,
@@ -115,7 +115,7 @@ export default class CustomAddressInput extends CustomComponent<Props, State> {
                                 ...defaultStyles.roundedBox,
                                 backgroundColor: colors.background
                             },
-                            description: textStyles.smaller,
+                            description: textStyles.small,
                             separator: {height: 0, opacity: 0}
                         }}
                         isRowScrollable={false}
@@ -175,7 +175,7 @@ export default class CustomAddressInput extends CustomComponent<Props, State> {
                     style={{
                         ...defaultStyles.roundedBox,
                         ...shadowStyles.small,
-                        ...textStyles.smaller,
+                        ...textStyles.small,
                         textAlign: 'left',
                         marginTop: -styleValues.mediumPadding
                     }}    

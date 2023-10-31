@@ -7,7 +7,7 @@ import BloisIconButton from "../BloisComponents/BloisIconButton";
 import {
     ItemSmallCard,
     LoadingCover,
-    PageContainer,
+    BloisPage,
     ScrollContainer,
 } from "../HelperFiles/CompIndex";
 import { ItemInfo, UserData } from "../HelperFiles/DataTypes";
@@ -130,7 +130,7 @@ export default class ClosetMainPage extends CustomComponent<
                 <View style={{flex: 1, justifyContent: 'center', paddingBottom: bottomInset + styleValues.mediumHeight}}>
                     <Text
                         style={{
-                            ...textStyles.small,
+                            ...textStyles.medium,
                             color: colors.grey,
                             alignSelf: 'center',
                         }}
@@ -165,10 +165,10 @@ export default class ClosetMainPage extends CustomComponent<
 
     render() {
         return (
-            <PageContainer headerText={"Your Closet"}>
+            <BloisPage headerText={"Your Closet"}>
                 {this.renderUI()}
                 {this.renderLoading()}
-            </PageContainer>
+            </BloisPage>
         );
     }
 }

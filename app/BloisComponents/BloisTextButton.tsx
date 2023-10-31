@@ -30,7 +30,6 @@ type Props = {
     animType?: "opacity" | "shadowSmall" | "shadow" | "outline";
     subtext?: string;
     subtextStyle?: TextStyle;
-    shadow?: boolean;
     tooltip?: {
         text: string;
         posX?: "center" | "left" | "right";
@@ -60,7 +59,7 @@ export default class TextButton extends Component<Props, State> {
                 <Text
                     {...this.props.subtextProps}
                     style={{
-                        ...textStyles.smaller,
+                        ...textStyles.small,
                         color: colors.mediumTextColor,
                         ...this.props.subtextStyle,
                     }}
@@ -77,7 +76,7 @@ export default class TextButton extends Component<Props, State> {
             <BloisPressable
                 {...this.props.pressableProps}
                 style={{
-                    ...(this.props.shadow !== false
+                    ...(this.props.animType !== "opacity"
                         ? defaultStyles.roundedBox
                         : undefined),
                     ...defaultStyles.row,
@@ -88,18 +87,17 @@ export default class TextButton extends Component<Props, State> {
                     justifyContent: "center",
                     ...this.props.style,
                 }}
-                animType={
-                    this.props.shadow !== false ? "shadowSmall" : "opacity"
-                }
+                animType={this.props.animType || 'shadowSmall'}
                 tooltip={this.props.tooltip}
                 onPress={this.props.onPress}
             >
                 {this.props.leftChildren}
                 <View style={{ flexDirection: "column" }}>
                     <Text
+                        ellipsizeMode={'tail'}
                         {...this.props.textProps}
                         style={{
-                            ...textStyles.small,
+                            ...textStyles.medium,
                             color: colors.majorTextColor,
                             ...this.props.textStyle,
                         }}
@@ -117,11 +115,11 @@ export default class TextButton extends Component<Props, State> {
 
 const styles = StyleSheet.create({
     textStyle: {
-        ...textStyles.medium,
+        ...textStyles.large,
         color: colors.majorTextColor,
     },
     subtextStyle: {
-        ...textStyles.small,
+        ...textStyles.medium,
         color: colors.mediumTextColor,
     },
     iconStyle: {

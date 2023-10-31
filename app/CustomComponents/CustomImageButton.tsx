@@ -73,7 +73,7 @@ export default class CustomImageButton extends CustomComponent<CustomImageButton
           }}
         >
           <Text style={{
-            ...textStyles.small,
+            ...textStyles.medium,
           }}>{this.props.infoProps.text}</Text>
         </View>
       )
@@ -141,7 +141,7 @@ export default class CustomImageButton extends CustomComponent<CustomImageButton
               alignItems: "center",
               justifyContent: "center"
             }}>
-              <Text style={{...textStyles.smaller, color: colors.white, marginHorizontal: styleValues.minorPadding}}>{`${this.props.badgeNumber}`}</Text>
+              <Text style={{...textStyles.small, color: colors.white, marginHorizontal: styleValues.minorPadding}}>{`${this.props.badgeNumber}`}</Text>
             </View> : undefined
           }
           {this.renderInfo()}

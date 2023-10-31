@@ -125,7 +125,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
             <>
                 <Text
                     style={{
-                        ...textStyles.small,
+                        ...textStyles.medium,
                         color: colors.grey,
                         textAlign: 'left',
                         marginBottom: styleValues.mediumPadding
@@ -288,7 +288,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                         />
                     </View>
                 </View>
-                <Text style={{...textStyles.small, color: colors.grey, textAlign: 'left', marginBottom: styleValues.mediumPadding}}>The highlighted area is a recommended meetup area to reduce travel time for each of you.</Text>
+                <Text style={{...textStyles.medium, color: colors.grey, textAlign: 'left', marginBottom: styleValues.mediumPadding}}>The highlighted area is a recommended meetup area to reduce travel time for each of you.</Text>
                 <BloisTextButton
                     text={"Select this meetup location"}
                     textStyle={{color: !this.state.meetupSelection ? colors.lightGrey : colors.black}}
@@ -362,7 +362,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                 this.setState({showModal: true})
             }}
         >
-            <Text style={{...textStyles.medium, marginBottom: styleValues.mediumPadding}}>Exchange Location</Text>
+            <Text style={{...textStyles.large, marginBottom: styleValues.mediumPadding}}>Exchange Location</Text>
             {this.state.selection && this.state.selection.lat !== 0 && this.state.selection.long !== 0
             ?
             /* Address */
@@ -377,7 +377,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                     {/* Name */}
                     <Text
                         style={{
-                            ...textStyles.small,
+                            ...textStyles.medium,
                             textAlign: 'left'
                         }}
                         numberOfLines={1}
@@ -388,7 +388,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                     <>
                         {/* Street address, postal code (pickup) */}
                         <Text style={{
-                            ...textStyles.smaller,
+                            ...textStyles.small,
                             textAlign: 'left',
                             color: colors.grey
                         }}>
@@ -397,7 +397,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                         {/* City, region, country (pickup) */}
                         <Text
                             style={{
-                                ...textStyles.smaller,
+                                ...textStyles.small,
                                 textAlign: 'left',
                                 color: colors.grey
                             }}
@@ -410,7 +410,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                     <>
                         <Text
                             style={{
-                                ...textStyles.smaller,
+                                ...textStyles.small,
                                 textAlign: 'left',
                                 color: colors.grey
                             }}
@@ -420,7 +420,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                         </Text>
                         <Text
                             style={{
-                                ...textStyles.smaller,
+                                ...textStyles.small,
                                 textAlign: 'left',
                                 color: colors.grey
                             }}
@@ -470,7 +470,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
             (this.state.selection ?
             <Text
                 style={{
-                    ...textStyles.smaller,
+                    ...textStyles.small,
                     textAlign: 'left',
                     color: colors.grey
                 }}
@@ -487,7 +487,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                     paddingVertical: styleValues.minorPadding
                 }}
             >
-                <Text style={textStyles.small}>Select</Text>
+                <Text style={textStyles.medium}>Select</Text>
             </View>
             )
             }
@@ -532,7 +532,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                         ...shadowStyles.small
                     }}
                 >
-                    <Text style={{...textStyles.medium, marginBottom: styleValues.mediumPadding}}>Exchange Location</Text>
+                    <Text style={{...textStyles.large, marginBottom: styleValues.mediumPadding}}>Exchange Location</Text>
                     {this.renderSelection()}
                 </KeyboardAvoidingView>
             </CustomModal>

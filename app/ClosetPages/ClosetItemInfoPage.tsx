@@ -6,7 +6,7 @@ import React from "react";
 import { DeviceEventEmitter, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
-import { ConfirmationPopup, CustomScrollView, BloisTextButton, ImageSlider, LoadingCover, BloisMenuBar, OfferSmallCard, PageContainer, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
+import { ConfirmationPopup, CustomScrollView, BloisTextButton, ImageSlider, LoadingCover, BloisMenuBar, OfferSmallCard, BloisPage, ScrollContainer, TextButton } from "../HelperFiles/CompIndex";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo, ItemInteraction, OfferData, OfferInfo } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -103,31 +103,31 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                     <View style={{flex: 1, marginRight: styleValues.minorPadding}}>
                         {/* Name */}
                         <Text
-                            style={{...textStyles.large, textAlign: "left"}}
+                            style={{...textStyles.larger, textAlign: "left"}}
                             numberOfLines={4}
                         >{this.state.itemInfo.item.name}</Text>
                         {/* Gender / category */}
                         <Text
                             style={{
-                                ...textStyles.medium,
+                                ...textStyles.large,
                                 textAlign: "left",
                                 color: colors.grey
                             }}
                         >{capitalizeWords(`${this.state.itemInfo.item.gender !== 'unisex' ? this.state.itemInfo.item.gender + `'s ` : ``}${this.state.itemInfo.item.category !== 'other' ? this.state.itemInfo.item.category : ''}`)}</Text>
                         {/* Size */}
                         <Text
-                            style={{...textStyles.medium, textAlign: "left", color: colors.grey}}
+                            style={{...textStyles.large, textAlign: "left", color: colors.grey}}
                             numberOfLines={1}
                         >Size: {capitalizeWords(this.state.itemInfo.item.size)}</Text>
                         {/* Distance */}
                         {this.state.itemInfo.distance! > 0 ? 
-                            <Text style={{...textStyles.medium, textAlign: "left", color: colors.grey}}>{`within ${this.state.itemInfo.distance} km`}</Text>
+                            <Text style={{...textStyles.large, textAlign: "left", color: colors.grey}}>{`within ${this.state.itemInfo.distance} km`}</Text>
                         : undefined}
                     </View>
                     <View>
                         {/* Minimum price */}
                         <Text style={{
-                                ...textStyles.larger,
+                                ...textStyles.largerst,
                                 textAlign: 'right',
                             }}
                             numberOfLines={1}
@@ -156,11 +156,11 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                                 name="eye-outline"
                                 style={{fontSize: styleValues.iconMediumSize, textAlignVertical: 'center', marginRight: styleValues.minorPadding, marginTop: -screenUnit*0.15}}
                             />
-                            <Text style={{...textStyles.medium}}>{this.state.itemInfo.item.viewCount.toString()}</Text>
+                            <Text style={{...textStyles.large}}>{this.state.itemInfo.item.viewCount.toString()}</Text>
                         </View>
-                        <Text style={{...textStyles.mediumHeader, marginVertical: undefined}}>Likes</Text>
+                        <Text style={{...textStyles.largeHeader, marginVertical: undefined}}>Likes</Text>
                         <View style={{flexDirection: 'row'}}>
-                            <Text style={{...textStyles.medium}}>{this.state.itemInfo.item.likeCount.toString()}</Text>
+                            <Text style={{...textStyles.large}}>{this.state.itemInfo.item.likeCount.toString()}</Text>
                             <AntDesign
                                 name="hearto"
                                 style={{fontSize: styleValues.iconSmallSize, textAlignVertical: 'center', marginLeft: styleValues.minorPadding, marginTop: screenUnit*0.1}}
@@ -168,7 +168,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                         </View>
                     </View>
                     {this.state.itemLikes.length === 0
-                    ? <Text style={{...textStyles.small, color: colors.grey, marginBottom: styleValues.mediumPadding}}>No likes yet.</Text>    
+                    ? <Text style={{...textStyles.medium, color: colors.grey, marginBottom: styleValues.mediumPadding}}>No likes yet.</Text>    
                     : this.state.itemLikes.map((interaction, index) => {
                         const secondsAgo = (Date.now() - interaction.likeTime)/1000
                         let timeText = secondsAgo < 60 ? `${Math.floor(secondsAgo)}s ago`
@@ -195,9 +195,9 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                                     }}
                                 />
                                 <View style={{flex: 1, justifyContent: 'space-between'}}>
-                                    <Text style={{...textStyles.medium, textAlign: 'left'}}>{currencyFormatter.format(interaction.likePrice)}</Text>
-                                    <Text style={{...textStyles.small, textAlign: 'left'}}>{`within ${interaction.distance} km`}</Text>
-                                    <Text style={{...textStyles.smaller, textAlign: 'left', color: colors.grey}}>{timeText}</Text>
+                                    <Text style={{...textStyles.large, textAlign: 'left'}}>{currencyFormatter.format(interaction.likePrice)}</Text>
+                                    <Text style={{...textStyles.medium, textAlign: 'left'}}>{`within ${interaction.distance} km`}</Text>
+                                    <Text style={{...textStyles.small, textAlign: 'left', color: colors.grey}}>{timeText}</Text>
                                 </View>
                                 <BloisTextButton
                                     text={'Send offer'}
@@ -238,7 +238,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
             return (
                 <View style={{marginBottom: styleValues.mediumPadding}}>
                     {/* Views / likes */}
-                    <Text style={{...textStyles.mediumHeader, marginTop: 0}}>Active Offers</Text>
+                    <Text style={{...textStyles.largeHeader, marginTop: 0}}>Active Offers</Text>
                     {this.state.itemOffers.map((offerInfo, index) => {
                         return (
                             <OfferSmallCard
@@ -336,7 +336,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
 
     render() {
     return (
-        <PageContainer
+        <BloisPage
             headerText={'Item Info'}
         >
             {this.renderUI()}
@@ -373,7 +373,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                 onConfirm={() => this.deleteItem()}
                 onDeny={() => this.setState({showDeletePopup: false})}
             />
-        </PageContainer>
+        </BloisPage>
     );
     }
 }

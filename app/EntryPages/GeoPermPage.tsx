@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { CustomImageButton, BloisTextButton, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { CustomImageButton, BloisTextButton, BloisPage, TextButton } from "../HelperFiles/CompIndex";
 import { auth } from "../HelperFiles/Constants";
 import { RootStackParamList } from "../HelperFiles/Navigation";
 import { icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
@@ -35,10 +35,10 @@ export default class GeoPermPage extends CustomComponent<StartProps, State> {
 
     render() {
         return (
-            <PageContainer style={{justifyContent: 'center'}}>
-                <Text style={textStyles.mediumHeader}>Location services are required to be enabled for this app.</Text>
+            <BloisPage style={{justifyContent: 'center'}}>
+                <Text style={textStyles.largeHeader}>Location services are required to be enabled for this app.</Text>
                 {this.state.permDenied ? 
-                <Text style={textStyles.small}>{"Please enable location services in Settings > dropcloset > Location services."}</Text>
+                <Text style={textStyles.medium}>{"Please enable location services in Settings > dropcloset > Location services."}</Text>
                 : 
                 <BloisTextButton
                     text={"Click here to request location permissions!"}
@@ -52,7 +52,7 @@ export default class GeoPermPage extends CustomComponent<StartProps, State> {
                     }}
                 />
                 }
-            </PageContainer>
+            </BloisPage>
         );
     }
 }

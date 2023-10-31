@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { CustomModal, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, BloisMenuBar, PageContainer } from "../HelperFiles/CompIndex";
+import { CustomModal, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCover, BloisMenuBar, BloisPage } from "../HelperFiles/CompIndex";
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
@@ -104,7 +104,7 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
             )
         } else if (this.state.items && this.state.items.length === 0) {
           return (
-            <Text style={{...textStyles.medium, alignSelf: 'center'}}>No items found.</Text>
+            <Text style={{...textStyles.large, alignSelf: 'center'}}>No items found.</Text>
           )
         }
     }
@@ -129,7 +129,7 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
     render() {
       try {
         return (
-            <PageContainer
+            <BloisPage
               headerText={this.props.route.params.header}
             >
               {this.renderUI()}
@@ -158,7 +158,7 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
                 ]}
               
               />
-            </PageContainer>
+            </BloisPage>
         );
       } catch (e) {
         this.setState({errorDidOccur: true})

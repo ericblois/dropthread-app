@@ -8,13 +8,13 @@ import TextInputPopup from "../CustomComponents/TextInputPopup";
 import DateScrollPicker from "../CustomComponents/DateScrollPicker";
 import ImageSliderSelector from "../CustomComponents/ImageSliderSelector"
 import ToggleSwitch from "../CustomComponents/ToggleSwitch"
-import PageContainer from "../CustomComponents/PageContainer"
+import BloisPage from "../BloisComponents/BloisPage"
 import ScrollContainer from "../CustomComponents/ScrollContainer"
 import GradientView from "../CustomComponents/GradientView";
 import LoadingCover from "../CustomComponents/LoadingCover";
 import TextInfoPopup from "../CustomComponents/TextInfoPopup";
 import ConfirmationPopup from "../CustomComponents/ConfirmationPopup";
-import TextDropdownAnimated from "../CustomComponents/TextDropdownAnimated";
+import BloisDropdown from "../BloisComponents/BloisDropdown";
 import ItemSmallCard from "../CustomComponents/ItemSmallCard";
 import ItemLikedCard from "../CustomComponents/ItemLikedCard";
 import ItemLargeCard from "../CustomComponents/ItemLargeCard";
@@ -45,13 +45,13 @@ export {
     DateScrollPicker,
     ImageSliderSelector,
     ToggleSwitch,
-    PageContainer,
+    BloisPage,
     ScrollContainer,
     GradientView,
     LoadingCover,
     TextInfoPopup,
     ConfirmationPopup,
-    TextDropdownAnimated,
+    BloisDropdown,
     ItemSmallCard,
     ItemLikedCard,
     ItemLargeCard,

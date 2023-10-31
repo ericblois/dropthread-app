@@ -2,7 +2,7 @@ import { DefaultTheme, NavigationContainer, NavigationContainerRef, createNaviga
 import * as Font from 'expo-font';
 import React, { Component } from "react";
 import { ActivityIndicator, AppState, DeviceEventEmitter, LogBox, StatusBar, Text } from "react-native";
-import PageContainer from "./app/CustomComponents/PageContainer";
+import BloisPage from "./app/BloisComponents/BloisPage";
 import { auth } from './app/HelperFiles/Constants';
 import { RootStack, RootStackParamList } from "./app/HelperFiles/Navigation";
 import StartPage from "./app/StartPage";
@@ -104,7 +104,7 @@ export default class App extends Component<Props, State> {
       );
     } // Error caught
     else {
-      <PageContainer style={{justifyContent: 'center'}}>
+      <BloisPage style={{justifyContent: 'center'}}>
         <FastImage
             source={require("./assets/entryBackground.jpg")}
             resizeMode="cover"
@@ -114,7 +114,7 @@ export default class App extends Component<Props, State> {
         />
         <Text
             style={{
-                ...textStyles.largest,
+                ...textStyles.largerst,
                 fontFamily: Font.isLoaded(fonts.bold) ? fonts.bold : undefined,
                 alignSelf: 'center',
             }}
@@ -123,7 +123,7 @@ export default class App extends Component<Props, State> {
           text={"Reload"}
           onPress={() => this.setState({errorCaught: false})}
         />
-      </PageContainer>
+      </BloisPage>
     }
   }
 }

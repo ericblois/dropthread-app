@@ -156,7 +156,7 @@ export default class BloisCurrencyInput extends CustomComponent<BloisCurrencyInp
                 >
                     {this.props.label ?
                         <Text style={{
-                            ...textStyles.smaller,
+                            ...textStyles.medium,
                             color: colors.grey,
                             marginRight: styleValues.mediumPadding
                         }}>{this.props.label}</Text>    
@@ -170,7 +170,7 @@ export default class BloisCurrencyInput extends CustomComponent<BloisCurrencyInp
                         defaultValue={this.props.defaultValue ? currencyFormatter.format(this.props.defaultValue) : undefined}
                         disableFullscreenUI={true}
                         focusable={true}
-                        style={{...textStyles.smaller, textAlign: 'left', flex: 1, ...this.props.textStyle}}
+                        style={{...textStyles.medium, textAlign: 'left', flex: 1, ...this.props.textStyle}}
                         placeholder={this.props.placeholder}
                         value={this.state.text}
                         keyboardType={'number-pad'}

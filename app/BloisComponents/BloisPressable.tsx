@@ -155,7 +155,7 @@ export default class BloisPressable extends CustomComponent<BloisPressableProps,
                             alignSelf: posX === "center" ? "center" : undefined
                         }}
                     >
-                        <Text style={{...textStyles.smaller}}>
+                        <Text style={{...textStyles.small}}>
                             {this.props.tooltip.text}
                         </Text>
                     </View>

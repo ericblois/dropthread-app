@@ -43,11 +43,11 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
             return (
                 <>
                     <Text
-                        style={textStyles.mediumHeader}
+                        style={textStyles.largeHeader}
                     >You receive:</Text>
                     {basePrice > 0 ? 
                     <View style={{...shadowStyles.small, ...defaultStyles.roundedBox, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
-                        <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Base: ${currencyFormatter.format(basePrice)}`}</Text>
+                        <Text style={{...textStyles.medium, textAlign: 'left', color: colors.darkGrey}}>{`Base: ${currencyFormatter.format(basePrice)}`}</Text>
                         <View
                             style={{
                                 flexDirection: 'row',
@@ -60,7 +60,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                 marginTop: styleValues.mediumPadding
                             }}
                         >
-                            <Text style={{...textStyles.small, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(basePrice)}`}</Text>
+                            <Text style={{...textStyles.medium, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(basePrice)}`}</Text>
                             <Icons.FontAwesome5
                                 name={'money-bill-wave'}
                                 style={{
@@ -142,13 +142,13 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                     </View>
                     {facePrice > 0 ?
                         <>
-                        <Text style={textStyles.mediumHeader}>You pay:</Text>
+                        <Text style={textStyles.largeHeader}>You pay:</Text>
                         <View style={{...shadowStyles.small, ...defaultStyles.roundedBox, alignItems: 'flex-start', justifyContent: 'flex-start'}}>
                             {basePrice > 0 ? 
-                                <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Base: ${currencyFormatter.format(basePrice)}`}</Text>
+                                <Text style={{...textStyles.medium, textAlign: 'left', color: colors.darkGrey}}>{`Base: ${currencyFormatter.format(basePrice)}`}</Text>
                             : undefined}
                             {feePrice > 0 ? 
-                                <Text style={{...textStyles.small, textAlign: 'left', color: colors.darkGrey}}>{`Fee: ${currencyFormatter.format(feePrice)}`}</Text>
+                                <Text style={{...textStyles.medium, textAlign: 'left', color: colors.darkGrey}}>{`Fee: ${currencyFormatter.format(feePrice)}`}</Text>
                             : undefined}
                             <View
                                 style={{
@@ -162,7 +162,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                     marginTop: styleValues.mediumPadding
                                 }}
                             >
-                                <Text style={{...textStyles.small, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(feePrice)}`}</Text>
+                                <Text style={{...textStyles.medium, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(feePrice)}`}</Text>
                                 <Icons.FontAwesome5
                                     name={'money-bill-wave'}
                                     style={{
@@ -175,7 +175,7 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                         </>
                     : undefined}
                     {givenItems.length > 0 ?
-                        <Text style={textStyles.mediumHeader}>Your items:</Text>
+                        <Text style={textStyles.largeHeader}>Your items:</Text>
                     : undefined}
                     {givenItems.map((itemInfo, index) => {
                         return (

@@ -6,7 +6,7 @@ import { StyleSheet, Text, TextInput } from "react-native";
 import CustomComponent from "./CustomComponents/CustomComponent";
 import { alphanumericSpecialRegex, emailRegex, nameRegex, passwordRegex } from './BloisComponents/BloisTextInput';
 import { capitalizeWords } from "./HelperFiles/ClientFunctions";
-import { DateScrollPicker, LoadingCover, BloisMenuBar, PageContainer, ScrollContainer, TextButton, TextDropdownAnimated, BloisTextInput, BloisTextButton } from "./HelperFiles/CompIndex";
+import { DateScrollPicker, LoadingCover, BloisMenuBar, BloisPage, ScrollContainer, TextButton, BloisDropdown, BloisTextInput, BloisTextButton } from "./HelperFiles/CompIndex";
 import { geofire } from "./HelperFiles/Constants";
 import { countriesList, Country, DefaultUserData, UserData, UserGender, UserGenders } from "./HelperFiles/DataTypes";
 import { RootStackParamList } from "./HelperFiles/Navigation";
@@ -146,7 +146,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
         if (this.state.errorMessage) {
             return <Text
                 style={{
-                    ...textStyles.smaller,
+                    ...textStyles.small,
                     color: colors.invalid,
                     textAlign: 'left',
                     paddingVertical: styleValues.mediumPadding
@@ -234,23 +234,23 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     }})}
                 ></DateScrollPicker>
                 {/* Gender */}
-                <TextDropdownAnimated
+                <BloisDropdown
                     items={UserGenders.map((gender) => ({
                         text: capitalizeWords(gender),
                         value: gender
                     }))}
-                    placeholderText={"Gender"}
+                    label={"Gender"}
                     enableMultiple={false}
                     showValidSelection={true}
                     onSelect={(selections) => this.setState({userData: {...this.state.userData, gender: selections[0].value as UserGender} as UserData})}
                 />
                 { /* Country */}
-                <TextDropdownAnimated
+                <BloisDropdown
                     items={countriesList.map((country) => ({
                         text: capitalizeWords(country),
                         value: country
                     }))}
-                    placeholderText={"Country"}
+                    label={"Country"}
                     enableMultiple={false}
                     showValidSelection={true}
                     onSelect={(selections) => this.setState({userData: {...this.state.userData, country: selections[0].value as Country} as UserData})}
@@ -292,7 +292,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
     render() {
         let isValid = this.validateInputs();
         return (
-        <PageContainer
+        <BloisPage
             headerText={'Sign Up'}
         >
             {this.renderError()}
@@ -316,14 +316,14 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     }
                 ]}
             ></BloisMenuBar>
-        </PageContainer>
+        </BloisPage>
         );
     }
 }
 
 const styles = StyleSheet.create({
     inputDescription: {
-        ...textStyles.smallerHeader,
+        ...textStyles.smallHeader,
         color: colors.grey,
         width: "100%",
         textAlign: "left",

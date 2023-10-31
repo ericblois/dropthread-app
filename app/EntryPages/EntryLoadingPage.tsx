@@ -13,7 +13,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import { AppState, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from "react-native";
 import CustomComponent from "../CustomComponents/CustomComponent";
-import { CustomImage, CustomImageButton, BloisTextButton, PageContainer, TextButton } from "../HelperFiles/CompIndex";
+import { CustomImage, CustomImageButton, BloisTextButton, BloisPage, TextButton } from "../HelperFiles/CompIndex";
 import { auth } from "../HelperFiles/Constants";
 import { RootStackParamList } from "../HelperFiles/Navigation";
 import { defaultStyles, fonts, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
@@ -128,7 +128,7 @@ export default class EntryLoadingPage extends CustomComponent<EntryProps, State>
 
     render() {
         return (
-            <PageContainer style={{justifyContent: 'center'}}>
+            <BloisPage style={{justifyContent: 'center'}}>
                     <FastImage
                         source={require("../../assets/entryBackground.jpg")}
                         resizeMode="cover"
@@ -138,13 +138,13 @@ export default class EntryLoadingPage extends CustomComponent<EntryProps, State>
                     />
                     <Text
                         style={{
-                            ...textStyles.largest,
+                            ...textStyles.largerst,
                             // Fonts may not be loaded yet when this is rendered
                             fontFamily: Font.isLoaded(fonts.bold) ? fonts.bold : undefined,
                             alignSelf: 'center',
                         }}
                     >dropcloset</Text>
-            </PageContainer>
+            </BloisPage>
         );
     }
 }

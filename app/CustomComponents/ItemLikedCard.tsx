@@ -194,11 +194,11 @@ const styles = StyleSheet.create({
         marginRight: styleValues.mediumPadding
     },
     headerText: {
-        ...textStyles.medium,
+        ...textStyles.large,
         textAlign: "left"
     },
     statusText: {
-        ...textStyles.small,
+        ...textStyles.medium,
         textAlign: "left",
         marginHorizontal: styleValues.minorPadding,
         flex: 1

@@ -16,7 +16,7 @@ import {
     BloisTextButton,
     BloisTextInput,
     CustomImageButton,
-    PageContainer,
+    BloisPage,
     TextButton,
 } from "./HelperFiles/CompIndex";
 import { auth } from "./HelperFiles/Constants";
@@ -151,7 +151,7 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                         }
                     />
                     <Text
-                        style={{ ...textStyles.small, ...styles.responseText }}
+                        style={{ ...textStyles.medium, ...styles.responseText }}
                     >
                         {this.state.responseText}
                     </Text>
@@ -170,7 +170,7 @@ export default class StartPage extends CustomComponent<StartProps, State> {
 
     render() {
         return (
-            <PageContainer>
+            <BloisPage>
                 <BloisTextButton
                     text={"Go to main page (Tester1)"}
                     onPress={() => {
@@ -220,7 +220,7 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                     }}
                 />
                 {this.renderLoginInput()}
-            </PageContainer>
+            </BloisPage>
         );
     }
 }
