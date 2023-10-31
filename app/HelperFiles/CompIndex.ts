@@ -7,7 +7,7 @@ import BloisTextInput from "../BloisComponents/BloisTextInput";
 import TextInputPopup from "../CustomComponents/TextInputPopup";
 import DateScrollPicker from "../CustomComponents/DateScrollPicker";
 import ImageSliderSelector from "../CustomComponents/ImageSliderSelector"
-import ToggleSwitch from "../CustomComponents/ToggleSwitch"
+import BloisToggle from "../BloisComponents/BloisToggle"
 import BloisPage from "../BloisComponents/BloisPage"
 import ScrollContainer from "../CustomComponents/ScrollContainer"
 import GradientView from "../CustomComponents/GradientView";
@@ -44,7 +44,7 @@ export {
     TextInputPopup,
     DateScrollPicker,
     ImageSliderSelector,
-    ToggleSwitch,
+    BloisToggle,
     BloisPage,
     ScrollContainer,
     GradientView,

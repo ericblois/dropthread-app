@@ -10,7 +10,7 @@ import {
     TagInputBox,
     BloisDropdown,
     BloisTextInput,
-    ToggleSwitch,
+    BloisToggle,
     BloisColorDropdown,
 } from "../HelperFiles/CompIndex";
 import {
@@ -402,15 +402,10 @@ export default class EditItemPage extends CustomComponent<
 
     renderVisibilitySwitch() {
         return (
-            <ToggleSwitch
+            <BloisToggle
                 text={"Publicly visible"}
-                textStyle={{ fontSize: styleValues.smallTextSize }}
-                switchProps={{
-                    value:
-                        this.state.itemChanges.isVisible !== undefined
-                            ? this.state.itemChanges.isVisible
-                            : this.state.itemData!.isVisible,
-                }}
+                defaultValue={this.state.itemChanges.isVisible || this.state.itemData?.isVisible}
+                info={{header: 'Public Visibility', body: 'This determines if your item can be seen by other people. Disable this if you are not ready to sell your item yet.'}}
                 onToggle={(value) => {
                     this.updateItem({ isVisible: value });
                 }}

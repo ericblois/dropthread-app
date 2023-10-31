@@ -64,9 +64,11 @@ export default class CustomModal extends CustomComponent<Props, State> {
                     {this.props.children}
                     {!this.props.disableExitButton ? 
                         <BloisIconButton
-                            name="close"
-                            type="AntDesign"
-                            buttonStyle={{
+                            icon={{
+                                type: 'AntDesign',
+                                name: 'close'
+                            }}
+                            style={{
                                 height: styleValues.iconLargestSize,
                                 width: styleValues.iconLargestSize,
                                 marginTop: styleValues.mediumPadding
