@@ -34,7 +34,7 @@ export const getItemKeywords = (item: ItemData) => {
     item.gender,
     item.country,
     item.region
-  ].concat(item.styles).join(' ')
+  ].join(' ')
   return extractKeywords(fullText)
 }
 
@@ -292,8 +292,6 @@ export type ItemData = {
   images: string[],
   country: Country,
   region: Region,
-  deliveryMethods: DeliveryMethod[],
-  styles: string[],
   keywords: string[],
   viewCount: number,
   likeCount: number,
@@ -321,8 +319,6 @@ export const DefaultItemData: Readonly<ItemData> = {
   images: [],
   country: "",
   region: "",
-  deliveryMethods: [],
-  styles: [],
   keywords: [],
   viewCount: 0,
   likeCount: 0,

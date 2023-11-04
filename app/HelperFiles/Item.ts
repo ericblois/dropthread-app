@@ -258,14 +258,8 @@ export default abstract class Item {
             case "priceData":
                 if (!Item.validatePriceData(value)) return false
                 break
-            case "styles":
-                if ((value as string[]).length > Item.maxNumStyles) return false
-                break
             case "country":
                 if (!value || value === "" || !countriesList.includes(value)) return false
-                break
-            case "deliveryMethods":
-                if (!value || value.length === 0) return false
                 break
             case "userID":
                 if (!value || value === "") return false
