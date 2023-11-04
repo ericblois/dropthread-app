@@ -4,7 +4,7 @@ import { AutoFocus, Camera, CameraType, FlashMode } from "expo-camera";
 import { CameraCapturedPicture, ImageType } from "expo-camera/build/Camera.types";
 import React from "react";
 import { LayoutRectangle, Text, View } from "react-native";
-import { bottomInset, colors, defaultStyles, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { bottomInset, colors, defaultStyles, screenWidth, shadowStyles, styVals, textStyles, topInset } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
 import CustomModal from "./CustomModal";
@@ -74,155 +74,161 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
                 }}
                 onClose={() => this.close()}
             >
-                <View
-                    style={{
-                        width: screenWidth - styleValues.mediumPadding*2,
-                        aspectRatio: 1
-                    }}
-                >
-                    {!this.state.image ?
-                    (this.state.permsGranted ?
-                        <Camera
-                            ref={(camera) => {this.cameraRef = camera}}
-                            autoFocus={AutoFocus.on}
-                            flashMode={this.state.flashMode}
-                            ratio={'1:1'}
-                            type={this.state.useFront ? CameraType.front : CameraType.back}
-                            useCamera2Api={true}
-                            onCameraReady={() => {
-                                this.setState({ready: true})
-                            }}
-                            style={{
-                                ...defaultStyles.fill,
-                                borderRadius: styleValues.majorPadding,
-                                overflow: 'hidden',
-                                transform: [{scaleX: this.state.useFront ? -1 : 1}]
-                            }}
-                        /> :
+                <View style={{paddingTop: topInset + styVals.mediumPadding, paddingBottom: bottomInset + styVals.mediumPadding}}>
+                    <View style={{flex: 1, justifyContent: 'center'}}>
                         <View
                             style={{
-                                ...defaultStyles.fill,
+                                width: screenWidth - styVals.mediumPadding*2,
+                                aspectRatio: 1
                             }}
                         >
-                            <Text style={textStyles.large}>No camera access.</Text>
-                        </View>
-                    ) :
-                    <CustomImage
-                        source={{uri: this.state.image.uri}}
-                        style={{
-                            ...defaultStyles.fill,
-                            borderRadius: styleValues.majorPadding,
-                            overflow: 'hidden'
-                        }}
-                    />
-                }
-                {/* FLASH */}
-                    <BloisIconButton
-                        name={this.state.flashMode === FlashMode.auto
-                            ? 'ios-flash-outline'
-                            : this.state.flashMode === FlashMode.on
-                                ? 'ios-flash'
-                                : 'ios-flash-off-outline'
+                            {!this.state.image ?
+                            (this.state.permsGranted ?
+                                <Camera
+                                    ref={(camera) => {this.cameraRef = camera}}
+                                    autoFocus={AutoFocus.on}
+                                    flashMode={this.state.flashMode}
+                                    ratio={'1:1'}
+                                    type={this.state.useFront ? CameraType.front : CameraType.back}
+                                    useCamera2Api={true}
+                                    onCameraReady={() => {
+                                        this.setState({ready: true})
+                                    }}
+                                    style={{
+                                        ...defaultStyles.fill,
+                                        borderRadius: styVals.majorPadding,
+                                        overflow: 'hidden',
+                                        transform: [{scaleX: this.state.useFront ? -1 : 1}]
+                                    }}
+                                /> :
+                                <View
+                                    style={{
+                                        ...defaultStyles.fill,
+                                    }}
+                                >
+                                    <Text style={textStyles.large}>No camera access.</Text>
+                                </View>
+                            ) :
+                            <CustomImage
+                                source={{uri: this.state.image.uri}}
+                                style={{
+                                    ...defaultStyles.fill,
+                                    borderRadius: styVals.majorPadding,
+                                    overflow: 'hidden'
+                                }}
+                            />
                         }
-                        type={'Ionicons'}
-                        buttonStyle={{
-                            width: styleValues.iconLargeSize,
-                            position: 'absolute',
-                            top: styleValues.mediumPadding,
-                            left: styleValues.mediumPadding
-                        }}
-                        iconStyle={{
-                            color: colors.white
-                        }}
-                        onPress={() => {
-                            if (this.state.flashMode === FlashMode.on) {
-                                this.setState({flashMode: FlashMode.off})
-                            } else {
-                                this.setState({flashMode: FlashMode.on})
-                            }
-                        }}
-                    />
-                </View>
-                {/* CONTROLS */}
-                <BlurView
-                    intensity={25}
-                    tint={'dark'}
-                    style={{
-                        position: 'absolute',
-                        width: screenWidth - 2*styleValues.mediumPadding,
-                        bottom: bottomInset + styleValues.mediumPadding,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-around',
-                        paddingVertical: styleValues.mediumPadding,
-                        borderRadius: styleValues.majorPadding,
-                        overflow: 'hidden',
-                    }}
-                >
-                    <BloisIconButton
-                        name='close'
-                        type='AntDesign'
-                        buttonStyle={{
-                            width: styleValues.iconLargeSize
-                        }}
-                        iconStyle={{
-                            color: colors.white
-                        }}
-                        onPress={() => this.close()}
-                    />
-                    <BloisPressable
+                        {/* FLASH */}
+                            <BloisIconButton
+                                icon={{
+                                    type: 'Ionicons',
+                                    name: this.state.flashMode === FlashMode.auto
+                                    ? 'ios-flash-outline'
+                                    : this.state.flashMode === FlashMode.on
+                                        ? 'ios-flash'
+                                        : 'ios-flash-off-outline'
+                                }}
+                                style={{
+                                    width: styVals.iconLargeSize,
+                                    position: 'absolute',
+                                    top: styVals.mediumPadding,
+                                    left: styVals.mediumPadding
+                                }}
+                                iconStyle={{
+                                    color: colors.white
+                                }}
+                                animType={'opacity'}
+                                onPress={() => {
+                                    if (this.state.flashMode === FlashMode.on) {
+                                        this.setState({flashMode: FlashMode.off})
+                                    } else {
+                                        this.setState({flashMode: FlashMode.on})
+                                    }
+                                }}
+                            />
+                        </View>
+                    </View>
+                    {/* CONTROLS */}
+                    <BlurView
+                        intensity={25}
+                        tint={'dark'}
                         style={{
-                            width: styleValues.largeHeight,
-                            height: styleValues.largeHeight,
-                            borderWidth: styleValues.majorBorderWidth,
-                            borderColor: colors.white,
-                            borderRadius: styleValues.largeHeight/2
-                        }}
-                        onPress={async () => {
-                            if (!this.state.image) {
-                                if (!this.cameraRef || !this.state.ready || !this.state.permsGranted) return;
-                                const picture = await this.cameraRef.takePictureAsync({
-                                    exif: false,
-                                    imageType: ImageType.jpg,
-                                    quality: 0.8
-                                })
-                                this.setState({image: picture})
-                            } else if (this.props.onSave) {
-                                this.props.onSave(this.state.image)
-                                this.close()
-                            }
+                            width: screenWidth - 2*styVals.mediumPadding,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-around',
+                            paddingVertical: styVals.mediumPadding,
+                            borderRadius: styVals.majorPadding,
+                            overflow: 'hidden',
                         }}
                     >
-                        <Octicons
-                            name='check'
+                        <BloisIconButton
+                            icon={{
+                                type: 'AntDesign',
+                                name: 'close'
+                            }}
+                            style={{width: styVals.iconLargeSize}}
+                            iconStyle={{color: colors.white}}
+                            animType={'opacity'}
+                            onPress={() => this.close()}
+                        />
+                        <BloisPressable
                             style={{
-                                width: styleValues.iconLargerSize,
-                                fontSize: styleValues.iconLargerSize,
-                                color: colors.white,
-                                textAlign: 'center',
-                                textAlignVertical: 'center',
-                                opacity: !this.state.image ? 0 : 1
+                                width: styVals.largeHeight,
+                                height: styVals.largeHeight,
+                                borderWidth: styVals.majorBorderWidth,
+                                borderColor: colors.white,
+                                borderRadius: styVals.largeHeight/2
+                            }}
+                            onPress={async () => {
+                                if (!this.state.image) {
+                                    if (!this.cameraRef || !this.state.ready || !this.state.permsGranted) return;
+                                    const picture = await this.cameraRef.takePictureAsync({
+                                        exif: false,
+                                        imageType: ImageType.jpg,
+                                        quality: 0.8
+                                    })
+                                    this.setState({image: picture})
+                                } else if (this.props.onSave) {
+                                    this.props.onSave(this.state.image)
+                                    this.close()
+                                }
+                            }}
+                        >
+                            <Octicons
+                                name='check'
+                                style={{
+                                    width: styVals.iconLargerSize,
+                                    fontSize: styVals.iconLargerSize,
+                                    color: colors.white,
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center',
+                                    opacity: !this.state.image ? 0 : 1
+                                }}
+                            />
+                        </BloisPressable>
+                        <BloisIconButton
+                            icon={{
+                                type: 'Ionicons',
+                                name: !this.state.image ? 'camera-reverse-outline' : 'camera-outline'
+                            }}
+                            style={{
+                                width: styVals.iconLargerSize
+                            }}
+                            iconStyle={{
+                                color: colors.white
+                            }}
+                            animType={'opacity'}
+                            onPress={() => {
+                                if (!this.state.image) {
+                                    this.setState({useFront: !this.state.useFront})
+                                } else {
+                                    this.setState({image: undefined})
+                                }
                             }}
                         />
-                    </BloisPressable>
-                    <BloisIconButton
-                        name={!this.state.image ? 'camera-reverse-outline' : 'camera-outline'}
-                        type={'Ionicons'}
-                        buttonStyle={{
-                            width: styleValues.iconLargerSize
-                        }}
-                        iconStyle={{
-                            color: colors.white
-                        }}
-                        onPress={() => {
-                            if (!this.state.image) {
-                                this.setState({useFront: !this.state.useFront})
-                            } else {
-                                this.setState({image: undefined})
-                            }
-                        }}
-                    />
-                </BlurView>
+                    </BlurView>
+                </View>
             </CustomModal>
         )
     }

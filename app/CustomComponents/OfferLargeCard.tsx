@@ -3,7 +3,7 @@ import React from "react";
 import { Text, View, ViewStyle } from "react-native";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemInfo, OfferInfo } from "../HelperFiles/DataTypes";
-import { colors, shadowStyles, styleValues, textStyles, defaultStyles } from "../HelperFiles/StyleSheet";
+import { colors, shadowStyles, styVals, textStyles, defaultStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import * as Icons from "@expo/vector-icons"
 import User from "../HelperFiles/User";
@@ -54,17 +54,17 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 width: '100%',
-                                borderTopWidth: styleValues.minorBorderWidth,
+                                borderTopWidth: styVals.minorBorderWidth,
                                 borderColor: colors.grey,
-                                paddingTop: styleValues.mediumPadding,
-                                marginTop: styleValues.mediumPadding
+                                paddingTop: styVals.mediumPadding,
+                                marginTop: styVals.mediumPadding
                             }}
                         >
                             <Text style={{...textStyles.medium, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(basePrice)}`}</Text>
                             <Icons.FontAwesome5
                                 name={'money-bill-wave'}
                                 style={{
-                                    fontSize: styleValues.mediumTextSize,
+                                    fontSize: styVals.mediumTextSize,
                                     color: colors.main
                                 }}
                             />
@@ -94,12 +94,12 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                         type="AntDesign"
                                         buttonStyle={{
                                             position: 'absolute',
-                                            top: styleValues.mediumPadding,
-                                            right: styleValues.mediumPadding,
+                                            top: styVals.mediumPadding,
+                                            right: styVals.mediumPadding,
                                             backgroundColor: colors.invalid,
-                                            height: styleValues.iconSmallSize,
-                                            borderRadius: styleValues.iconMediumSize,
-                                            padding: styleValues.minorPadding
+                                            height: styVals.iconSmallSize,
+                                            borderRadius: styVals.iconMediumSize,
+                                            padding: styVals.minorPadding
                                         }}
                                         iconStyle={{color: colors.white}}
                                         onPress={() => {
@@ -128,13 +128,13 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                             width: '100%',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            marginTop: styleValues.mediumPadding
+                            marginTop: styVals.mediumPadding
                         }}
                     >
                         <Icons.Octicons
                             name={"arrow-switch"}
                             style={{
-                                fontSize: styleValues.largeTextSize,
+                                fontSize: styVals.largeTextSize,
                                 color: colors.darkerGrey,
                                 transform: [{rotate: '90deg'}]
                             }}
@@ -156,17 +156,17 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
                                     width: '100%',
-                                    borderTopWidth: styleValues.minorBorderWidth,
+                                    borderTopWidth: styVals.minorBorderWidth,
                                     borderColor: colors.grey,
-                                    paddingTop: styleValues.mediumPadding,
-                                    marginTop: styleValues.mediumPadding
+                                    paddingTop: styVals.mediumPadding,
+                                    marginTop: styVals.mediumPadding
                                 }}
                             >
                                 <Text style={{...textStyles.medium, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(feePrice)}`}</Text>
                                 <Icons.FontAwesome5
                                     name={'money-bill-wave'}
                                     style={{
-                                        fontSize: styleValues.mediumTextSize,
+                                        fontSize: styVals.mediumTextSize,
                                         color: colors.main
                                     }}
                                 />
@@ -201,12 +201,12 @@ export default class OfferLargeCard extends CustomComponent<Props, State> {
                                         type="AntDesign"
                                         buttonStyle={{
                                             position: 'absolute',
-                                            top: styleValues.mediumPadding,
-                                            right: styleValues.mediumPadding,
+                                            top: styVals.mediumPadding,
+                                            right: styVals.mediumPadding,
                                             backgroundColor: colors.invalid,
-                                            height: styleValues.iconSmallSize,
-                                            borderRadius: styleValues.iconMediumSize,
-                                            padding: styleValues.minorPadding
+                                            height: styVals.iconSmallSize,
+                                            borderRadius: styVals.iconMediumSize,
+                                            padding: styVals.minorPadding
                                         }}
                                         iconStyle={{color: colors.white}}
                                         onPress={() => {

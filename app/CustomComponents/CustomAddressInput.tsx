@@ -1,7 +1,7 @@
 import React from "react";
 import { Animated, GestureResponderEvent, KeyboardAvoidingView, Pressable, PressableProps, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } from "react-native";
 import FastImage, { ImageStyle } from "react-native-fast-image";
-import { colors, defaultStyles, fonts, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, fonts, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import LoadingCover from "./LoadingCover";
 import { DefaultAddressData, AddressData } from "../HelperFiles/DataTypes";
@@ -30,7 +30,7 @@ type State = {
 
 export default class CustomAddressInput extends CustomComponent<Props, State> {
 
-    inputHeight = styleValues.smallHeight;
+    inputHeight = styVals.smallHeight;
 
     constructor(props: Props) {
         super(props)
@@ -74,8 +74,8 @@ export default class CustomAddressInput extends CustomComponent<Props, State> {
                 />
                 <View
                     style={{
-                        height: this.state.isQuery ? styleValues.largestHeight*2 : this.inputHeight + styleValues.mediumPadding*2,
-                        //minHeight: this.inputHeight + styleValues.mediumPadding*3
+                        height: this.state.isQuery ? styVals.largestHeight*2 : this.inputHeight + styVals.mediumPadding*2,
+                        //minHeight: this.inputHeight + styVals.mediumPadding*3
                     }}
                 >
                     <GooglePlacesAutocomplete
@@ -96,7 +96,7 @@ export default class CustomAddressInput extends CustomComponent<Props, State> {
                                 height: this.inputHeight,
                                 ...textStyles.small,
                                 overflow: 'visible',
-                                marginBottom: -styleValues.mediumPadding,
+                                marginBottom: -styVals.mediumPadding,
                                 shadowColor: validAddress || !this.state.validityFlag ? colors.black : colors.invalid,
                                 shadowOpacity: validAddress || !this.state.validityFlag ? shadowStyles.small.shadowOpacity : 1,
                                 elevation: 10,
@@ -105,9 +105,9 @@ export default class CustomAddressInput extends CustomComponent<Props, State> {
                             },
                             listView: {
                                 ...shadowStyles.small,
-                                paddingTop: styleValues.mediumPadding*2,
-                                padding: styleValues.mediumPadding,
-                                marginHorizontal: -styleValues.mediumPadding,
+                                paddingTop: styVals.mediumPadding*2,
+                                padding: styVals.mediumPadding,
+                                marginHorizontal: -styVals.mediumPadding,
                                 elevation: -1,
                                 zIndex: -1,
                             },
@@ -177,7 +177,7 @@ export default class CustomAddressInput extends CustomComponent<Props, State> {
                         ...shadowStyles.small,
                         ...textStyles.small,
                         textAlign: 'left',
-                        marginTop: -styleValues.mediumPadding
+                        marginTop: -styVals.mediumPadding
                     }}    
                     placeholder={"Address Notes"}
                     maxLength={Address.maxValueLength}
@@ -194,7 +194,7 @@ export default class CustomAddressInput extends CustomComponent<Props, State> {
                     text={`Save address`}
                     textStyle={{color: Address.validate(this.state.currentAddress) ? colors.black : colors.lightGrey}}
                     buttonStyle={{
-                        height: styleValues.smallHeight
+                        height: styVals.smallHeight
                     }}
                     showLoading={true}
                     onPress={async () => {

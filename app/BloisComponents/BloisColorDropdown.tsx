@@ -6,7 +6,7 @@ import {
     fonts,
     screenWidth,
     shadowStyles,
-    styleValues,
+    styVals,
     textStyles,
 } from "../HelperFiles/StyleSheet";
 import CustomComponent from "../CustomComponents/CustomComponent";
@@ -46,7 +46,7 @@ export default class BloisColorDropdown extends CustomComponent<
     animationTime = 300;
     animatedStyles: { [type: string]: Animated.AnimatedProps<ViewStyle> };
 
-    maxDropdownHeight = (screenWidth - 2 * styleValues.mediumPadding) * 0.4;
+    maxDropdownHeight = (screenWidth - 2 * styVals.mediumPadding) * 0.4;
 
     dropdownHeight = new Animated.Value(0);
     dropdownOpacity = new Animated.Value(0);
@@ -89,8 +89,8 @@ export default class BloisColorDropdown extends CustomComponent<
                 }),
             },
             outline: {
-                borderWidth: styleValues.minorBorderWidth,
-                borderRadius: styleValues.mediumPadding,
+                borderWidth: styVals.minorBorderWidth,
+                borderRadius: styVals.mediumPadding,
                 borderColor: this.validity.interpolate({
                     inputRange: [0, 1],
                     outputRange: [colors.invalid, colors.transparent],
@@ -251,19 +251,19 @@ export default class BloisColorDropdown extends CustomComponent<
                                                 borderWidth: this.state.selections.includes(
                                                     color
                                                 )
-                                                    ? styleValues.mediumBorderWidth
+                                                    ? styVals.mediumBorderWidth
                                                     : undefined,
                                                 backgroundColor: colors.transparent,
-                                                borderRadius: styleValues.minorPadding*1.5,
-                                                padding: styleValues.minorPadding / 2,
+                                                borderRadius: styVals.minorPadding*1.5,
+                                                padding: styVals.minorPadding / 2,
                                             }}
                                         >
                                             <View
                                                 style={{
-                                                    height: styleValues.smallHeight/2,
+                                                    height: styVals.smallHeight/2,
                                                     aspectRatio: 1,
                                                     backgroundColor: ItemColorValues[color],
-                                                    borderRadius: styleValues.minorPadding,
+                                                    borderRadius: styVals.minorPadding,
                                                 }}
                                             ></View>
                                         </View>
@@ -301,7 +301,7 @@ export default class BloisColorDropdown extends CustomComponent<
                         text={'Color'}
                         style={{
                             ...defaultStyles.roundedBox,
-                            height: styleValues.smallHeight,
+                            height: styVals.smallHeight,
                             justifyContent: 'space-between',
                             ...this.animatedStyles[this.props.indicatorType || 'shadowSmall'],
                             ...this.props.style
@@ -327,7 +327,7 @@ export default class BloisColorDropdown extends CustomComponent<
                             >
                                 <Feather
                                     name={'chevron-down'}
-                                    style={{fontSize: styleValues.largerTextSize, color: colors.grey}}
+                                    style={{fontSize: styVals.largerTextSize, color: colors.grey}}
                                     
                                 />
                             </Animated.View>
@@ -343,18 +343,19 @@ export default class BloisColorDropdown extends CustomComponent<
                         <View style={{
                             flex: 1,
                             flexDirection: 'row',
-                            paddingHorizontal: styleValues.mediumPadding,
-                            gap: styleValues.mediumPadding
+                            paddingHorizontal: styVals.mediumPadding,
+                            gap: styVals.mediumPadding
                         }}>
                             {this.state.selections.map((color) => (
                                 <View
                                     style={{
                                         ...shadowStyles.small,
-                                        height: styleValues.smallHeight/2,
+                                        height: styVals.smallHeight/2,
                                         aspectRatio: 1,
                                         backgroundColor: ItemColorValues[color],
-                                        borderRadius: styleValues.minorPadding,
+                                        borderRadius: styVals.minorPadding,
                                     }}
+                                    key={color}
                                 ></View>
                             ))}
                         </View>

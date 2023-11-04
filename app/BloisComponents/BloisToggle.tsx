@@ -14,7 +14,7 @@ import {
     defaultStyles,
     screenWidth,
     shadowStyles,
-    styleValues,
+    styVals,
     textStyles,
 } from "../HelperFiles/StyleSheet";
 import CustomComponent from "../CustomComponents/CustomComponent";
@@ -66,8 +66,8 @@ export default class BloisToggle extends CustomComponent<
                     }}
                     animType={"opacity"}
                     style={{
-                        width: styleValues.iconMediumSize,
-                        marginRight: styleValues.minorPadding,
+                        width: styVals.iconMediumSize,
+                        marginRight: styVals.minorPadding,
                     }}
                     onPress={() => this.setState({ infoActive: true })}
                 />
@@ -79,7 +79,7 @@ export default class BloisToggle extends CustomComponent<
         let switchScale = 0.75;
         if (this.state.switchHeight > 0) {
             switchScale =
-                (styleValues.smallHeight - styleValues.minorPadding * 2.5) /
+                (styVals.smallHeight - styVals.minorPadding * 2.5) /
                 this.state.switchHeight;
         }
         return (
@@ -89,7 +89,7 @@ export default class BloisToggle extends CustomComponent<
                     ...(this.props.shadow !== false
                         ? shadowStyles.small
                         : undefined),
-                    height: styleValues.smallHeight,
+                    height: styVals.smallHeight,
                     flexDirection: "row",
                     justifyContent: "space-between",
                     ...this.props.style,
@@ -115,7 +115,7 @@ export default class BloisToggle extends CustomComponent<
                     {...this.props.switchProps}
                     style={{
                         transform: [{ scale: switchScale }],
-                        marginRight: -styleValues.minorPadding,
+                        marginRight: -styVals.minorPadding,
                         ...this.props.switchStyle,
                     }}
                     value={this.state.switchValue}
@@ -134,7 +134,7 @@ export default class BloisToggle extends CustomComponent<
                         visible={this.state.infoActive}
                         onClose={() => this.setState({ infoActive: false })}
                     >
-                        <View style={{...defaultStyles.roundedBox, ...shadowStyles.small, paddingBottom: styleValues.mediumPadding*2}}>
+                        <View style={{...defaultStyles.roundedBox, ...shadowStyles.small, paddingBottom: styVals.mediumPadding*2}}>
                             <Text style={textStyles.largeHeader}>
                                 {this.props.info.header}
                             </Text>

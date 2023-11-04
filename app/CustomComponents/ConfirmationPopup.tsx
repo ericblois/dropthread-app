@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-import { colors, defaultStyles, fonts, icons, screenHeight, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, fonts, icons, screenHeight, screenWidth, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImageButton from "./CustomImageButton";
 import TextButton from "./TextButton";
@@ -40,8 +40,8 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                 text={this.props.confirmText || 'Confirm'}
                 buttonStyle={{
                     flex: 1,
-                    height: styleValues.smallHeight,
-                    padding: styleValues.minorPadding,
+                    height: styVals.smallHeight,
+                    padding: styVals.minorPadding,
                     ...this.props.confirmButtonStyle
                 }}
                 textStyle={{
@@ -64,8 +64,8 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                 }}
                 buttonStyle={{
                     flex: 1,
-                    height: styleValues.smallHeight,
-                    padding: styleValues.minorPadding,
+                    height: styVals.smallHeight,
+                    padding: styVals.minorPadding,
                     ...this.props.denyButtonStyle
                 }}
                 onPress={async () => await this.props.onDeny?.()}
@@ -83,7 +83,7 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
             >
                 <View style={{
                     ...defaultStyles.fill,
-                    paddingHorizontal: styleValues.mediumPadding,
+                    paddingHorizontal: styVals.mediumPadding,
                     alignItems: 'center',
                     justifyContent: 'center'
                 }}
@@ -110,7 +110,7 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                             </Text>
                         : undefined}
                         {/* Info / description */}
-                        <Text style={{...textStyles.medium, textAlign: 'left', marginBottom: styleValues.mediumPadding}}>
+                        <Text style={{...textStyles.medium, textAlign: 'left', marginBottom: styVals.mediumPadding}}>
                             {this.props.infoText}
                         </Text>
                         {/* Buttons */}
@@ -123,7 +123,7 @@ export default class ConfirmationPopup extends CustomComponent<Props, State> {
                             }}
                         >
                             {this.renderDenyButton()}
-                            <View style={{width: styleValues.mediumPadding}}/>
+                            <View style={{width: styVals.mediumPadding}}/>
                             {this.renderConfirmButton()}
                         </View>
                     </View>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         width: screenWidth,
         height: screenHeight,
-        padding: styleValues.mediumPadding,
+        padding: styVals.mediumPadding,
         backgroundColor: "rgba(0,0,0,0.5)",
     },
     outsideTouchable: {
@@ -153,15 +153,15 @@ const styles = StyleSheet.create({
 
     },
     button: {
-        width: styleValues.iconSmallSize,
-        height: styleValues.iconSmallSize,
+        width: styVals.iconSmallSize,
+        height: styVals.iconSmallSize,
         top: 0,
         right: 0
     },
     exitButton: {
         position: "absolute",
-        width: styleValues.iconSmallSize,
-        height: styleValues.iconSmallSize,
+        width: styVals.iconSmallSize,
+        height: styVals.iconSmallSize,
         top: 0,
         right: 0
     }

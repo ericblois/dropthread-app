@@ -1,5 +1,5 @@
 import { ActivityIndicator, Animated, GestureResponderEvent, Pressable, PressableProps, Text, View, ViewStyle } from "react-native";
-import { colors, shadowStyles, styleValues, defaultStyles, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, shadowStyles, styVals, defaultStyles, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "../CustomComponents/CustomComponent";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -88,8 +88,8 @@ export default class BloisPressable extends CustomComponent<BloisPressableProps,
             }]
         },
         outline: {
-            borderWidth: styleValues.mediumBorderWidth,
-            borderRadius: styleValues.mediumPadding,
+            borderWidth: styVals.mediumBorderWidth,
+            borderRadius: styVals.mediumPadding,
             borderColor: this.progress.interpolate({
                 inputRange: [0, 1],
                 outputRange: [colors.transparent, colors.main]
@@ -132,8 +132,8 @@ export default class BloisPressable extends CustomComponent<BloisPressableProps,
                         position: "absolute",
                         width: 0,
                         height: 0,
-                        top: posY === "below" ? this.pressableHeight + styleValues.minorPadding : undefined,
-                        bottom: posY === "above" ? this.pressableHeight + styleValues.minorPadding : undefined,
+                        top: posY === "below" ? this.pressableHeight + styVals.minorPadding : undefined,
+                        bottom: posY === "above" ? this.pressableHeight + styVals.minorPadding : undefined,
                         left: posX === "right" ? 0 : undefined,
                         right: posX === "left" ? 0 : undefined,
                         alignSelf: posX === "center" ? "center" : undefined,

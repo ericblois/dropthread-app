@@ -1,16 +1,10 @@
-import React from "react";
-import { Animated, Image, ImageStyle, Modal, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
-import FastImage from "react-native-fast-image";
-import { accessCamera, accessPhotos, getCompressedImage } from "../HelperFiles/ClientFunctions";
-import { colors, defaultStyles, icons, screenHeight, screenWidth, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
+import { Animated, Image, ImageStyle, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
+import { getCompressedImage } from "../HelperFiles/ClientFunctions";
+import { colors, defaultStyles, screenWidth, shadowStyles, styVals } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
-import GradientView from "./GradientView";
-import CustomImageButton from "./CustomImageButton";
 import CustomImage from "./CustomImage";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
-import { AutoFocus, Camera, FlashMode } from 'expo-camera';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CustomModal from "./CustomModal";
 import CustomCameraModal from "./CustomCameraModal";
 import Item from "../HelperFiles/Item";
 
@@ -25,10 +19,9 @@ type Props = {
     imageStyle?: ImageStyle,
     minRatio?: number,
     maxRatio?: number,
-    fadeColor?: string,
     maxNum?: number,
     showValidSelection: boolean,
-    ignoreInitialValidity: boolean,
+    showInitialValidity: boolean,
     onChange?: (uris: {
         all: string[],
         new: string[],
@@ -76,7 +69,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
         }
         this.loadCount = 0
         this.ratioCount = 0
-        this.progress = new Animated.Value(props.ignoreInitialValidity !== false ? 1 : (isValid ? 1 : 0))
+        this.progress = new Animated.Value(props.showInitialValidity !== true ? 1 : (isValid ? 1 : 0))
         this.animationTime = 300
     }
     componentDidMount() {
@@ -87,11 +80,12 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
             if (this.props.onImagesLoaded) {
                 this.props.onImagesLoaded()
             }
+        } else {
+            this.getImageRatios()
         }
-        this.getImageRatios()
         super.componentDidMount()
     }
-    animateValidate = () => {
+    animValid = () => {
         Animated.timing(this.progress, {
             toValue: 1,
             duration: this.animationTime,
@@ -99,13 +93,14 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
         }).start()
     }
 
-    animateInvalidate = () => {
+    animInvalid = () => {
         Animated.timing(this.progress, {
             toValue: 0,
             duration: this.animationTime,
             useNativeDriver: false
         }).start()
     }
+
     // On mount, get the aspect ratio of each image in the slider
     getImageRatios() {
         this.props.uris.forEach((uri, index) => {
@@ -156,7 +151,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
         } else if (this.props.minRatio && ratio < this.props.minRatio) {
             ratio = this.props.minRatio
         }
-        let galleryHeight = ((this.state.galleryWidth - 2*styleValues.mediumPadding) / ratio) + styleValues.mediumPadding*2
+        let galleryHeight = ((this.state.galleryWidth - 2*styVals.mediumPadding) / ratio) + styVals.mediumPadding*2
         this.setState({galleryHeight: galleryHeight})
     }
     // Append an image to the end of the selector
@@ -182,7 +177,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     })
                 }
                 if (this.props.showValidSelection) {
-                    this.animateValidate()
+                    this.animValid()
                 }
             })
         })
@@ -222,7 +217,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                 })
             }
             if (this.props.showValidSelection && this.state.images.length === 0) {
-                this.animateInvalidate()
+                this.animInvalid()
             }
         })
     }
@@ -232,20 +227,19 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
             let ratio = item.ratio
             // Ensure that first image fills gallery
             if (index === 0) {
-                ratio = (this.state.galleryWidth - styleValues.mediumPadding*2) / (this.state.galleryHeight - styleValues.mediumPadding*2)
+                ratio = (this.state.galleryWidth - styVals.mediumPadding*2) / (this.state.galleryHeight - styVals.mediumPadding*2)
             }
             return (
                 <CustomImage
                     source={{uri: item.uri, priority: index === 0 ? 'high' : 'normal'}}
                     style={{
                         ...shadowStyles.small,
-                        width: ratio * (this.state.galleryHeight - styleValues.mediumPadding*2),
-                        height: this.state.galleryHeight - styleValues.mediumPadding*2,
-                        borderRadius: styleValues.mediumPadding,
-                        marginHorizontal: styleValues.minorPadding,
+                        width: ratio * (this.state.galleryHeight - styVals.mediumPadding*2),
+                        height: this.state.galleryHeight - styVals.mediumPadding*2,
+                        borderRadius: styVals.mediumPadding,
                     }}
                     imageStyle={{
-                        borderRadius: styleValues.mediumPadding,
+                        borderRadius: styVals.mediumPadding,
                     }}
                     onLoad={() => {
                         if (this.props.onImagesLoaded) {
@@ -259,9 +253,9 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     imageProps={{
                         onError: () => {
                             // Remove this uri
-                            const stateUpdate = this.state.images
-                            stateUpdate[index] = {uri: "", ratio: this.state.images[index].ratio}
-                            this.setState({images: stateUpdate})
+                            const newImages = this.state.images
+                            newImages[index] = {uri: "", ratio: this.state.images[index].ratio}
+                            this.setState({images: newImages})
                             // Send load update anyway
                             if (this.props.onImagesLoaded) {
                                 this.loadCount += 1
@@ -282,14 +276,9 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                         }}
                         style={{
                             position: "absolute",
-                            width: styleValues.iconMediumSize,
-                            height: styleValues.iconMediumSize,
-                            margin: styleValues.mediumPadding,
-                            top: 0,
-                            right: 0,
-                        }}
-                        iconStyle={{
-                            color: colors.white
+                            width: styVals.iconLargeSize,
+                            top: styVals.mediumPadding,
+                            right: styVals.mediumPadding
                         }}
                         onPress={() => {
                             this.removeImage(item.uri)
@@ -297,15 +286,42 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                         tooltip={{
                             text: "Remove image",
                             posX: "left",
-                            posY: "above"
+                            posY: "below"
                         }}
                     />
                 </CustomImage>
             )
-        } else {
-            return (<View key={index.toString()}/>)
         }
     }
+
+    renderImageSlider() {
+        return (
+            <ScrollView
+                ref={(scrollView) => {this.scrollViewRef = scrollView}}
+                style={{...defaultStyles.fill, overflow: 'hidden'}}
+                contentContainerStyle={{
+                    padding: styVals.mediumPadding,
+                    gap: styVals.mediumPadding,
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                horizontal={true}
+                /* THIS SHOULD BE SET TO > 1 */
+                scrollEnabled={this.state.images.length > 1}
+                onContentSizeChange={(width) => {
+                    if (this.lastContentWidth < width) {
+                        this.scrollViewRef!.scrollToEnd()
+                    }
+                    this.lastContentWidth = width
+                }}
+            >
+                {this.state.images.map((item, index) => this.renderImage(item, index))}
+            </ScrollView>
+        )
+    }
+
     renderPlaceholder() {
         return (
             /* Placeholder */
@@ -320,11 +336,10 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                     inputRange: [0, 1],
                     outputRange: [colors.invalid, colors.black]
                 }),
-                width: screenWidth - 2*styleValues.mediumPadding,
-                height: styleValues.largestHeight*2,
-                borderRadius: styleValues.mediumPadding,
+                width: '100%',
+                height: styVals.largestHeight*2,
+                borderRadius: styVals.mediumPadding,
                 backgroundColor: colors.background,
-                margin: styleValues.mediumPadding,
                 alignItems: "center",
                 justifyContent: "center"
             }}
@@ -332,7 +347,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
             <MaterialCommunityIcons
                 name={'image-outline'}
                 style={{
-                    fontSize: styleValues.largestTextSize,
+                    fontSize: styVals.largestTextSize,
                     color: colors.grey
                 }}
             />
@@ -349,11 +364,11 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                 }}
                 style={{
                     position: 'absolute',
-                    bottom: styleValues.mediumPadding*2,
-                    right: styleValues.mediumPadding*2,
-                    width: styleValues.iconMediumSize + styleValues.mediumPadding*2,
-                    padding: styleValues.mediumPadding,
-                    borderRadius: styleValues.mediumPadding,
+                    bottom: styVals.mediumPadding,
+                    right: styVals.mediumPadding*2,
+                    width: styVals.iconLargestSize,
+                    padding: styVals.mediumPadding,
+                    borderRadius: styVals.mediumPadding,
                     backgroundColor: colors.background,
                 }}
                 pressableProps={{disabled: this.state.images.length >= this.state.maxNum}}
@@ -385,20 +400,20 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
 
     render() {
         // Check validity of input
-        if (this.props.showValidSelection && this.props.ignoreInitialValidity === false) {
+        if (this.props.showValidSelection && this.props.showInitialValidity === true) {
             if (this.state.images.length > 0) {
-                this.animateValidate()
+                this.animValid()
             } else {
-                this.animateInvalidate()
+                this.animInvalid()
             }
         }
         return (
             <View
                 style={{
-                    ...styles.gallery,
                     width: "100%",
                     height: this.state.galleryHeight,
                     overflow: 'visible',
+                    padding: styVals.mediumPadding,
                     ...this.props.style
                 }}
                 onLayout={(e) => {
@@ -412,30 +427,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
                 }}
             >
                 {this.state.images.length > 0 ?
-                    /* Image scroller */
-                    <ScrollView
-                        ref={(scrollView) => {this.scrollViewRef = scrollView}}
-                        style={{...defaultStyles.fill, overflow: 'hidden'}}
-                        contentContainerStyle={{
-                            paddingVertical: styleValues.mediumPadding,
-                            paddingHorizontal: styleValues.mediumPadding/2,
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                        showsHorizontalScrollIndicator={false}
-                        showsVerticalScrollIndicator={false}
-                        horizontal={true}
-                        /* THIS SHOULD BE SET TO > 1 */
-                        scrollEnabled={this.state.images.length > 1}
-                        onContentSizeChange={(width) => {
-                            if (this.lastContentWidth < width) {
-                                this.scrollViewRef!.scrollToEnd()
-                            }
-                            this.lastContentWidth = width
-                        }}
-                    >
-                        {this.state.images.map((item, index) => this.renderImage(item, index))}
-                    </ScrollView> : 
+                    this.renderImageSlider() : 
                     this.renderPlaceholder()
                 }
             {this.renderAddButton()}
@@ -444,18 +436,3 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    gallery: {
-        width: "100%",
-        overflow: "hidden"
-    },
-    addImageButton: {
-        width: styleValues.iconLargeSize,
-        height: styleValues.iconLargeSize,
-        position: "absolute",
-        margin: styleValues.mediumPadding,
-        bottom: styleValues.mediumPadding,
-        left: styleValues.mediumPadding,
-    },
-});

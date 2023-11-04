@@ -17,7 +17,7 @@ import {
     colors,
     defaultStyles,
     fonts,
-    styleValues,
+    styVals,
     textStyles,
 } from "../HelperFiles/StyleSheet";
 import CustomComponent from "../CustomComponents/CustomComponent";
@@ -81,8 +81,8 @@ export default class TextButton extends Component<Props, State> {
                         : undefined),
                     ...defaultStyles.row,
                     width: undefined,
-                    paddingVertical: styleValues.minorPadding,
-                    minHeight: styleValues.smallHeight,
+                    paddingVertical: styVals.minorPadding,
+                    minHeight: styVals.smallHeight,
                     alignContent: "center",
                     justifyContent: "center",
                     ...this.props.style,
@@ -124,8 +124,8 @@ const styles = StyleSheet.create({
     },
     iconStyle: {
         aspectRatio: 1,
-        width: styleValues.iconSmallSize,
-        height: styleValues.iconSmallSize,
+        width: styVals.iconSmallSize,
+        height: styVals.iconSmallSize,
         tintColor: colors.grey,
         alignSelf: "center",
         flexWrap: "wrap",

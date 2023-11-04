@@ -3,7 +3,7 @@ import React from "react";
 import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData } from "../HelperFiles/DataTypes";
-import { colors, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, screenWidth, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImage from "./CustomImage";
 import LoadingCover from "./LoadingCover";
@@ -90,19 +90,19 @@ export default class SearchResultItem extends CustomComponent<Props, State> {
 const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: "#fff",
-        borderRadius: styleValues.mediumPadding,
+        borderRadius: styVals.mediumPadding,
         height: screenWidth * 0.3,
-        width: screenWidth - styleValues.mediumPadding*2,
-        marginBottom: styleValues.mediumPadding,
-        padding: styleValues.mediumPadding,
+        width: screenWidth - styVals.mediumPadding*2,
+        marginBottom: styVals.mediumPadding,
+        padding: styVals.mediumPadding,
         flexDirection: "row",
         alignItems: "center",
     },
     productImage: {
         height: "100%",
         aspectRatio: 1,
-        borderRadius: styleValues.mediumPadding,
-        marginRight: styleValues.mediumPadding
+        borderRadius: styVals.mediumPadding,
+        marginRight: styVals.mediumPadding
     },
     productInfoArea: {
         height: "100%",

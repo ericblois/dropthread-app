@@ -8,7 +8,7 @@ import { ItemLargeCard, LoadingCover, BloisMenuBar, BloisPage } from "../HelperF
 import { ItemData, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
-import { icons, styleValues } from "../HelperFiles/StyleSheet";
+import { icons, styVals } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type ItemSwapsNavigationProp = CompositeNavigationProp<
@@ -82,7 +82,7 @@ export default class ItemSwapsPage extends CustomComponent<ItemSwapsProps, State
                             />
                         )
                     }}
-                    itemWidth={screenWidth - 2*styleValues.mediumPadding}
+                    itemWidth={screenWidth - 2*styVals.mediumPadding}
                     sliderWidth={screenWidth}
                 />*/}
                 {/*<ScrollContainer

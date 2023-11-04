@@ -5,7 +5,7 @@ import FastImage from "react-native-fast-image";
 import BloisPressable from "../BloisComponents/BloisPressable";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo } from "../HelperFiles/DataTypes";
-import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth } from "../HelperFiles/StyleSheet";
+import { colors, shadowStyles, styVals, textStyles, screenUnit, screenWidth } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImage from "./CustomImage";
 import LoadingCover from "./LoadingCover";
@@ -51,10 +51,10 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
                         <Icons.MaterialCommunityIcons
                             name="fire"
                             style={{
-                                fontSize: styleValues.iconSmallSize,
+                                fontSize: styVals.iconSmallSize,
                                 color: colors.flame,
-                                marginLeft: -styleValues.minorPadding,
-                                height: styleValues.largerTextSize
+                                marginLeft: -styVals.minorPadding,
+                                height: styVals.largerTextSize
                             }}
                         /> : undefined}
                     {/* Name */}
@@ -126,20 +126,20 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
 const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: colors.background,
-        borderRadius: styleValues.mediumPadding,
+        borderRadius: styVals.mediumPadding,
         height: screenUnit * 6,
-        width: screenWidth - styleValues.mediumPadding*2,
-        marginBottom: styleValues.mediumPadding,
-        padding: styleValues.minorPadding,
-        paddingLeft: styleValues.mediumPadding,
+        width: screenWidth - styVals.mediumPadding*2,
+        marginBottom: styVals.mediumPadding,
+        padding: styVals.minorPadding,
+        paddingLeft: styVals.mediumPadding,
         flexDirection: "row",
         alignItems: "center"
     },
     productImage: {
         height: "100%",
         aspectRatio: 1,
-        borderRadius: styleValues.minorPadding,
-        marginLeft: styleValues.mediumPadding
+        borderRadius: styVals.minorPadding,
+        marginLeft: styVals.mediumPadding
     },
     productSubInfoArea: {
         width: "100%",

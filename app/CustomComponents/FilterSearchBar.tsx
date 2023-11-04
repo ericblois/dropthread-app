@@ -6,7 +6,7 @@ import { Animated, Pressable, StyleSheet, Text, View, ViewStyle } from "react-na
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import { simpleCurrencyFormatter } from "../HelperFiles/Constants";
 import { countriesList, DefaultItemFilter, ItemCategories, ItemConditions, ItemFilter, ItemGenders } from "../HelperFiles/DataTypes";
-import { bottomInset, colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues, textStyles, topInset } from "../HelperFiles/StyleSheet";
+import { bottomInset, colors, defaultStyles, icons, screenWidth, shadowStyles, styVals, textStyles, topInset } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImageButton from "./CustomImageButton";
 import ScrollContainer from "./ScrollContainer";
@@ -56,7 +56,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
     searchBarFlex = new Animated.Value(0)
     searchBarOpacity = new Animated.Value(0)
     filterOpacity = new Animated.Value(0)
-    contentTopPos = new Animated.Value(topInset + styleValues.smallHeight + styleValues.mediumPadding)
+    contentTopPos = new Animated.Value(topInset + styVals.smallHeight + styVals.mediumPadding)
 
     showSearchBar() {
       this.setState({showSearchBar: true}, () => {
@@ -73,7 +73,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
             }),
             Animated.sequence([
               Animated.timing(this.contentTopPos, {
-                toValue: topInset + styleValues.smallHeight*2 + styleValues.mediumPadding*2,
+                toValue: topInset + styVals.smallHeight*2 + styVals.mediumPadding*2,
                 duration: this.searchFadeTime/2,
                 useNativeDriver: false
               }),
@@ -122,7 +122,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                     useNativeDriver: false
                   }),
                   Animated.timing(this.contentTopPos, {
-                    toValue: topInset + styleValues.smallHeight + styleValues.mediumPadding,
+                    toValue: topInset + styVals.smallHeight + styVals.mediumPadding,
                     duration: this.searchFadeTime/2,
                     useNativeDriver: false
                   })
@@ -213,9 +213,9 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                 text={`${text}`}
                 appearance={this.state.filters[filterKey] !== undefined ? "color" : this.state.dropdownType === filterKey ? "light" : "no-color"}
                 buttonStyle={{
-                    height: styleValues.smallHeight,
+                    height: styVals.smallHeight,
                     width: undefined,
-                    marginRight: filterKey === "country" ? 0 : styleValues.mediumPadding,
+                    marginRight: filterKey === "country" ? 0 : styVals.mediumPadding,
                     marginBottom: undefined
                 }}
                 textStyle={textStyles.medium}
@@ -278,7 +278,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                             <TextButton
                                 text={capitalizeWords(label.replaceAll('_', ' '))}
                                 appearance={buttonState ? "color" : "no-color"}
-                                buttonStyle={{height: styleValues.smallHeight}}
+                                buttonStyle={{height: styVals.smallHeight}}
                                 textStyle={textStyles.medium}
                                 onPress={() => {
                                     let newFilters = {} as ItemFilter
@@ -380,26 +380,26 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                     <MultiSlider
                         containerStyle={{
                             width: "100%",
-                            //marginTop: styleValues.smallHeight,
+                            //marginTop: styVals.smallHeight,
                         }}
                         trackStyle={{
                             ...shadowStyles.small,
-                            height: styleValues.minorPadding,
-                            borderRadius: styleValues.minorPadding/2,
+                            height: styVals.minorPadding,
+                            borderRadius: styVals.minorPadding/2,
                         }}
                         markerStyle={{
                             ...shadowStyles.small,
                             backgroundColor: colors.white,
                             borderColor: colors.main,
-                            borderWidth: styleValues.mediumBorderWidth,
-                            borderRadius: styleValues.mediumPadding,
-                            height: styleValues.iconMediumSize,
-                            width: styleValues.iconMediumSize,
+                            borderWidth: styVals.mediumBorderWidth,
+                            borderRadius: styVals.mediumPadding,
+                            height: styVals.iconMediumSize,
+                            width: styVals.iconMediumSize,
                             alignSelf: "center"
                         }}
                         selectedStyle={{backgroundColor: colors.main}}
                         unselectedStyle={{backgroundColor: colors.white}}
-                        sliderLength={(screenWidth - styleValues.mediumPadding*4)}
+                        sliderLength={(screenWidth - styVals.mediumPadding*4)}
                         snapped={true}
                         values={values}
                         enabledOne={true}
@@ -413,8 +413,8 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                                     style={{
                                         alignSelf: "center",
                                         backgroundColor: colors.white,
-                                        borderRadius: styleValues.mediumPadding,
-                                        padding: styleValues.minorPadding
+                                        borderRadius: styVals.mediumPadding,
+                                        padding: styVals.minorPadding
                                     }}
                                 >
                                     <Text
@@ -487,10 +487,10 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                 <ScrollContainer
                     containerStyle={{
                         width: "100%",
-                        height: styleValues.smallHeight + styleValues.mediumPadding*2,
+                        height: styVals.smallHeight + styVals.mediumPadding*2,
                         flex: undefined,
                     }}
-                    contentContainerStyle={{height: styleValues.smallHeight + styleValues.mediumPadding*2}}
+                    contentContainerStyle={{height: styVals.smallHeight + styVals.mediumPadding*2}}
                     horizontal={true}
                 >
                     <Animated.View
@@ -543,7 +543,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                 {/* Search button and text input */}
                 <View style={{
                     width: "100%",
-                    paddingHorizontal: styleValues.mediumPadding,
+                    paddingHorizontal: styVals.mediumPadding,
                     alignSelf: "center",
                     flexDirection: "row",
                     alignItems: "center"
@@ -551,9 +551,9 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                     <CustomImageButton
                     iconSource={icons.search}
                     buttonStyle={{
-                        height: styleValues.iconLargeSize,
-                        width: styleValues.iconLargeSize,
-                        marginRight: styleValues.mediumPadding,
+                        height: styVals.iconLargeSize,
+                        width: styVals.iconLargeSize,
+                        marginRight: styVals.mediumPadding,
                     }}
                     iconStyle={{tintColor: colors.darkGrey}}
                     onPress={() => {
@@ -637,12 +637,12 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
 const styles = StyleSheet.create({
     elementContainer: {
         flexDirection: "column",
-        paddingTop: topInset + styleValues.mediumPadding,
+        paddingTop: topInset + styVals.mediumPadding,
         width: "100%"
     },
     dropdownBackground: {
         ...shadowStyles.small,
-        width: screenWidth - 2*styleValues.mediumPadding,
+        width: screenWidth - 2*styVals.mediumPadding,
         alignSelf: "center",
         alignItems: "center",
     }

@@ -8,7 +8,7 @@ import {
     View,
     ViewStyle,
 } from "react-native";
-import { colors, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, styVals, textStyles } from "../HelperFiles/StyleSheet";
 
 type BloisScrollableProps = {
     style?: ViewStyle;

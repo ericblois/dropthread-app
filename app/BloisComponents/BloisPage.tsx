@@ -1,6 +1,6 @@
 import React from "react"
 import { Keyboard, Text, TouchableWithoutFeedback, View, ViewStyle } from "react-native"
-import { defaultStyles, styleValues, textStyles, topInset } from "../HelperFiles/StyleSheet"
+import { defaultStyles, styVals, textStyles, topInset } from "../HelperFiles/StyleSheet"
 import CustomComponent from "../CustomComponents/CustomComponent"
 
 type Props = {

@@ -5,7 +5,7 @@ import FastImage from "react-native-fast-image";
 import BloisPressable from "../BloisComponents/BloisPressable";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo } from "../HelperFiles/DataTypes";
-import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth, defaultStyles } from "../HelperFiles/StyleSheet";
+import { colors, shadowStyles, styVals, textStyles, screenUnit, screenWidth, defaultStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImage from "./CustomImage";
 import LoadingCover from "./LoadingCover";
@@ -41,7 +41,7 @@ export default class CustomModal extends CustomComponent<Props, State> {
             >
                 <View style={{
                     ...defaultStyles.fill,
-                    paddingHorizontal: styleValues.mediumPadding,
+                    paddingHorizontal: styVals.mediumPadding,
                     alignItems: 'center',
                     justifyContent: 'center'
                 }}
@@ -69,9 +69,9 @@ export default class CustomModal extends CustomComponent<Props, State> {
                                 name: 'close'
                             }}
                             style={{
-                                height: styleValues.iconLargestSize,
-                                width: styleValues.iconLargestSize,
-                                marginTop: styleValues.mediumPadding
+                                height: styVals.iconLargestSize,
+                                width: styVals.iconLargestSize,
+                                marginTop: styVals.mediumPadding
                             }}
                             onPress={(e) => {
                                 if (this.props.onClose) {

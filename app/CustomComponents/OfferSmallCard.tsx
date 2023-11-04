@@ -5,7 +5,7 @@ import FastImage from "react-native-fast-image";
 import BloisPressable from "../BloisComponents/BloisPressable";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo, OfferData, OfferInfo } from "../HelperFiles/DataTypes";
-import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth } from "../HelperFiles/StyleSheet";
+import { colors, shadowStyles, styVals, textStyles, screenUnit, screenWidth } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImage from "./CustomImage";
 import LoadingCover from "./LoadingCover";
@@ -69,12 +69,12 @@ export default class OfferSmallCard extends CustomComponent<Props, State> {
                     <Icons.FontAwesome5
                         name={'money-bill-wave'}
                         style={{
-                            fontSize: styleValues.mediumTextSize,
+                            fontSize: styVals.mediumTextSize,
                             color: this.state.willPayPrice > 0 ? colors.lighterGrey : colors.main 
                         }}
                     />
                     {/* Price */}
-                    <Text style={{...textStyles.medium, textAlign: 'left', marginLeft: styleValues.mediumPadding, flex: 1}}
+                    <Text style={{...textStyles.medium, textAlign: 'left', marginLeft: styVals.mediumPadding, flex: 1}}
                     >{`${this.state.willPayPrice > 0 ? 'You pay: ' : 'You receive: '}${currencyFormatter.format(this.state.willPayPrice > 0 ? this.state.willPayPrice : this.state.willReceivePrice)}`}</Text>
                     {/* View offer text */}
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -82,7 +82,7 @@ export default class OfferSmallCard extends CustomComponent<Props, State> {
                         <Icons.Feather
                             name={'chevron-right'}
                             style={{
-                                fontSize: styleValues.largerTextSize,
+                                fontSize: styVals.largerTextSize,
                                 color: colors.grey
                             }}
                         />
@@ -106,20 +106,20 @@ export default class OfferSmallCard extends CustomComponent<Props, State> {
 const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: colors.background,
-        borderRadius: styleValues.mediumPadding,
+        borderRadius: styVals.mediumPadding,
         height: screenUnit * 5,
-        width: screenWidth - styleValues.mediumPadding*2,
-        marginBottom: styleValues.mediumPadding,
-        padding: styleValues.minorPadding,
-        paddingLeft: styleValues.mediumPadding,
+        width: screenWidth - styVals.mediumPadding*2,
+        marginBottom: styVals.mediumPadding,
+        padding: styVals.minorPadding,
+        paddingLeft: styVals.mediumPadding,
         flexDirection: "row",
         alignItems: "center"
     },
     productImage: {
         height: "100%",
         aspectRatio: 1,
-        borderRadius: styleValues.minorPadding,
-        marginLeft: styleValues.mediumPadding
+        borderRadius: styVals.minorPadding,
+        marginLeft: styVals.mediumPadding
     },
     productSubInfoArea: {
         width: "100%",

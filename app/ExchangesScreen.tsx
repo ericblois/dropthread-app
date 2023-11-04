@@ -6,7 +6,7 @@ import CustomComponent from "./CustomComponents/CustomComponent";
 import ViewLikesPage from "./LikesPages/ViewLikesPage";
 import { ExchangesStack, UserMainStackParamList } from "./HelperFiles/Navigation";
 import ViewExchangesPage from "./LikesPages/ViewExchangesPage";
-import { colors, fonts, screenWidth, shadowStyles, styleValues, topInset } from "./HelperFiles/StyleSheet";
+import { colors, fonts, screenWidth, shadowStyles, styVals, topInset } from "./HelperFiles/StyleSheet";
 import BloisTextButton from "./BloisComponents/BloisTextButton";
 
 type ExchangesNavigationProp = StackNavigationProp<UserMainStackParamList, "exchanges">;
@@ -44,8 +44,8 @@ export default class ExchangesScreen extends CustomComponent<ExchangesProp, Stat
                             style={{
                                 ...shadowStyles.medium,
                                 width: screenWidth,
-                                paddingTop: topInset + styleValues.mediumPadding,
-                                paddingHorizontal: styleValues.mediumPadding,
+                                paddingTop: topInset + styVals.mediumPadding,
+                                paddingHorizontal: styVals.mediumPadding,
                                 flexDirection: 'row',
                                 justifyContent: 'space-evenly',
                                 backgroundColor: colors.background
@@ -53,7 +53,7 @@ export default class ExchangesScreen extends CustomComponent<ExchangesProp, Stat
                         >
                             <BloisTextButton
                                 text={'Liked items'}
-                                wrapperStyle={{marginRight: styleValues.mediumPadding, flex: 1}}
+                                wrapperStyle={{marginRight: styVals.mediumPadding, flex: 1}}
                                 textStyle={{
                                     color: props.route.name === 'exchanges' ? colors.main : colors.black,
                                     fontFamily: props.route.name === 'exchanges' ? fonts.medium : fonts.regular

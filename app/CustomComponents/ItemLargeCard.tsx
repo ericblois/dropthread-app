@@ -6,7 +6,7 @@ import  TextButton from "./TextButton";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemCondition, ItemData, ItemInfo } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
-import { colors, defaultStyles, fonts, icons, screenUnit, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, fonts, icons, screenUnit, screenWidth, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImageButton from "./CustomImageButton";
 import ImageSlider from "./ImageSlider";
@@ -113,7 +113,7 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
         <>
             <ImageSlider
                 uris={this.state.itemInfo.item.images}
-                style={{borderRadius: styleValues.mediumPadding}}
+                style={{borderRadius: styVals.mediumPadding}}
                 minRatio={1}
                 maxRatio={1.5}
                 fadeColor={colors.background}
@@ -132,9 +132,9 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
             >
                 {/* Name, price */}
                 <View style={{
-                    paddingBottom: styleValues.mediumPadding,
-                    marginBottom: styleValues.mediumPadding,
-                    borderBottomWidth: styleValues.minorBorderWidth,
+                    paddingBottom: styVals.mediumPadding,
+                    marginBottom: styVals.mediumPadding,
+                    borderBottomWidth: styVals.minorBorderWidth,
                     borderColor: colors.darkGrey
                 }}>
                     <View style={{flexDirection: "row"}}>
@@ -142,7 +142,7 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                             style={{
                                 ...styles.headerText,
                                 flex: 1,
-                                marginRight: styleValues.mediumPadding*2
+                                marginRight: styVals.mediumPadding*2
                             }}
                             numberOfLines={2}
                         >{this.state.itemInfo.item.name}</Text>
@@ -166,37 +166,37 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                 </View>
                 {/* Popular item? */}
                 {this.state.itemInfo.item.likeCount >= 0 ?
-                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: styleValues.minorPadding}}>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: styVals.minorPadding}}>
                     <Icons.MaterialCommunityIcons
                         name="fire"
                         style={{
-                            fontSize: styleValues.iconMediumSize,
+                            fontSize: styVals.iconMediumSize,
                             color: colors.flame,
-                            marginRight: styleValues.minorPadding
+                            marginRight: styVals.minorPadding
                         }}
                     />
                     <Text style={styles.minorText}>{`This item is popular!`}</Text>
                 </View> : undefined}
                 {/* Condition */}
-                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: styleValues.minorPadding}}>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: styVals.minorPadding}}>
                     <Icons.MaterialCommunityIcons
                         name={'star-four-points-outline'}
                         style={{
-                            fontSize: styleValues.iconMediumSize,
+                            fontSize: styVals.iconMediumSize,
                             color: colors.grey,
-                            marginRight: styleValues.minorPadding
+                            marginRight: styVals.minorPadding
                         }}
                     />
                     <Text style={styles.minorText}>{`${capitalizeWords(this.state.itemInfo.item.condition)} condition`}</Text>
                 </View>
                 {/* Size and fit */}
-                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: styleValues.minorPadding}}>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: styVals.minorPadding}}>
                     <Icons.MaterialCommunityIcons
                         name={'ruler'}
                         style={{
-                            fontSize: styleValues.iconMediumSize,
+                            fontSize: styVals.iconMediumSize,
                             color: colors.grey,
-                            marginRight: styleValues.minorPadding
+                            marginRight: styVals.minorPadding
                         }}
                     />
                     <Text style={styles.minorText}>{`${capitalizeWords(this.state.itemInfo.item.size)}${this.state.itemInfo.item.fit !== 'proper' ? ` (Fits ${this.state.itemInfo.item.fit})` : ``}`}</Text>
@@ -207,18 +207,18 @@ export default class ItemLargeCard extends CustomComponent<Props, State> {
                 flexDirection: 'row',
                 alignItems: 'flex-end',
                 justifyContent: 'space-between',
-                paddingHorizontal: styleValues.mediumPadding
+                paddingHorizontal: styVals.mediumPadding
             }}>
                 {this.props.hideButtons ? <View></View> :
                 <CustomImageButton
                     iconSource={icons.hangers}
                     buttonStyle={{
                         ...shadowStyles.small,
-                        width: styleValues.iconLargestSize,
+                        width: styVals.iconLargestSize,
                         aspectRatio: 1,
-                        marginBottom: styleValues.mediumPadding,
-                        padding: styleValues.mediumPadding,
-                        borderRadius: styleValues.mediumPadding,
+                        marginBottom: styVals.mediumPadding,
+                        padding: styVals.mediumPadding,
+                        borderRadius: styVals.mediumPadding,
                         backgroundColor: colors.background,
                     }}
                     iconStyle={{tintColor: colors.grey}}
@@ -260,18 +260,18 @@ export const styles = StyleSheet.create({
     cardContainer: {
         ...shadowStyles.medium,
         backgroundColor: colors.background,
-        borderRadius: styleValues.mediumPadding,
+        borderRadius: styVals.mediumPadding,
         height: "100%",
         width: "100%",
     },
     itemInfoContainer: {
         flex: 1,
         width: "100%",
-        paddingHorizontal: styleValues.mediumPadding
+        paddingHorizontal: styVals.mediumPadding
     },
     headerText: {
         ...textStyles.large,
-        marginBottom: styleValues.minorPadding,
+        marginBottom: styVals.minorPadding,
         textAlign: "left"
     },
     majorText: {
@@ -285,15 +285,15 @@ export const styles = StyleSheet.create({
     },
     infoTextBorder: {
         borderColor: colors.black,
-        borderWidth: styleValues.mediumBorderWidth,
-        borderRadius: styleValues.minorPadding,
-        padding: styleValues.minorPadding/2,
+        borderWidth: styVals.mediumBorderWidth,
+        borderRadius: styVals.minorPadding,
+        padding: styVals.minorPadding/2,
     },
     likeButton: {
         ...shadowStyles.small,
-        width: styleValues.iconLargesterSize,
-        height: styleValues.iconLargesterSize,
-        borderRadius: styleValues.majorPadding,
-        marginBottom: styleValues.minorPadding
+        width: styVals.iconLargesterSize,
+        height: styVals.iconLargesterSize,
+        borderRadius: styVals.majorPadding,
+        marginBottom: styVals.minorPadding
     }
 })

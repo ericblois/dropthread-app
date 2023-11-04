@@ -24,7 +24,7 @@ import { RootStackParamList } from "./HelperFiles/Navigation";
 import {
     icons,
     screenWidth,
-    styleValues,
+    styVals,
     textStyles,
 } from "./HelperFiles/StyleSheet";
 import BloisIconButton from "./BloisComponents/BloisIconButton";
@@ -141,7 +141,7 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                         iconSource={icons.chevron}
                         iconStyle={{ tintColor: "#fff" }}
                         buttonStyle={{
-                            marginBottom: styleValues.mediumPadding,
+                            marginBottom: styVals.mediumPadding,
                         }}
                         onPress={() =>
                             this.setState({
@@ -159,7 +159,7 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                         iconSource={icons.enter}
                         iconStyle={{ tintColor: "#fff" }}
                         buttonStyle={{
-                            marginBottom: styleValues.mediumPadding,
+                            marginBottom: styVals.mediumPadding,
                         }}
                         onPress={() => this.attemptSignin()}
                     />
@@ -238,16 +238,16 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderWidth: 2,
         borderColor: "#e34f4f",
-        borderRadius: styleValues.mediumPadding,
-        marginBottom: styleValues.mediumPadding,
+        borderRadius: styVals.mediumPadding,
+        marginBottom: styVals.mediumPadding,
     },
     buttonText: {
         color: "#ff7070",
-        fontSize: styleValues.mediumTextSize,
+        fontSize: styVals.mediumTextSize,
     },
     responseText: {
         color: "#fff",
-        height: styleValues.iconMediumSize,
+        height: styVals.iconMediumSize,
     },
     logo: {
         position: "absolute",

@@ -11,7 +11,7 @@ import { extractKeywords, ItemData, ItemFilter, ItemInfo, ItemPriceData, OfferDa
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
 import Offer from "../HelperFiles/Offer";
-import { bottomInset, colors, defaultStyles, fonts, icons, screenHeight, screenUnit, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { bottomInset, colors, defaultStyles, fonts, icons, screenHeight, screenUnit, screenWidth, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 import OfferLargeCard from "../CustomComponents/OfferLargeCard";
 
@@ -97,7 +97,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
     renderUI() {
         return (
             <CustomScrollView
-                contentContainerStyle={{paddingBottom: styleValues.mediumHeight + styleValues.mediumPadding}}
+                contentContainerStyle={{paddingBottom: styVals.mediumHeight + styVals.mediumPadding}}
             >
                 <BloisTextButton
                     text={`Browse ${this.state.offerInfo?.offer.toName}'s items`}
@@ -106,7 +106,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                         <Entypo
                             name="chevron-thin-right"
                             style={{
-                                fontSize: styleValues.mediumTextSize,
+                                fontSize: styVals.mediumTextSize,
                                 color: colors.grey
                             }}
                         />
@@ -163,12 +163,12 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                                         type="Feather"
                                         buttonStyle={{
                                             position: 'absolute',
-                                            top: styleValues.mediumPadding,
-                                            right: styleValues.mediumPadding,
+                                            top: styVals.mediumPadding,
+                                            right: styVals.mediumPadding,
                                             backgroundColor: colors.main,
-                                            height: styleValues.iconMediumSize,
-                                            borderRadius: styleValues.iconMediumSize,
-                                            padding: styleValues.minorPadding
+                                            height: styVals.iconMediumSize,
+                                            borderRadius: styVals.iconMediumSize,
+                                            padding: styVals.minorPadding
                                         }}
                                         iconStyle={{color: colors.white}}
                                         onPress={() => this.addItem(itemInfo)}
@@ -207,7 +207,7 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                 {this.renderUI()}
                 <View style={{
                     position: 'absolute',
-                    bottom: bottomInset + styleValues.mediumPadding,
+                    bottom: bottomInset + styVals.mediumPadding,
                     width: '100%', 
                     flexDirection: 'row',
                     alignItems: 'center'
@@ -218,8 +218,8 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                         animationType={'shadowSmall'}
                         buttonStyle={{
                             ...defaultStyles.roundedBox,
-                            width: styleValues.mediumHeight,
-                            marginRight: styleValues.mediumPadding,
+                            width: styVals.mediumHeight,
+                            marginRight: styVals.mediumPadding,
                             marginVertical: 0
                         }}
                         onPress={() => this.props.navigation.goBack()}
@@ -232,11 +232,11 @@ export default class CreateOfferPage extends CustomComponent<CreateOfferProps, S
                             flex: 1
                         }}
                         buttonStyle={{
-                            height: styleValues.mediumHeight,
+                            height: styVals.mediumHeight,
                             backgroundColor: this.state.offerData.deliveryAddress ? colors.main : colors.lightestGrey
                         }}
                         textStyle={{
-                            fontSize: styleValues.mediumTextSize
+                            fontSize: styVals.mediumTextSize
                         }}
                         onPress={async () => {
                             if (this.state.offerData.deliveryAddress) {

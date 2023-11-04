@@ -20,7 +20,7 @@ import {
     icons,
     screenHeight,
     screenWidth,
-    styleValues,
+    styVals,
 } from "./HelperFiles/StyleSheet";
 import EditOfferPage from "./UserMainPages/EditOfferPage";
 
@@ -76,8 +76,8 @@ export default class UserMainScreen extends CustomComponent<
                                         top:
                                             displayHeight -
                                             bottomInset -
-                                            styleValues.mediumHeight -
-                                            styleValues.mediumPadding,
+                                            styVals.mediumHeight -
+                                            styVals.mediumPadding,
                                     }}
                                     buttons={[
                                         {

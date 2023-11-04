@@ -1,7 +1,7 @@
 import React from "react";
 import { Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import FastImage, { ImageStyle } from "react-native-fast-image";
-import { colors, defaultStyles, fonts, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, fonts, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import LoadingCover from "./LoadingCover";
 
@@ -176,8 +176,8 @@ const styles = StyleSheet.create({
     },
     iconStyle: {
         aspectRatio: 1,
-        width: styleValues.iconSmallSize,
-        height: styleValues.iconSmallSize,
+        width: styVals.iconSmallSize,
+        height: styVals.iconSmallSize,
         tintColor: colors.grey,
         alignSelf: "center",
         flexWrap: "wrap",

@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { LayoutRectangle, Text, View, ViewStyle } from "react-native";
-import { colors, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, styVals, textStyles } from "../HelperFiles/StyleSheet";
 
 type BloisBadgeProps = {
     number: number;
@@ -21,14 +21,14 @@ export default class BloisBadge extends Component<BloisBadgeProps, State> {
             <View
                 style={{
                     position: "absolute",
-                    top: -styleValues.mediumPadding,
+                    top: -styVals.mediumPadding,
                     left:
                         posY === "left"
-                            ? -styleValues.mediumPadding
+                            ? -styVals.mediumPadding
                             : undefined,
                     right:
                         posY === "right"
-                            ? -styleValues.mediumPadding
+                            ? -styVals.mediumPadding
                             : undefined,
                     overflow: "visible",
                 }}
@@ -38,11 +38,11 @@ export default class BloisBadge extends Component<BloisBadgeProps, State> {
                         backgroundColor: colors.invalid,
                         alignItems: "center",
                         justifyContent: "center",
-                        paddingHorizontal: styleValues.minorPadding * 1.5,
-                        paddingVertical: styleValues.minorPadding / 2,
+                        paddingHorizontal: styVals.minorPadding * 1.5,
+                        paddingVertical: styVals.minorPadding / 2,
                         minWidth: this.layout
                             ? this.layout.height
-                            : styleValues.smallHeight * 0.65,
+                            : styVals.smallHeight * 0.65,
                         borderRadius: this.layout
                             ? this.layout.height / 2
                             : 300,

@@ -7,7 +7,7 @@ import { CustomImageButton, FilterSearchBar, ItemLargeCard, LoadingCover, BloisM
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
-import { bottomInset, colors, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { bottomInset, colors, icons, screenWidth, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 import AppUtils from "../HelperFiles/AppUtils";
 
@@ -118,8 +118,8 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
               <CustomImageButton
                 iconSource={icons.refresh}
                 buttonStyle={{
-                    height: styleValues.iconMediumSize,
-                    width: styleValues.iconMediumSize
+                    height: styVals.iconMediumSize,
+                    width: styVals.iconMediumSize
                 }}
                 iconStyle={{tintColor: colors.lightGrey}}
                 onPress={() => this.refreshData()}
@@ -135,7 +135,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
               width: screenWidth
             }}
             contentContainerStyle={{
-              paddingVertical: styleValues.mediumPadding
+              paddingVertical: styVals.mediumPadding
             }}
             horizontal={true}
             pagingEnabled={true}
@@ -146,7 +146,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
               <Pressable
                 style={{
                     width: screenWidth,
-                    paddingHorizontal: styleValues.mediumPadding,
+                    paddingHorizontal: styVals.mediumPadding,
                 }}
               >
                 <ItemLargeCard
@@ -172,7 +172,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
         || !this.state.userData) {
           return (
             <LoadingCover
-              style={{top: styleValues.mediumPadding}}
+              style={{top: styVals.mediumPadding}}
               size={"large"}
               
               errorText={this.state.errorMessage}
@@ -190,7 +190,7 @@ export default class BrowsePage extends CustomComponent<BrowseProps, State> {
             <BloisPage>
               <FilterSearchBar
                 initialFilter={this.state.searchFilters}
-                contentContainerStyle={{bottom: bottomInset + styleValues.mediumHeight + styleValues.mediumPadding*2}}
+                contentContainerStyle={{bottom: bottomInset + styVals.mediumHeight + styVals.mediumPadding*2}}
                 onSearchSubmit={(text) => {
                   // Check if no keywords are given
                   if (text == "" && this.state.searchFilters.keywords === undefined) {

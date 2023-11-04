@@ -7,7 +7,7 @@ import { CustomModal, FilterSearchBar, ItemLargeCard, ItemSmallCard, LoadingCove
 import { extractKeywords, ItemData, ItemFilter, ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
-import { bottomInset, colors, icons, screenHeight, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { bottomInset, colors, icons, screenHeight, screenWidth, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
 
@@ -70,7 +70,7 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
             return (
                 <FlatList
                     data={this.state.items}
-                    style={{overflow: 'visible', marginTop: styleValues.mediumPadding}}
+                    style={{overflow: 'visible', marginTop: styVals.mediumPadding}}
                     renderItem={({item, index}) => (
                         <View>
                             <ItemSmallCard
@@ -84,12 +84,12 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
                                 type="Feather"
                                 buttonStyle={{
                                     position: 'absolute',
-                                    top: styleValues.mediumPadding,
-                                    right: styleValues.mediumPadding,
+                                    top: styVals.mediumPadding,
+                                    right: styVals.mediumPadding,
                                     backgroundColor: colors.main,
-                                    height: styleValues.iconMediumSize,
-                                    borderRadius: styleValues.iconMediumSize,
-                                    padding: styleValues.minorPadding
+                                    height: styVals.iconMediumSize,
+                                    borderRadius: styVals.iconMediumSize,
+                                    padding: styVals.minorPadding
                                 }}
                                 iconStyle={{color: colors.white}}
                                 onPress={async () => {

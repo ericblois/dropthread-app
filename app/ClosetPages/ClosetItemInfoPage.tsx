@@ -12,7 +12,7 @@ import { ItemData, ItemInfo, ItemInteraction, OfferData, OfferInfo } from "../He
 import Item from "../HelperFiles/Item";
 import { ClosetStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
 import Offer from "../HelperFiles/Offer";
-import { colors, defaultStyles, displayWidth, icons, menuBarStyles, screenUnit, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, displayWidth, icons, menuBarStyles, screenUnit, screenWidth, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 import { ConfirmationPopupConfig } from "../CustomComponents/ConfirmationPopup";
 
@@ -100,7 +100,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
         if (this.state.itemInfo) {
             return (
                 <View style={{width: "100%", flexDirection: 'row'}}>
-                    <View style={{flex: 1, marginRight: styleValues.minorPadding}}>
+                    <View style={{flex: 1, marginRight: styVals.minorPadding}}>
                         {/* Name */}
                         <Text
                             style={{...textStyles.larger, textAlign: "left"}}
@@ -148,13 +148,13 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             alignItems: 'flex-start',
-                            marginBottom: styleValues.mediumPadding
+                            marginBottom: styVals.mediumPadding
                         }}
                     >
                         <View style={{flexDirection: 'row'}}>
                             <Ionicons
                                 name="eye-outline"
-                                style={{fontSize: styleValues.iconMediumSize, textAlignVertical: 'center', marginRight: styleValues.minorPadding, marginTop: -screenUnit*0.15}}
+                                style={{fontSize: styVals.iconMediumSize, textAlignVertical: 'center', marginRight: styVals.minorPadding, marginTop: -screenUnit*0.15}}
                             />
                             <Text style={{...textStyles.large}}>{this.state.itemInfo.item.viewCount.toString()}</Text>
                         </View>
@@ -163,12 +163,12 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                             <Text style={{...textStyles.large}}>{this.state.itemInfo.item.likeCount.toString()}</Text>
                             <AntDesign
                                 name="hearto"
-                                style={{fontSize: styleValues.iconSmallSize, textAlignVertical: 'center', marginLeft: styleValues.minorPadding, marginTop: screenUnit*0.1}}
+                                style={{fontSize: styVals.iconSmallSize, textAlignVertical: 'center', marginLeft: styVals.minorPadding, marginTop: screenUnit*0.1}}
                             />
                         </View>
                     </View>
                     {this.state.itemLikes.length === 0
-                    ? <Text style={{...textStyles.medium, color: colors.grey, marginBottom: styleValues.mediumPadding}}>No likes yet.</Text>    
+                    ? <Text style={{...textStyles.medium, color: colors.grey, marginBottom: styVals.mediumPadding}}>No likes yet.</Text>    
                     : this.state.itemLikes.map((interaction, index) => {
                         const secondsAgo = (Date.now() - interaction.likeTime)/1000
                         let timeText = secondsAgo < 60 ? `${Math.floor(secondsAgo)}s ago`
@@ -188,10 +188,10 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                                 <SimpleLineIcons
                                     name="heart"
                                     style={{
-                                        height: styleValues.largerTextSize,
-                                        fontSize: styleValues.largerTextSize,
+                                        height: styVals.largerTextSize,
+                                        fontSize: styVals.largerTextSize,
                                         color: colors.main,
-                                        marginRight: styleValues.mediumPadding
+                                        marginRight: styVals.mediumPadding
                                     }}
                                 />
                                 <View style={{flex: 1, justifyContent: 'space-between'}}>
@@ -208,13 +208,13 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                                         alignSelf: 'flex-end'
                                     }}
                                     textStyle={{
-                                        marginRight: styleValues.mediumPadding
+                                        marginRight: styVals.mediumPadding
                                     }}
                                     rightChildren={
                                         <Octicons
                                             name={"arrow-switch"}
                                             style={{
-                                                fontSize: styleValues.largeTextSize,
+                                                fontSize: styVals.largeTextSize,
                                                 color: colors.main
                                             }}
                                         />
@@ -236,7 +236,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
     renderOffers() {
         if (this.state.itemInfo && this.state.itemOffers && this.state.itemOffers.length > 0) {
             return (
-                <View style={{marginBottom: styleValues.mediumPadding}}>
+                <View style={{marginBottom: styVals.mediumPadding}}>
                     {/* Views / likes */}
                     <Text style={{...textStyles.largeHeader, marginTop: 0}}>Active Offers</Text>
                     {this.state.itemOffers.map((offerInfo, index) => {
@@ -259,12 +259,12 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                 <>
                 <CustomScrollView
                     style={{
-                        marginTop: - styleValues.mediumPadding,
+                        marginTop: - styVals.mediumPadding,
                     }}
                     contentContainerStyle={{
-                        marginHorizontal: -styleValues.mediumPadding,
-                        paddingHorizontal: styleValues.mediumPadding,
-                        marginBottom: styleValues.mediumHeight*2,
+                        marginHorizontal: -styVals.mediumPadding,
+                        paddingHorizontal: styVals.mediumPadding,
+                        marginBottom: styVals.mediumHeight*2,
                         overflow: 'hidden'
                     }}
                     avoidKeyboard={true}
@@ -273,15 +273,15 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                         style={{
                             ...shadowStyles.medium,
                             backgroundColor: colors.background,
-                            marginHorizontal: -styleValues.mediumPadding,
-                            paddingHorizontal: styleValues.mediumPadding,
-                            paddingBottom: styleValues.mediumPadding,
-                            marginBottom: styleValues.mediumPadding
+                            marginHorizontal: -styVals.mediumPadding,
+                            paddingHorizontal: styVals.mediumPadding,
+                            paddingBottom: styVals.mediumPadding,
+                            marginBottom: styVals.mediumPadding
                         }}
                     >
                         <ImageSlider
                             uris={this.state.itemInfo.item.images}
-                            style={{width: screenWidth, marginHorizontal: -styleValues.mediumPadding}}
+                            style={{width: screenWidth, marginHorizontal: -styVals.mediumPadding}}
                             minRatio={1}
                             maxRatio={2}
                             onImagesLoaded={() => this.setState({imagesLoaded: true})}

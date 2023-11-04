@@ -7,7 +7,7 @@ import CustomComponent from "../CustomComponents/CustomComponent";
 import { CustomImageButton, BloisTextButton, BloisPage, TextButton } from "../HelperFiles/CompIndex";
 import { auth } from "../HelperFiles/Constants";
 import { RootStackParamList } from "../HelperFiles/Navigation";
-import { icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { icons, screenWidth, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import AppUtils from "../HelperFiles/AppUtils"
 import * as Location from "expo-location"
 
@@ -70,16 +70,16 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderWidth: 2,
         borderColor: "#e34f4f",
-        borderRadius: styleValues.mediumPadding,
-        marginBottom: styleValues.mediumPadding
+        borderRadius: styVals.mediumPadding,
+        marginBottom: styVals.mediumPadding
     },
     buttonText: {
         color: "#ff7070",
-        fontSize: styleValues.mediumTextSize,
+        fontSize: styVals.mediumTextSize,
     },
     responseText: {
         color: "#fff",
-        height: styleValues.iconMediumSize,
+        height: styVals.iconMediumSize,
     },
     logo: {
         position: "absolute",

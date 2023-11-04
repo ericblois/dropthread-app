@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, ImageStyle, ScrollView, StyleSheet, View, ViewStyle } from "react-native";
-import { defaultStyles, shadowStyles, styleValues } from "../HelperFiles/StyleSheet";
+import { defaultStyles, shadowStyles, styVals } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import GradientView from "./GradientView";
 import CustomImage from "./CustomImage";
@@ -67,7 +67,7 @@ export default class ImageSlider extends CustomComponent<ImageSliderProps, Image
         } else if (this.props.minRatio && ratio < this.props.minRatio) {
             ratio = this.props.minRatio
         }
-        let galleryHeight = ((this.state.galleryWidth - 2*styleValues.mediumPadding) / ratio) + styleValues.mediumPadding*2
+        let galleryHeight = ((this.state.galleryWidth - 2*styVals.mediumPadding) / ratio) + styVals.mediumPadding*2
         this.setState({galleryHeight: galleryHeight})
     }
 
@@ -76,20 +76,20 @@ export default class ImageSlider extends CustomComponent<ImageSliderProps, Image
             let ratio = item.ratio
             // Ensure that first image fills gallery
             if (index === 0) {
-                ratio = (this.state.galleryWidth - styleValues.mediumPadding*2) / ((this.state.galleryHeight || 0) - styleValues.mediumPadding*2)
+                ratio = (this.state.galleryWidth - styVals.mediumPadding*2) / ((this.state.galleryHeight || 0) - styVals.mediumPadding*2)
             }
             return (
                 <CustomImage
                     source={{uri: item.uri, priority: index === 0 ? 'high' : 'normal'}}
                     style={{
                         ...shadowStyles.small,
-                        width: ratio * ((this.state.galleryHeight || 0) - styleValues.mediumPadding*2),
-                        height: (this.state.galleryHeight || 0) - styleValues.mediumPadding*2,
-                        borderRadius: styleValues.mediumPadding,
-                        marginHorizontal: styleValues.minorPadding,
+                        width: ratio * ((this.state.galleryHeight || 0) - styVals.mediumPadding*2),
+                        height: (this.state.galleryHeight || 0) - styVals.mediumPadding*2,
+                        borderRadius: styVals.mediumPadding,
+                        marginHorizontal: styVals.minorPadding,
                     }}
                     imageStyle={{
-                        borderRadius: styleValues.mediumPadding,
+                        borderRadius: styVals.mediumPadding,
                     }}
                     onLoad={(width, height) => {
                         // Get image ratio
@@ -157,8 +157,8 @@ export default class ImageSlider extends CustomComponent<ImageSliderProps, Image
                 <ScrollView
                     style={defaultStyles.fill}
                     contentContainerStyle={{
-                        paddingVertical: styleValues.mediumPadding,
-                        paddingHorizontal: styleValues.mediumPadding/2,
+                        paddingVertical: styVals.mediumPadding,
+                        paddingHorizontal: styVals.mediumPadding/2,
                         alignItems: "center",
                         justifyContent: "center",
                     }}

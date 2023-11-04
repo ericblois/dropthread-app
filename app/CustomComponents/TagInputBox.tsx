@@ -17,7 +17,7 @@ import {
     defaultStyles,
     icons,
     shadowStyles,
-    styleValues,
+    styVals,
     textStyles,
 } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
@@ -67,19 +67,19 @@ export default class TagInputBox extends CustomComponent<
             <View
                 style={{
                     flexDirection: "row",
-                    marginHorizontal: styleValues.minorPadding,
+                    marginHorizontal: styVals.minorPadding,
                     ...defaultStyles.roundedBox,
                     ...shadowStyles.small,
-                    padding: styleValues.minorPadding,
+                    padding: styVals.minorPadding,
                     width: undefined,
-                    height: styleValues.smallHeight,
+                    height: styVals.smallHeight,
                 }}
                 key={text}
             >
                 <Text
                     style={{
                         ...textStyles.medium,
-                        marginHorizontal: styleValues.minorPadding,
+                        marginHorizontal: styVals.minorPadding,
                         ...this.props.textStyle,
                     }}
                 >
@@ -91,9 +91,9 @@ export default class TagInputBox extends CustomComponent<
                         type: "MaterialIcons",
                     }}
                     style={{
-                        width: styleValues.iconSmallSize,
-                        height: styleValues.iconSmallSize,
-                        marginHorizontal: styleValues.minorPadding,
+                        width: styVals.iconSmallSize,
+                        height: styVals.iconSmallSize,
+                        marginHorizontal: styVals.minorPadding,
                     }}
                     animType="opacity"
                     onPress={() => this.removeTag(text)}
@@ -151,8 +151,8 @@ export default class TagInputBox extends CustomComponent<
                     }}
                     contentContainerStyle={{
                         ...defaultStyles.roundedBox,
-                        padding: styleValues.minorPadding,
-                        paddingBottom: styleValues.mediumPadding,
+                        padding: styVals.minorPadding,
+                        paddingBottom: styVals.mediumPadding,
                         height: undefined,
                         overflow: "hidden",
                         ...this.props.boxStyle,
@@ -167,14 +167,14 @@ export default class TagInputBox extends CustomComponent<
                         <ScrollView
                             style={{
                                 width: "100%",
-                                height: styleValues.smallHeight,
-                                margin: styleValues.minorPadding,
+                                height: styVals.smallHeight,
+                                margin: styVals.minorPadding,
                                 overflow: "visible",
-                                marginBottom: styleValues.mediumPadding,
+                                marginBottom: styVals.mediumPadding,
                             }}
                             contentContainerStyle={{
                                 padding: 0,
-                                //paddingHorizontal: styleValues.minorPadding,
+                                //paddingHorizontal: styVals.minorPadding,
                                 overflow: "visible",
                             }}
                             showsHorizontalScrollIndicator={false}
@@ -191,7 +191,7 @@ export default class TagInputBox extends CustomComponent<
                     <TextInput
                         style={[
                             defaultStyles.inputText,
-                            { marginTop: styleValues.minorPadding },
+                            { marginTop: styVals.minorPadding },
                             this.props.textStyle,
                         ]}
                         disableFullscreenUI={true}

@@ -11,7 +11,7 @@ import { extractKeywords, ItemData, ItemFilter, ItemInfo, OfferData, UserData } 
 import Item from "../HelperFiles/Item";
 import { UserDetailStackParamList } from "../HelperFiles/Navigation";
 import Offer from "../HelperFiles/Offer";
-import { bottomInset, colors, defaultStyles, fonts, icons, screenHeight, screenUnit, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { bottomInset, colors, defaultStyles, fonts, icons, screenHeight, screenUnit, screenWidth, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type ViewOfferNavigationProp = StackNavigationProp<UserDetailStackParamList, "viewOffer">;
@@ -86,17 +86,17 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             width: '100%',
-                            borderTopWidth: styleValues.minorBorderWidth,
+                            borderTopWidth: styVals.minorBorderWidth,
                             borderColor: colors.grey,
-                            paddingTop: styleValues.mediumPadding,
-                            marginTop: styleValues.mediumPadding
+                            paddingTop: styVals.mediumPadding,
+                            marginTop: styVals.mediumPadding
                         }}
                     >
                         <Text style={{...textStyles.medium, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(subtotalPrice)}`}</Text>
                         <FontAwesome5
                             name={'money-bill-wave'}
                             style={{
-                                fontSize: styleValues.mediumTextSize,
+                                fontSize: styVals.mediumTextSize,
                                 color: colors.main
                             }}
                         />
@@ -132,9 +132,9 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                     <Octicons
                         name={"arrow-switch"}
                         style={{
-                            fontSize: styleValues.largeTextSize,
+                            fontSize: styVals.largeTextSize,
                             color: colors.darkerGrey,
-                            marginRight: styleValues.mediumPadding,
+                            marginRight: styVals.mediumPadding,
                             transform: [{rotate: '90deg'}]
                         }}
                     />
@@ -152,17 +152,17 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             width: '100%',
-                            borderTopWidth: styleValues.minorBorderWidth,
+                            borderTopWidth: styVals.minorBorderWidth,
                             borderColor: colors.grey,
-                            paddingTop: styleValues.mediumPadding,
-                            marginTop: styleValues.mediumPadding
+                            paddingTop: styVals.mediumPadding,
+                            marginTop: styVals.mediumPadding
                         }}
                     >
                         <Text style={{...textStyles.medium, textAlign: 'left'}}>{`Payment of ${currencyFormatter.format(subtotalPrice)}`}</Text>
                         <FontAwesome5
                             name={'money-bill-wave'}
                             style={{
-                                fontSize: styleValues.mediumTextSize,
+                                fontSize: styVals.mediumTextSize,
                                 color: colors.main
                             }}
                         />
@@ -186,9 +186,9 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
         return (
             <View style={{
                 position: 'absolute',
-                bottom: bottomInset + styleValues.mediumPadding,
+                bottom: bottomInset + styVals.mediumPadding,
                 width: '100%',
-                height: styleValues.mediumHeight,
+                height: styVals.mediumHeight,
                 flexDirection: 'row',
                 alignItems: 'center'
             }}>
@@ -198,9 +198,9 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                     animationType={'shadowSmall'}
                     buttonStyle={{
                         ...defaultStyles.roundedBox,
-                        width: styleValues.mediumHeight,
-                        height: styleValues.mediumHeight,
-                        marginRight: styleValues.mediumPadding,
+                        width: styVals.mediumHeight,
+                        height: styVals.mediumHeight,
+                        marginRight: styVals.mediumPadding,
                         marginBottom: undefined
                     }}
                     onPress={() => this.props.navigation.goBack()}
@@ -213,9 +213,9 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                         animationType={'shadowSmall'}
                         buttonStyle={{
                             ...defaultStyles.roundedBox,
-                            width: styleValues.mediumHeight,
-                            height: styleValues.mediumHeight,
-                            marginRight: styleValues.mediumPadding,
+                            width: styVals.mediumHeight,
+                            height: styVals.mediumHeight,
+                            marginRight: styVals.mediumPadding,
                             marginBottom: undefined
                         }}
                         iconStyle={{
@@ -229,16 +229,16 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                         animationType={'shadowSmall'}
                         buttonStyle={{
                             ...defaultStyles.roundedBox,
-                            width: styleValues.mediumHeight,
-                            height: styleValues.mediumHeight,
-                            marginRight: styleValues.mediumPadding,
+                            width: styVals.mediumHeight,
+                            height: styVals.mediumHeight,
+                            marginRight: styVals.mediumPadding,
                             marginBottom: undefined
                         }}
                         iconStyle={{
                             color: colors.altBlue,
-                            fontSize: styleValues.largestTextSize,
+                            fontSize: styVals.largestTextSize,
                             textAlignVertical: 'center',
-                            height: styleValues.largestTextSize
+                            height: styVals.largestTextSize
                         }}
                         onPress={() => this.props.navigation.goBack()}
                     />
@@ -251,7 +251,7 @@ export default class ViewOfferPage extends CustomComponent<ViewOfferProps, State
                             width: undefined,
                             aspectRatio: undefined,
                             flex: 1,
-                            height: styleValues.mediumHeight,
+                            height: styVals.mediumHeight,
                             marginBottom: undefined
                         }}
                         iconStyle={{

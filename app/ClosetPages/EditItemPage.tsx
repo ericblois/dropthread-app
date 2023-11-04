@@ -29,7 +29,7 @@ import {
     bottomInset,
     colors,
     screenWidth,
-    styleValues,
+    styVals,
 } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 import BloisScrollable from "../BloisComponents/BloisScrollable";
@@ -129,7 +129,6 @@ export default class EditItemPage extends CustomComponent<
     // Try to upload this item's data to the server
     async saveItem() {
         if (Item.validatePartial(this.state.itemChanges)) {
-            this.setState({ isLoading: true, errorMessage: undefined });
             try {
                 // Save item
                 if (this.props.route.params.isNew) {
@@ -148,7 +147,6 @@ export default class EditItemPage extends CustomComponent<
             } catch (e) {
                 this.handleError(e);
             }
-            this.setState({ isLoading: false });
         }
     }
 
@@ -158,12 +156,12 @@ export default class EditItemPage extends CustomComponent<
                 uris={this.state.itemData!.images}
                 style={{
                     width: screenWidth,
-                    marginLeft: -styleValues.mediumPadding,
+                    marginLeft: -styVals.mediumPadding,
                 }}
                 minRatio={1}
                 maxRatio={16 / 9}
                 showValidSelection={true}
-                ignoreInitialValidity={!this.state.validityFlag}
+                showInitialValidity={this.state.validityFlag}
                 maxNum={Item.maxNumImages}
                 onImagesLoaded={() => {
                     this.setState({ imagesLoaded: true });
@@ -346,7 +344,7 @@ export default class EditItemPage extends CustomComponent<
                     let text =
                         fit === "proper"
                             ? "True to size"
-                            : capitalizeWords(fit);
+                            : `Fits ${fit}`;
                     return { text: text, value: fit };
                 })}
                 checkValidity={(selections) => selections.length > 0}
@@ -362,39 +360,24 @@ export default class EditItemPage extends CustomComponent<
         );
     }
 
-    renderDeliveryDropdown() {
+    renderDescription() {
         return (
             <BloisDropdown
-                items={DeliveryMethods.map((method) => {
-                    let text = capitalizeWords(method);
-                    return { text: text, value: method };
+                items={ItemFits.map((fit) => {
+                    let text =
+                        fit === "proper"
+                            ? "True to size"
+                            : `Fits ${fit}`;
+                    return { text: text, value: fit };
                 })}
                 checkValidity={(selections) => selections.length > 0}
-                multiselect={true}
                 showInitialValidity={this.state.validityFlag}
-                label="Delivery Methods"
+                label="Fit"
                 defaultValue={
-                    this.state.itemChanges.deliveryMethods ||
-                    this.state.itemData!.deliveryMethods
+                    this.state.itemChanges.fit || this.state.itemData!.fit
                 }
                 onSelect={(selections) => {
-                    this.updateItem({
-                        deliveryMethods: selections.map((sel) => sel.value),
-                    });
-                }}
-            />
-        );
-    }
-
-    renderStylesInput() {
-        return (
-            <TagInputBox
-                onChange={(tags) => this.updateItem({ styles: tags })}
-                defaultValue={
-                    this.state.itemChanges.styles || this.state.itemData!.styles
-                }
-                textProps={{
-                    placeholder: "Styles",
+                    this.updateItem({ fit: selections[0].value });
                 }}
             />
         );
@@ -420,7 +403,7 @@ export default class EditItemPage extends CustomComponent<
                     <BloisScrollable
                         style={{
                             width: "100%",
-                            marginBottom: styleValues.mediumHeight
+                            marginBottom: styVals.mediumHeight
                         }}
                     >
                         {this.renderImageSelector()}
@@ -432,8 +415,6 @@ export default class EditItemPage extends CustomComponent<
                         {this.renderColorDropdown()}
                         {this.renderFitDropdown()}
                         {this.renderPriceInput()}
-                        {this.renderDeliveryDropdown()}
-                        {this.renderStylesInput()}
                         {this.renderVisibilitySwitch()}
                     </BloisScrollable>
                 </>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Animated, KeyboardAvoidingView, ScrollView, ScrollViewProps, Text, TextInput, TextInputProps, TextStyle, View, ViewStyle } from "react-native";
-import { colors, defaultStyles, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "../CustomComponents/CustomComponent";
 
 type BloisTextInputProps = {
@@ -81,8 +81,8 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                 })
             },
             outline: {
-                borderWidth: styleValues.minorBorderWidth,
-                borderRadius: styleValues.mediumPadding,
+                borderWidth: styVals.minorBorderWidth,
+                borderRadius: styVals.mediumPadding,
                 borderColor: this.progress.interpolate({
                     inputRange: [0, 1],
                     outputRange: [colors.invalid, colors.transparent]
@@ -151,7 +151,7 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                 <Animated.View
                     style={{
                         ...defaultStyles.roundedBox,
-                        height: styleValues.smallHeight,
+                        height: styVals.smallHeight,
                         flexDirection: 'row',
                         justifyContent: 'flex-start',
                         paddingVertical: 0,
@@ -163,7 +163,7 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                         <Text style={{
                             ...textStyles.medium,
                             color: colors.grey,
-                            marginRight: styleValues.mediumPadding
+                            marginRight: styVals.mediumPadding
                         }}>{this.props.label}</Text>    
                     : undefined}
                     {this.props.prefix ?

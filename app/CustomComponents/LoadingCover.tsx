@@ -1,7 +1,7 @@
 
 import React from "react";
 import { ActivityIndicator, ActivityIndicatorProps, StyleSheet, Text, View, ViewStyle } from "react-native";
-import { colors, defaultStyles, icons, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, screenWidth, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImageButton from "./CustomImageButton";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
@@ -27,7 +27,7 @@ export default class LoadingCover extends CustomComponent<Props, State> {
                     ...defaultStyles.fill,
                     alignItems: "center",
                     justifyContent: "center",
-                    borderRadius: styleValues.mediumPadding,
+                    borderRadius: styVals.mediumPadding,
                     backgroundColor: colors.background,
                     ...this.props.style
                 }}
@@ -37,7 +37,7 @@ export default class LoadingCover extends CustomComponent<Props, State> {
                     <Text
                         style={{
                             ...textStyles.medium,
-                            marginBottom: styleValues.mediumPadding,
+                            marginBottom: styVals.mediumPadding,
                             color: colors.grey
                         }}
                     >{this.props.errorText}</Text>
@@ -47,8 +47,8 @@ export default class LoadingCover extends CustomComponent<Props, State> {
                             name: 'refresh'
                         }}
                         style={{
-                            height: styleValues.iconMediumSize,
-                            width: styleValues.iconMediumSize
+                            height: styVals.iconMediumSize,
+                            width: styVals.iconMediumSize
                         }}
                         animType={'opacity'}
                         iconStyle={{color: colors.lightGrey}}
@@ -67,18 +67,18 @@ export default class LoadingCover extends CustomComponent<Props, State> {
 const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: "#fff",
-        borderRadius: styleValues.mediumPadding,
+        borderRadius: styVals.mediumPadding,
         minHeight: screenWidth * 0.25,
         width: "100%",
-        padding: styleValues.mediumPadding,
-        marginBottom: styleValues.mediumPadding,
+        padding: styVals.mediumPadding,
+        marginBottom: styVals.mediumPadding,
         flexDirection: "row",
         alignItems: "center",
     },
     profileImage: {
         width: screenWidth * 0.15,
         aspectRatio: 1,
-        borderRadius: styleValues.minorPadding,
-        marginRight: styleValues.mediumPadding
+        borderRadius: styVals.minorPadding,
+        marginRight: styVals.mediumPadding
     },
 })

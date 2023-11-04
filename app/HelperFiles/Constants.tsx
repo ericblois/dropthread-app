@@ -9,7 +9,7 @@ import { requestURL } from './config';
 import * as Device from 'expo-device';
 import Config from 'react-native-config';
 
-const localhost = Device.isDevice ? '192.168.10.55' : 'localhost'
+const localhost = Device.isDevice ? '192.168.40.35' : 'localhost'
 
 const firebaseConfig = {
   apiKey: Config.FIREBASE_API_KEY,

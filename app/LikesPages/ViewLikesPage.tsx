@@ -8,7 +8,7 @@ import { CustomModal, ItemLargeCard, ItemLikedCard, LoadingCover, BloisMenuBar, 
 import { ItemInfo, UserData } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
 import { ExchangesStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
-import { colors, icons, screenHeight, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, icons, screenHeight, styVals } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type ViewLikesNavigationProp = CompositeNavigationProp<

@@ -1,7 +1,7 @@
 import React from "react";
 import { ActivityIndicator, Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, Text, View, ViewStyle } from "react-native";
 import FastImage, { FastImageProps, ImageStyle, Source } from "react-native-fast-image";
-import { colors, defaultStyles, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import BloisPressable from '../BloisComponents/BloisPressable'
 
@@ -51,12 +51,12 @@ export default class CustomImageButton extends CustomComponent<CustomImageButton
     if (this.props.infoProps && this.state.showInfo) {
       const posVert = this.props.infoProps.positionVertical ? this.props.infoProps.positionVertical : "above"
       const posHor = this.props.infoProps.positionHorizontal ? this.props.infoProps.positionHorizontal : "center"
-      const width = this.props.infoProps.width ? this.props.infoProps.width : this.props.infoProps.text.length*styleValues.mediumTextSize*0.65 + styleValues.mediumPadding*2
+      const width = this.props.infoProps.width ? this.props.infoProps.width : this.props.infoProps.text.length*styVals.mediumTextSize*0.65 + styVals.mediumPadding*2
       let left = posHor === "right" ? 0 : undefined
       let right = posHor === "left" ? 0 : undefined
       if (posVert === "beside") {
-        left = posHor === "left" ? -(width + styleValues.mediumPadding) : undefined
-        right = posHor === "right" ? -(width + styleValues.mediumPadding) : undefined
+        left = posHor === "left" ? -(width + styVals.mediumPadding) : undefined
+        right = posHor === "right" ? -(width + styVals.mediumPadding) : undefined
       }
       return (
         <View
@@ -65,8 +65,8 @@ export default class CustomImageButton extends CustomComponent<CustomImageButton
             ...shadowStyles.small,
             position: "absolute",
             width: width,
-            top: posVert === "above" ? -(styleValues.smallHeight + styleValues.mediumPadding) : undefined,
-            bottom: posVert === "below" ? -(styleValues.smallHeight + styleValues.mediumPadding) : undefined,
+            top: posVert === "above" ? -(styVals.smallHeight + styVals.mediumPadding) : undefined,
+            bottom: posVert === "below" ? -(styVals.smallHeight + styVals.mediumPadding) : undefined,
             left: left,
             right: right,
             alignSelf: posHor === "center" ? "center" : undefined,
@@ -119,7 +119,7 @@ export default class CustomImageButton extends CustomComponent<CustomImageButton
                     ...defaultStyles.fill,
                     alignItems: "center",
                     justifyContent: "center",
-                    borderRadius: styleValues.mediumPadding,
+                    borderRadius: styVals.mediumPadding,
                     backgroundColor: "transparent",
                 }}
               >
@@ -132,16 +132,16 @@ export default class CustomImageButton extends CustomComponent<CustomImageButton
           {this.props.showBadge === true ? 
             <View style={{
               position: "absolute",
-              height: styleValues.smallTextSize*4/3,
-              minWidth: styleValues.smallTextSize*4/3,
-              borderRadius: styleValues.smallTextSize*4/3,
-              top: -styleValues.minorPadding,
-              right: -styleValues.minorPadding,
+              height: styVals.smallTextSize*4/3,
+              minWidth: styVals.smallTextSize*4/3,
+              borderRadius: styVals.smallTextSize*4/3,
+              top: -styVals.minorPadding,
+              right: -styVals.minorPadding,
               backgroundColor: colors.main,
               alignItems: "center",
               justifyContent: "center"
             }}>
-              <Text style={{...textStyles.small, color: colors.white, marginHorizontal: styleValues.minorPadding}}>{`${this.props.badgeNumber}`}</Text>
+              <Text style={{...textStyles.small, color: colors.white, marginHorizontal: styVals.minorPadding}}>{`${this.props.badgeNumber}`}</Text>
             </View> : undefined
           }
           {this.renderInfo()}
@@ -154,8 +154,8 @@ export const iconButtonStyles = StyleSheet.create({
   defaultButton: {
     alignContent: "center",
     justifyContent: "center",
-    height: styleValues.iconLargerSize,
-    width: styleValues.iconLargerSize,
+    height: styVals.iconLargerSize,
+    width: styVals.iconLargerSize,
     padding: undefined,
     marginBottom: undefined
   },

@@ -11,7 +11,7 @@ import { extractKeywords, ItemData, ItemFilter, ItemInfo, ItemPriceData, OfferDa
 import Item from "../HelperFiles/Item";
 import { UserMainStackParamList } from "../HelperFiles/Navigation";
 import Offer from "../HelperFiles/Offer";
-import { bottomInset, colors, defaultStyles, fonts, icons, screenHeight, screenUnit, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { bottomInset, colors, defaultStyles, fonts, icons, screenHeight, screenUnit, screenWidth, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 import OfferLargeCard from "../CustomComponents/OfferLargeCard";
 
@@ -115,7 +115,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
     renderUI() {
         return (
             <CustomScrollView
-                contentContainerStyle={{paddingBottom: styleValues.mediumHeight + styleValues.mediumPadding}}
+                contentContainerStyle={{paddingBottom: styVals.mediumHeight + styVals.mediumPadding}}
             >
                     <BloisTextButton
                         text={`Browse ${this.state.isFrom ? this.state.offerInfo?.offer.toName : this.state.offerInfo?.offer.fromName}'s items`}
@@ -124,7 +124,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                             <Entypo
                                 name="chevron-thin-right"
                                 style={{
-                                    fontSize: styleValues.mediumTextSize,
+                                    fontSize: styVals.mediumTextSize,
                                     color: colors.grey
                                 }}
                             />
@@ -165,12 +165,12 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                                         type="Feather"
                                         buttonStyle={{
                                             position: 'absolute',
-                                            top: styleValues.mediumPadding,
-                                            right: styleValues.mediumPadding,
+                                            top: styVals.mediumPadding,
+                                            right: styVals.mediumPadding,
                                             backgroundColor: colors.main,
-                                            height: styleValues.iconMediumSize,
-                                            borderRadius: styleValues.iconMediumSize,
-                                            padding: styleValues.minorPadding
+                                            height: styVals.iconMediumSize,
+                                            borderRadius: styVals.iconMediumSize,
+                                            padding: styVals.minorPadding
                                         }}
                                         iconStyle={{color: colors.white}}
                                         onPress={() => this.addItem(itemInfo)}
@@ -209,7 +209,7 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                 {this.renderUI()}
                 <View style={{
                     position: 'absolute',
-                    bottom: bottomInset + styleValues.mediumPadding,
+                    bottom: bottomInset + styVals.mediumPadding,
                     width: '100%', 
                     flexDirection: 'row',
                     alignItems: 'center'
@@ -220,8 +220,8 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                         animationType={'shadowSmall'}
                         buttonStyle={{
                             ...defaultStyles.roundedBox,
-                            width: styleValues.mediumHeight,
-                            marginRight: styleValues.mediumPadding,
+                            width: styVals.mediumHeight,
+                            marginRight: styVals.mediumPadding,
                             marginVertical: 0
                         }}
                         onPress={() => this.props.navigation.goBack()}
@@ -232,11 +232,11 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                             showLoading
                             wrapperStyle={{flex: 1}}
                             buttonStyle={{
-                                height: styleValues.mediumHeight,
+                                height: styVals.mediumHeight,
                                 backgroundColor: this.state.isFrom ? colors.background : colors.invalid,
-                                marginRight: styleValues.mediumPadding
+                                marginRight: styVals.mediumPadding
                             }}
-                            textStyle={{fontSize: styleValues.mediumTextSize, color: this.state.isFrom ? colors.invalid : colors.white}}
+                            textStyle={{fontSize: styVals.mediumTextSize, color: this.state.isFrom ? colors.invalid : colors.white}}
                             onPress={async () => this.setState({showRejectPopup: true})}
                         />
                     {!this.state.isFrom ?
@@ -248,10 +248,10 @@ export default class EditOfferPage extends CustomComponent<EditOfferProps, State
                                 flex: 1
                             }}
                             buttonStyle={{
-                                height: styleValues.mediumHeight
+                                height: styVals.mediumHeight
                             }}
                             textStyle={{
-                                fontSize: styleValues.mediumTextSize
+                                fontSize: styVals.mediumTextSize
                             }}
                             onPress={async () => this.setState({showAcceptPopup: true})}
                         />

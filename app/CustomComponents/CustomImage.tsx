@@ -1,7 +1,7 @@
 import React from "react";
 import { Animated, GestureResponderEvent, Pressable, PressableProps, StyleSheet, ViewStyle } from "react-native";
 import FastImage, { FastImageProps, ImageStyle, Source } from "react-native-fast-image";
-import { colors, defaultStyles, icons, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, styVals } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type CustomImageProps = {
@@ -64,7 +64,7 @@ export default class CustomImage extends CustomComponent<CustomImageProps, State
             source={this.props.source}
             style={{
               ...defaultStyles.fill,
-              borderRadius: this.props.style?.borderRadius! | styleValues.minorPadding,
+              borderRadius: this.props.style?.borderRadius! | styVals.minorPadding,
               opacity: this.imageOpacity,
               ...this.props.imageStyle,
               tintColor: undefined
@@ -98,8 +98,8 @@ export default class CustomImage extends CustomComponent<CustomImageProps, State
                 <FastImage
                     source={icons.image}
                     style={{
-                        width: styleValues.iconSmallSize,
-                        height: styleValues.iconSmallSize
+                        width: styVals.iconSmallSize,
+                        height: styVals.iconSmallSize
                     }}
                     tintColor={colors.lightGrey}
                     resizeMode={"contain"}

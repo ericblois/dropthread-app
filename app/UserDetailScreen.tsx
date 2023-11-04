@@ -13,7 +13,7 @@ import * as Notifications from 'expo-notifications'
 import BrowsePage from "./UserMainPages/BrowsePage";
 import CreateOfferPage from "./UserMainPages/CreateOfferPage";
 import BloisMenuBar from "./BloisComponents/BloisMenuBar";
-import { bottomInset, colors, displayHeight, icons, screenHeight, screenWidth, styleValues } from "./HelperFiles/StyleSheet";
+import { bottomInset, colors, displayHeight, icons, screenHeight, screenWidth, styVals } from "./HelperFiles/StyleSheet";
 import ViewOfferPage from "./UserDetailPages/ViewOfferPage";
 
 type UserDetailNavigationProp = StackNavigationProp<RootStackParamList, "userDetail">;

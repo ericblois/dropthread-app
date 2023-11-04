@@ -16,7 +16,7 @@ import {
     ClosetStackParamList,
     UserMainStackParamList,
 } from "../HelperFiles/Navigation";
-import { bottomInset, colors, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { bottomInset, colors, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type ClosetMainNavigationProp = CompositeNavigationProp<
@@ -77,14 +77,14 @@ export default class ClosetMainPage extends CustomComponent<
                     position: "absolute",
                     bottom:
                         bottomInset +
-                        styleValues.mediumHeight +
-                        styleValues.mediumPadding,
-                    right: styleValues.mediumPadding,
+                        styVals.mediumHeight +
+                        styVals.mediumPadding,
+                    right: styVals.mediumPadding,
                     width:
-                        styleValues.iconLargerSize +
-                        styleValues.mediumPadding * 2,
-                    padding: styleValues.mediumPadding,
-                    borderRadius: styleValues.mediumPadding,
+                        styVals.iconLargerSize +
+                        styVals.mediumPadding * 2,
+                    padding: styVals.mediumPadding,
+                    borderRadius: styVals.mediumPadding,
                     backgroundColor: colors.background,
                 }}
                 animType={'shadow'}
@@ -127,7 +127,7 @@ export default class ClosetMainPage extends CustomComponent<
             );
         } else {
             return (
-                <View style={{flex: 1, justifyContent: 'center', paddingBottom: bottomInset + styleValues.mediumHeight}}>
+                <View style={{flex: 1, justifyContent: 'center', paddingBottom: bottomInset + styVals.mediumHeight}}>
                     <Text
                         style={{
                             ...textStyles.medium,

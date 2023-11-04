@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, TextStyle, View, ViewStyle, TouchableOpacity } from "react-native";
 import CustomImageButton from "../CustomComponents/CustomImageButton";
-import { colors, defaultStyles, icons, screenHeight, screenWidth, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, screenHeight, screenWidth, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type Props = {
@@ -53,15 +53,15 @@ export default class TextInfoPopup extends CustomComponent<Props, State> {
                 />
                 <View style={{
                     position: "absolute",
-                    padding: styleValues.iconSmallSize,
-                    paddingBottom: styleValues.iconSmallSize + styleValues.mediumHeight
+                    padding: styVals.iconSmallSize,
+                    paddingBottom: styVals.iconSmallSize + styVals.mediumHeight
                 }}>
                     <View
                         style={{
                             ...defaultStyles.inputBox,
                             height: undefined,
                             maxWidth: screenWidth*0.8,
-                            padding: styleValues.mediumPadding,
+                            padding: styVals.mediumPadding,
                             ...this.props.boxStyle
                         }}
                     >
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         width: screenWidth,
         height: screenHeight,
-        padding: styleValues.mediumPadding,
+        padding: styVals.mediumPadding,
         backgroundColor: "rgba(0,0,0,0.5)",
     },
     outsideTouchable: {
@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
     },
     exitButton: {
         position: "absolute",
-        width: styleValues.iconSmallSize,
-        height: styleValues.iconSmallSize,
+        width: styVals.iconSmallSize,
+        height: styVals.iconSmallSize,
         top: 0,
         right: 0
     }

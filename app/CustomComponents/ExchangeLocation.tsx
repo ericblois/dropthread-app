@@ -1,7 +1,7 @@
 import React from "react";
 import { Animated, GestureResponderEvent, KeyboardAvoidingView, Pressable, PressableProps, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import FastImage, { ImageStyle } from "react-native-fast-image";
-import { colors, defaultStyles, fonts, screenUnit, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, fonts, screenUnit, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import LoadingCover from "./LoadingCover";
 import { Coords, DefaultAddressData, AddressData, DeliveryMethod, OfferData } from "../HelperFiles/DataTypes";
@@ -128,7 +128,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                         ...textStyles.medium,
                         color: colors.grey,
                         textAlign: 'left',
-                        marginBottom: styleValues.mediumPadding
+                        marginBottom: styVals.mediumPadding
                     }}
                 >{`When ${this.state.otherUserName} receives this offer, they will be able to choose an exchange location. After they have chosen, you will confirm the location before accepting the exchange.`}
                 </Text>
@@ -251,12 +251,12 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                         <MapMarker
                             coordinate={{latitude: this.state.selection.lat, longitude: this.state.selection.long}}
                             title={"Current exchange location"}
-                            style={{height: styleValues.largestTextSize*1.5*1.833}}
+                            style={{height: styVals.largestTextSize*1.5*1.833}}
                         >
                             <Entypo
                                 name="location-pin"
                                 style={{
-                                    fontSize: styleValues.largestTextSize*1.5,
+                                    fontSize: styVals.largestTextSize*1.5,
                                     color: colors.markerBlue,
                                     textAlign: 'center',
                                     textAlignVertical: 'bottom',
@@ -280,7 +280,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                         <Entypo
                             name="location-pin"
                             style={{
-                                fontSize: styleValues.largestTextSize*1.5,
+                                fontSize: styVals.largestTextSize*1.5,
                                 color: hexToRGBA(colors.black, 0.5),
                                 textAlign: 'center',
                                 textAlignVertical: 'bottom'
@@ -288,7 +288,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                         />
                     </View>
                 </View>
-                <Text style={{...textStyles.medium, color: colors.grey, textAlign: 'left', marginBottom: styleValues.mediumPadding}}>The highlighted area is a recommended meetup area to reduce travel time for each of you.</Text>
+                <Text style={{...textStyles.medium, color: colors.grey, textAlign: 'left', marginBottom: styVals.mediumPadding}}>The highlighted area is a recommended meetup area to reduce travel time for each of you.</Text>
                 <BloisTextButton
                     text={"Select this meetup location"}
                     textStyle={{color: !this.state.meetupSelection ? colors.lightGrey : colors.black}}
@@ -354,15 +354,15 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                 ...shadowStyles.small,
                 shadowColor: this.shadowColor,
                 shadowOpacity: this.shadowOpacity,
-                minHeight: styleValues.largeHeight,
+                minHeight: styVals.largeHeight,
                 justifyContent: 'flex-start',
-                paddingVertical: styleValues.minorPadding
+                paddingVertical: styVals.minorPadding
             }}
             onPress={() => {
                 this.setState({showModal: true})
             }}
         >
-            <Text style={{...textStyles.large, marginBottom: styleValues.mediumPadding}}>Exchange Location</Text>
+            <Text style={{...textStyles.large, marginBottom: styVals.mediumPadding}}>Exchange Location</Text>
             {this.state.selection && this.state.selection.lat !== 0 && this.state.selection.long !== 0
             ?
             /* Address */
@@ -436,7 +436,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                     style={{
                         ...defaultStyles.roundedBox,
                         ...shadowStyles.small,
-                        width: styleValues.largeHeight,
+                        width: styVals.largeHeight,
                         aspectRatio: 1
                     }}
                     region={{
@@ -451,12 +451,12 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                     <MapMarker
                         coordinate={{latitude: this.state.selection.lat, longitude: this.state.selection.long}}
                         title={"Current exchange location"}
-                        style={{height: styleValues.largestTextSize*1.833}}
+                        style={{height: styVals.largestTextSize*1.833}}
                     >
                         <Entypo
                             name="location-pin"
                             style={{
-                                fontSize: styleValues.largestTextSize,
+                                fontSize: styVals.largestTextSize,
                                 color: colors.markerBlue,
                                 textAlign: 'center',
                                 textAlignVertical: 'bottom',
@@ -484,7 +484,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                     ...defaultStyles.roundedBox,
                     ...shadowStyles.small,
                     width: undefined,
-                    paddingVertical: styleValues.minorPadding
+                    paddingVertical: styVals.minorPadding
                 }}
             >
                 <Text style={textStyles.medium}>Select</Text>
@@ -532,7 +532,7 @@ export default class ExchangeLocation extends CustomComponent<Props, State> {
                         ...shadowStyles.small
                     }}
                 >
-                    <Text style={{...textStyles.large, marginBottom: styleValues.mediumPadding}}>Exchange Location</Text>
+                    <Text style={{...textStyles.large, marginBottom: styVals.mediumPadding}}>Exchange Location</Text>
                     {this.renderSelection()}
                 </KeyboardAvoidingView>
             </CustomModal>

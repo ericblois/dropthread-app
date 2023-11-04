@@ -3,7 +3,7 @@ import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import CustomImageButton from "../CustomComponents/CustomImageButton";
 import BloisTextInput from "../BloisComponents/BloisTextInput";
-import { colors, icons, screenHeight, screenWidth, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, icons, screenHeight, screenWidth, styVals } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type Props = {
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         width: screenWidth,
         height: screenHeight,
-        padding: styleValues.mediumPadding,
+        padding: styVals.mediumPadding,
         top: 0,
         left:  0,
     },
@@ -96,6 +96,6 @@ const styles = StyleSheet.create({
     saveButton: {
         position: "absolute",
         top: "55%",
-        right: styleValues.mediumPadding
+        right: styVals.mediumPadding
     }
 })

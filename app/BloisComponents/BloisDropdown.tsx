@@ -6,7 +6,7 @@ import {
     fonts,
     screenWidth,
     shadowStyles,
-    styleValues,
+    styVals,
     textStyles,
 } from "../HelperFiles/StyleSheet";
 import CustomComponent from "../CustomComponents/CustomComponent";
@@ -83,8 +83,8 @@ export default class BloisDropdown extends CustomComponent<
                 }),
             },
             outline: {
-                borderWidth: styleValues.minorBorderWidth,
-                borderRadius: styleValues.mediumPadding,
+                borderWidth: styVals.minorBorderWidth,
+                borderRadius: styVals.mediumPadding,
                 borderColor: this.validity.interpolate({
                     inputRange: [0, 1],
                     outputRange: [colors.invalid, colors.transparent],
@@ -128,7 +128,7 @@ export default class BloisDropdown extends CustomComponent<
         this.setState({expanded: true}, () => {
             Animated.sequence([
                 Animated.timing(this.dropdownHeight, {
-                    toValue: styleValues.smallHeight*this.props.items.length,
+                    toValue: styVals.smallHeight*this.props.items.length,
                     duration: this.dropdownTime,
                     useNativeDriver: false,
                 }),
@@ -218,10 +218,10 @@ export default class BloisDropdown extends CustomComponent<
                             <BloisTextButton
                                 text={text}
                                 style={{
-                                    borderTopWidth: index !== 0 ? styleValues.minorBorderWidth : 0,
+                                    borderTopWidth: index !== 0 ? styVals.minorBorderWidth : 0,
                                     borderColor: colors.lightGrey,
                                     width: '100%',
-                                    padding: styleValues.mediumPadding,
+                                    padding: styVals.mediumPadding,
                                     justifyContent: 'space-between',
                                 }}
                                 textStyle={{
@@ -238,7 +238,7 @@ export default class BloisDropdown extends CustomComponent<
                                     <Feather
                                         name={isSelected ? 'check-circle' : 'circle'}
                                         style={{
-                                            fontSize: styleValues.largeTextSize,
+                                            fontSize: styVals.largeTextSize,
                                             color: isSelected ? colors.valid : colors.lightGrey
                                         }}
                                     />
@@ -280,7 +280,7 @@ export default class BloisDropdown extends CustomComponent<
                     text={mainText}
                     style={{
                         ...defaultStyles.roundedBox,
-                        height: styleValues.smallHeight,
+                        height: styVals.smallHeight,
                         justifyContent: 'space-between',
                         ...this.animatedStyles[this.props.indicatorType || 'shadowSmall'],
                         ...this.props.style
@@ -306,7 +306,7 @@ export default class BloisDropdown extends CustomComponent<
                         >
                             <Feather
                                 name={'chevron-down'}
-                                style={{fontSize: styleValues.largerTextSize, color: colors.grey}}
+                                style={{fontSize: styVals.largerTextSize, color: colors.grey}}
                                 
                             />
                         </Animated.View>

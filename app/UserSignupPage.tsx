@@ -10,7 +10,7 @@ import { DateScrollPicker, LoadingCover, BloisMenuBar, BloisPage, ScrollContaine
 import { geofire } from "./HelperFiles/Constants";
 import { countriesList, Country, DefaultUserData, UserData, UserGender, UserGenders } from "./HelperFiles/DataTypes";
 import { RootStackParamList } from "./HelperFiles/Navigation";
-import { colors, icons, shadowStyles, styleValues, textStyles } from "./HelperFiles/StyleSheet";
+import { colors, icons, shadowStyles, styVals, textStyles } from "./HelperFiles/StyleSheet";
 import User from "./HelperFiles/User";
 
 type UserSignupNavigationProp = StackNavigationProp<RootStackParamList, "userSignup">
@@ -149,7 +149,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     ...textStyles.small,
                     color: colors.invalid,
                     textAlign: 'left',
-                    paddingVertical: styleValues.mediumPadding
+                    paddingVertical: styVals.mediumPadding
                 }}
                 numberOfLines={2}
             >
@@ -224,7 +224,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                 <DateScrollPicker
                     pickerStyle={{
                         borderColor: this.validateBirthday() ? colors.valid : colors.invalid,
-                        borderWidth: styleValues.minorBorderWidth
+                        borderWidth: styVals.minorBorderWidth
                     }}
                     onDateChange={(date) => this.setState({userData: {
                             ...this.state.userData,
@@ -255,7 +255,7 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     showValidSelection={true}
                     onSelect={(selections) => this.setState({userData: {...this.state.userData, country: selections[0].value as Country} as UserData})}
                 />
-                <Text style={{...styles.inputDescription, fontSize: styleValues.smallestTextSize}}>Your location is required to view items near you. Location data is never shared with other users without your permission.</Text>
+                <Text style={{...styles.inputDescription, fontSize: styVals.smallestTextSize}}>Your location is required to view items near you. Location data is never shared with other users without your permission.</Text>
                 <BloisTextButton
                     text={"Location"}
                     wrapperStyle={{
@@ -263,14 +263,14 @@ export default class UserSignupPage extends CustomComponent<UserSignupProps, Sta
                     }}
                     buttonStyle={{
                         borderColor: this.validateCoords() ? colors.valid : colors.invalid,
-                        borderWidth: styleValues.minorBorderWidth
+                        borderWidth: styVals.minorBorderWidth
                     }}
                     rightChildren={
                         <MaterialIcons
                             name={'my-location'}
                             style={{
                                 color: this.validateCoords() ? colors.valid : colors.invalid,
-                                fontSize: styleValues.largeTextSize
+                                fontSize: styVals.largeTextSize
                             }}
                         />
                     }

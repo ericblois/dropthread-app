@@ -4,7 +4,7 @@ import { GestureResponderEvent, Pressable, StyleSheet, Text, TouchableOpacity, V
 import FastImage from "react-native-fast-image";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemInfo } from "../HelperFiles/DataTypes";
-import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth, icons, defaultStyles } from "../HelperFiles/StyleSheet";
+import { colors, shadowStyles, styVals, textStyles, screenUnit, screenWidth, icons, defaultStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImage from "./CustomImage";
 import BloisPressable from "../BloisComponents/BloisPressable";
@@ -81,10 +81,10 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
             {/* INFO AREA */}
             <View style={{height: "100%", flex: 1}}>
                 {/* HEADER */}
-                <View style={{flexDirection: "row", marginBottom: styleValues.minorPadding}}>
+                <View style={{flexDirection: "row", marginBottom: styVals.minorPadding}}>
                     {/* ITEM NAME */}
                     <Text
-                        style={{...styles.headerText, flex: 1, marginRight: styleValues.mediumPadding}}
+                        style={{...styles.headerText, flex: 1, marginRight: styVals.mediumPadding}}
                         numberOfLines={1}
                     >{this.state.itemInfo.item.name}</Text>
                     {/* PRICE */}
@@ -94,9 +94,9 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
                             source={icons.backArrow}
                             resizeMode={"contain"}
                             style={{
-                                width: styleValues.iconSmallestSize,
+                                width: styVals.iconSmallestSize,
                                 aspectRatio: 1,
-                                marginRight: styleValues.minorPadding,
+                                marginRight: styVals.minorPadding,
                                 transform: [{rotate: '90deg'}]
                             }}
                             tintColor={priceColor}
@@ -115,7 +115,7 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
                             source={icons.hollowHeart}
                             resizeMode={"contain"}
                             style={{
-                                width: styleValues.iconSmallerSize,
+                                width: styVals.iconSmallerSize,
                                 aspectRatio: 1
                             }}
                             tintColor={statusColor}
@@ -179,19 +179,19 @@ export default class ItemLikedCard extends CustomComponent<Props, State> {
 const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: "#fff",
-        borderRadius: styleValues.mediumPadding,
+        borderRadius: styVals.mediumPadding,
         height: screenUnit * 5,
-        width: screenWidth - styleValues.mediumPadding*2,
-        marginBottom: styleValues.mediumPadding,
-        padding: styleValues.minorPadding,
+        width: screenWidth - styVals.mediumPadding*2,
+        marginBottom: styVals.mediumPadding,
+        padding: styVals.minorPadding,
         flexDirection: "row",
         alignItems: "center",
     },
     productImage: {
         height: "100%",
         aspectRatio: 1,
-        borderRadius: styleValues.minorPadding,
-        marginRight: styleValues.mediumPadding
+        borderRadius: styVals.minorPadding,
+        marginRight: styVals.mediumPadding
     },
     headerText: {
         ...textStyles.large,
@@ -200,13 +200,13 @@ const styles = StyleSheet.create({
     statusText: {
         ...textStyles.medium,
         textAlign: "left",
-        marginHorizontal: styleValues.minorPadding,
+        marginHorizontal: styVals.minorPadding,
         flex: 1
     },
     likeButton: {
         ...shadowStyles.small,
-        width: styleValues.iconLargerSize,
+        width: styVals.iconLargerSize,
         aspectRatio: 1,
-        borderRadius: styleValues.majorPadding
+        borderRadius: styVals.majorPadding
     }
 })

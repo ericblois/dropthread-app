@@ -1,7 +1,7 @@
 import React from "react"
 import { EmitterSubscription, KeyboardAvoidingView, ScrollView, ScrollViewProps, StyleSheet, View, ViewStyle } from "react-native"
 import GradientView from "./GradientView"
-import { defaultStyles, screenWidth, styleValues } from "../HelperFiles/StyleSheet"
+import { defaultStyles, screenWidth, styVals } from "../HelperFiles/StyleSheet"
 import CustomComponent from "./CustomComponent"
 import { LayoutRectangle } from "react-native"
 import { Keyboard } from "react-native"
@@ -78,8 +78,8 @@ export default class CustomScrollView extends CustomComponent<Props, State> {
                     {...this.props}
                     style={{...defaultStyles.fill, overflow: 'visible'}}
                     contentContainerStyle={{
-                        paddingVertical: !this.props.horizontal ? styleValues.mediumPadding : undefined,
-                        paddingHorizontal: this.props.horizontal ? styleValues.mediumPadding : undefined,
+                        paddingVertical: !this.props.horizontal ? styVals.mediumPadding : undefined,
+                        paddingHorizontal: this.props.horizontal ? styVals.mediumPadding : undefined,
                     }}
                     onScroll={(e) => {
                         this.contentOffset = this.props.horizontal ? e.nativeEvent.contentOffset.x : e.nativeEvent.contentOffset.y

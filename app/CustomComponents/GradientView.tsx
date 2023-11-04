@@ -2,7 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { View, ViewStyle } from "react-native";
 import { hexToRGBA } from "../HelperFiles/ClientFunctions";
-import { colors, defaultStyles, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, styVals } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 
 type GradientViewProps = {
@@ -25,7 +25,7 @@ export default class GradientView extends CustomComponent<GradientViewProps, Sta
 
     constructor(props: GradientViewProps) {
         super(props)
-        this.fadeLength = props.fadeLength ? props.fadeLength : styleValues.mediumPadding
+        this.fadeLength = props.fadeLength ? props.fadeLength : styVals.mediumPadding
     }
 
     renderTopFade(startColor: string, startBackground: string) {

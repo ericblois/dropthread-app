@@ -9,7 +9,7 @@ import { LoadingCover, BloisMenuBar, BloisPage, TextButton } from "../HelperFile
 import { auth } from "../HelperFiles/Constants";
 import { DefaultItemData, ItemData, UserData } from "../HelperFiles/DataTypes";
 import { ClosetStackParamList, RootStackParamList, UserMainStackParamList } from "../HelperFiles/Navigation";
-import { colors, icons, styleValues } from "../HelperFiles/StyleSheet";
+import { colors, icons, styVals } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 
 type AccountMainNavigationProp = CompositeNavigationProp<
@@ -95,8 +95,8 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
                         type={"MaterialCommunityIcons"}
                         buttonStyle={{
                             backgroundColor: colors.lightGrey,
-                            width: styleValues.iconLargerSize,
-                            borderRadius: styleValues.mediumPadding
+                            width: styVals.iconLargerSize,
+                            borderRadius: styVals.mediumPadding
                         }}
                         animationType={'shadowSmall'}
                     />
@@ -105,10 +105,10 @@ export default class AccountMainPage extends CustomComponent<AccountMainProps, S
                         name={"plus"}
                         type={"MaterialCommunityIcons"}
                         buttonStyle={{
-                            marginTop: styleValues.mediumPadding,
+                            marginTop: styVals.mediumPadding,
                             backgroundColor: colors.background,
-                            width: styleValues.iconLargerSize,
-                            borderRadius: styleValues.mediumPadding
+                            width: styVals.iconLargerSize,
+                            borderRadius: styVals.mediumPadding
                         }}
                         animationType={'shadowSmall'}
                     />

@@ -5,7 +5,7 @@ import FastImage from "react-native-fast-image";
 import BloisPressable from "../BloisComponents/BloisPressable";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { AddressData, ItemData, ItemInfo } from "../HelperFiles/DataTypes";
-import { colors, shadowStyles, styleValues, textStyles, screenUnit, screenWidth, defaultStyles } from "../HelperFiles/StyleSheet";
+import { colors, shadowStyles, styVals, textStyles, screenUnit, screenWidth, defaultStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImage from "./CustomImage";
 import LoadingCover from "./LoadingCover";
@@ -87,15 +87,15 @@ export default class AddressCard extends CustomComponent<Props, State> {
                 buttonStyle={{
                     ...defaultStyles.roundedBox,
                     ...shadowStyles.small,
-                    width: styleValues.mediumHeight,
+                    width: styVals.mediumHeight,
                     marginBottom: 0,
                     justifyContent: 'center',
                     aspectRatio: 1
                 }}
                 iconStyle={{
                     color: colors.main,
-                    fontSize: styleValues.largestTextSize,
-                    paddingTop: styleValues.minorPadding/2,
+                    fontSize: styVals.largestTextSize,
+                    paddingTop: styVals.minorPadding/2,
                 }}
                 onPress={() => {
                     // Get platform-specific map URL

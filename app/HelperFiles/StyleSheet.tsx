@@ -57,7 +57,7 @@ export const colors = {
   minorTextColor: "#777",
 }
 
-export const styleValues = {
+export const styVals = {
   screenHeight: screenHeight,
   screenWidth: screenWidth,
   smallestHeight: screenUnit/2,
@@ -99,74 +99,74 @@ const defaultTemplates = StyleSheet.create({
     color: colors.majorTextColor
   },
   menuBar: {
-    width: screenWidth - styleValues.mediumPadding*2,
-    height: styleValues.mediumHeight,
+    width: screenWidth - styVals.mediumPadding*2,
+    height: styVals.mediumHeight,
     position: "absolute",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     alignSelf: "center",
-    borderRadius: styleValues.mediumPadding,
-    padding: styleValues.mediumPadding,
+    borderRadius: styVals.mediumPadding,
+    padding: styVals.mediumPadding,
     backgroundColor: colors.background,
-    bottom: bottomInset + styleValues.mediumPadding,
+    bottom: bottomInset + styVals.mediumPadding,
   }
 })
 
 export const textStyles = StyleSheet.create({
   smaller: {
     ...defaultTemplates.text,
-    fontSize: styleValues.smallerTextSize,
+    fontSize: styVals.smallerTextSize,
   },
   small: {
     ...defaultTemplates.text,
-    fontSize: styleValues.smallTextSize,
+    fontSize: styVals.smallTextSize,
   },
   medium: {
     ...defaultTemplates.text,
-    fontSize: styleValues.mediumTextSize,
+    fontSize: styVals.mediumTextSize,
   },
   large: {
     ...defaultTemplates.text,
-    fontSize: styleValues.largeTextSize,
+    fontSize: styVals.largeTextSize,
   },
   larger: {
     ...defaultTemplates.text,
-    fontSize: styleValues.largerTextSize,
+    fontSize: styVals.largerTextSize,
   },
   largest: {
     ...defaultTemplates.text,
-    fontSize: styleValues.largestTextSize,
+    fontSize: styVals.largestTextSize,
   },
   smallerHeader: {
     ...defaultTemplates.text,
-    fontSize: styleValues.smallerTextSize,
-    marginVertical: styleValues.mediumPadding
+    fontSize: styVals.smallerTextSize,
+    marginVertical: styVals.mediumPadding
   },
   smallHeader: {
     ...defaultTemplates.text,
-    fontSize: styleValues.smallTextSize,
-    marginVertical: styleValues.mediumPadding
+    fontSize: styVals.smallTextSize,
+    marginVertical: styVals.mediumPadding
   },
   mediumHeader: {
     ...defaultTemplates.text,
-    fontSize: styleValues.mediumTextSize,
-    marginVertical: styleValues.mediumPadding
+    fontSize: styVals.mediumTextSize,
+    marginVertical: styVals.mediumPadding
   },
   largeHeader: {
     ...defaultTemplates.text,
-    fontSize: styleValues.largeTextSize,
-    marginVertical: styleValues.mediumPadding
+    fontSize: styVals.largeTextSize,
+    marginVertical: styVals.mediumPadding
   },
   largerHeader: {
     ...defaultTemplates.text,
-    fontSize: styleValues.largerTextSize,
-    marginVertical: styleValues.mediumPadding
+    fontSize: styVals.largerTextSize,
+    marginVertical: styVals.mediumPadding
   },
   largestHeader: {
     ...defaultTemplates.text,
-    fontSize: styleValues.largestTextSize,
-    marginVertical: styleValues.mediumPadding
+    fontSize: styVals.largestTextSize,
+    marginVertical: styVals.mediumPadding
   },
 })
 
@@ -190,7 +190,7 @@ export const shadowStyles = StyleSheet.create({
       height: 0,
     },
     shadowOpacity: 0.3,
-    shadowRadius: styleValues.minorPadding,
+    shadowRadius: styVals.minorPadding,
     elevation: 5,
   },
   medium: {
@@ -200,7 +200,7 @@ export const shadowStyles = StyleSheet.create({
       height: 0,
     },
     shadowOpacity: 0.5,
-    shadowRadius: styleValues.minorPadding,
+    shadowRadius: styVals.minorPadding,
     elevation: 10,
   },
   large: {
@@ -210,7 +210,7 @@ export const shadowStyles = StyleSheet.create({
       height: 0,
     },
     shadowOpacity: 0.8,
-    shadowRadius: styleValues.minorPadding,
+    shadowRadius: styVals.minorPadding,
     elevation: 15,
   },
 })
@@ -225,9 +225,9 @@ export const defaultStyles = StyleSheet.create({
     bottom: 0,
     right: 0,
     left: 0,
-    paddingTop: topInset + styleValues.mediumPadding,
-    paddingBottom: bottomInset + styleValues.mediumPadding,
-    paddingHorizontal: styleValues.mediumPadding,
+    paddingTop: topInset + styVals.mediumPadding,
+    paddingBottom: bottomInset + styVals.mediumPadding,
+    paddingHorizontal: styVals.mediumPadding,
     backgroundColor: colors.background,
   },
   headerBox: {
@@ -238,30 +238,30 @@ export const defaultStyles = StyleSheet.create({
     right: 0,
     alignItems: "center",
     backgroundColor: colors.background,
-    padding: styleValues.minorPadding,
-    paddingTop: topInset + styleValues.minorPadding,
+    padding: styVals.minorPadding,
+    paddingTop: topInset + styVals.minorPadding,
     zIndex: 1000,
     elevation: 1000
   },
   roundedBox: {
     width: "100%",
-    borderRadius: styleValues.mediumPadding,
+    borderRadius: styVals.mediumPadding,
     backgroundColor: colors.background,
-    padding: styleValues.mediumPadding,
+    padding: styVals.mediumPadding,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: styleValues.mediumPadding
+    marginBottom: styVals.mediumPadding
   },
   inputBox: {
     width: "100%",
     height: screenUnit*2,
     backgroundColor: colors.white,
-    borderWidth: styleValues.mediumBorderWidth,
-    borderRadius: styleValues.mediumPadding,
+    borderWidth: styVals.mediumBorderWidth,
+    borderRadius: styVals.mediumPadding,
     borderColor: colors.lighterGrey,
-    marginBottom: styleValues.mediumPadding,
-    padding: styleValues.minorPadding,
-    paddingLeft: styleValues.mediumPadding,
+    marginBottom: styVals.mediumPadding,
+    padding: styVals.minorPadding,
+    paddingLeft: styVals.mediumPadding,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -271,7 +271,7 @@ export const defaultStyles = StyleSheet.create({
     width: "100%",
     height: "100%",
     backgroundColor: colors.background,
-    borderRadius: styleValues.mediumPadding,
+    borderRadius: styVals.mediumPadding,
     color: colors.majorTextColor,
   },
   fill: {

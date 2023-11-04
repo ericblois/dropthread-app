@@ -1,7 +1,7 @@
 import React from "react"
 import { KeyboardAvoidingView, ScrollView, ScrollViewProps, StyleSheet, View, ViewStyle } from "react-native"
 import GradientView from "../CustomComponents/GradientView"
-import { defaultStyles, screenWidth, styleValues } from "../HelperFiles/StyleSheet"
+import { defaultStyles, screenWidth, styVals } from "../HelperFiles/StyleSheet"
 import CustomComponent from "./CustomComponent"
 
 type Props = ScrollViewProps & {
@@ -47,8 +47,8 @@ export default class ScrollContainer extends CustomComponent<Props, State> {
                             this.props.style
                         )}
                         contentContainerStyle={StyleSheet.compose({
-                                padding: styleValues.mediumPadding,
-                                paddingBottom: !this.props.horizontal ? styleValues.mediumHeight + styleValues.mediumPadding*2 : undefined,
+                                padding: styVals.mediumPadding,
+                                paddingBottom: !this.props.horizontal ? styVals.mediumHeight + styVals.mediumPadding*2 : undefined,
                             },
                             this.props.contentContainerStyle
                         )}

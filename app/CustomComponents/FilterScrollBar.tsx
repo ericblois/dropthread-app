@@ -6,7 +6,7 @@ import { Animated, StyleSheet, Text, View, ViewStyle, TouchableWithoutFeedback }
 import { capitalizeWords } from "../HelperFiles/ClientFunctions";
 import { simpleCurrencyFormatter } from "../HelperFiles/Constants";
 import { countriesList, DefaultItemFilter, ItemCategories, ItemConditions, ItemFilter, ItemGenders } from "../HelperFiles/DataTypes";
-import { colors, defaultStyles, icons, screenWidth, shadowStyles, styleValues, textStyles } from "../HelperFiles/StyleSheet";
+import { colors, defaultStyles, icons, screenWidth, shadowStyles, styVals, textStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import ScrollContainer from "./ScrollContainer";
 import TextButton from "./TextButton";
@@ -117,9 +117,9 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
                 text={`${text}`}
                 appearance={this.state.filters[filterKey] !== undefined ? "color" : this.state.dropdownType === filterKey ? "light" : "no-color"}
                 buttonStyle={{
-                    height: styleValues.smallHeight,
+                    height: styVals.smallHeight,
                     width: undefined,
-                    marginRight: filterKey === "country" ? 0 : styleValues.mediumPadding
+                    marginRight: filterKey === "country" ? 0 : styVals.mediumPadding
                 }}
                 textStyle={textStyles.medium}
                 touchableProps={{
@@ -181,7 +181,7 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
                             <TextButton
                                 text={capitalizeWords(label.replaceAll('_', ' '))}
                                 appearance={buttonState ? "color" : "no-color"}
-                                buttonStyle={{height: styleValues.smallHeight}}
+                                buttonStyle={{height: styVals.smallHeight}}
                                 textStyle={textStyles.medium}
                                 onPress={() => {
                                     let newFilters = {} as ItemFilter
@@ -283,26 +283,26 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
                     <MultiSlider
                         containerStyle={{
                             width: "100%",
-                            //marginTop: styleValues.smallHeight,
+                            //marginTop: styVals.smallHeight,
                         }}
                         trackStyle={{
                             ...shadowStyles.small,
-                            height: styleValues.minorPadding,
-                            borderRadius: styleValues.minorPadding/2,
+                            height: styVals.minorPadding,
+                            borderRadius: styVals.minorPadding/2,
                         }}
                         markerStyle={{
                             ...shadowStyles.small,
                             backgroundColor: colors.white,
                             borderColor: colors.main,
-                            borderWidth: styleValues.mediumBorderWidth,
-                            borderRadius: styleValues.mediumPadding,
-                            height: styleValues.iconMediumSize,
-                            width: styleValues.iconMediumSize,
+                            borderWidth: styVals.mediumBorderWidth,
+                            borderRadius: styVals.mediumPadding,
+                            height: styVals.iconMediumSize,
+                            width: styVals.iconMediumSize,
                             alignSelf: "center"
                         }}
                         selectedStyle={{backgroundColor: colors.main}}
                         unselectedStyle={{backgroundColor: colors.white}}
-                        sliderLength={(screenWidth - styleValues.mediumPadding*4)}
+                        sliderLength={(screenWidth - styVals.mediumPadding*4)}
                         snapped={true}
                         values={values}
                         enabledOne={true}
@@ -316,8 +316,8 @@ export default class FilterScrollBar extends CustomComponent<Props, State> {
                                     style={{
                                         alignSelf: "center",
                                         backgroundColor: colors.white,
-                                        borderRadius: styleValues.mediumPadding,
-                                        padding: styleValues.minorPadding
+                                        borderRadius: styVals.mediumPadding,
+                                        padding: styVals.minorPadding
                                     }}
                                 >
                                     <Text
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
         width: undefined,
         backgroundColor: colors.white,
         marginBottom: undefined,
-        marginRight: styleValues.mediumPadding
+        marginRight: styVals.mediumPadding
     },
     filterText: {
         ...textStyles.medium
@@ -472,10 +472,10 @@ const styles = StyleSheet.create({
     dropdownBackground: {
         ...shadowStyles.small,
         position: "absolute",
-        width: screenWidth - 2*styleValues.mediumPadding,
-        top: styleValues.smallHeight + styleValues.mediumPadding,
+        width: screenWidth - 2*styVals.mediumPadding,
+        top: styVals.smallHeight + styVals.mediumPadding,
         alignSelf: "center",
-        padding: styleValues.mediumPadding,
+        padding: styVals.mediumPadding,
         paddingBottom: 0,
     }
 })

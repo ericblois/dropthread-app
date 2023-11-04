@@ -5,7 +5,7 @@ import {
 } from "react-native";
 import {
     colors,
-    defaultStyles, styleValues
+    defaultStyles, styVals
 } from "../HelperFiles/StyleSheet";
 import * as Icons from "@expo/vector-icons";
 import { Icon, IconProps } from "@expo/vector-icons/build/createIconSet";
@@ -52,7 +52,7 @@ export default class BloisIconButton extends Component<BloisIconButtonProps, Sta
                     ...(this.props.animType !== "opacity"
                         ? defaultStyles.roundedBox
                         : undefined),
-                    width: styleValues.smallHeight,
+                    width: styVals.smallHeight,
                     alignContent: "center",
                     justifyContent: "center",
                     aspectRatio: 1,
@@ -77,7 +77,7 @@ export default class BloisIconButton extends Component<BloisIconButtonProps, Sta
                         fontSize:
                             (this.props.style?.width as number) |
                             (this.props.style?.height as number) |
-                            styleValues.smallHeight,
+                            styVals.smallHeight,
                         ...this.props.iconStyle,
                     }}
                 />
