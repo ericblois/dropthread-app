@@ -5,11 +5,11 @@ import { CameraCapturedPicture, ImageType } from "expo-camera/build/Camera.types
 import React from "react";
 import { LayoutRectangle, Text, View } from "react-native";
 import { bottomInset, colors, defaultStyles, screenWidth, shadowStyles, styVals, textStyles, topInset } from "../HelperFiles/StyleSheet";
-import CustomComponent from "./CustomComponent";
-import BloisIconButton from "../BloisComponents/BloisIconButton";
-import CustomModal from "./CustomModal";
-import CustomImage from "./CustomImage";
-import BloisPressable from "../BloisComponents/BloisPressable";
+import CustomComponent from "../CustomComponents/CustomComponent";
+import BloisIconButton from "./BloisIconButton";
+import CustomModal from "../CustomComponents/CustomModal";
+import CustomImage from "../CustomComponents/CustomImage";
+import BloisPressable from "./BloisPressable";
 
 type CustomCameraModalProps = {
   visible: boolean,
@@ -25,7 +25,7 @@ type State = {
     image?: CameraCapturedPicture
 }
 
-export default class CustomCameraModal extends CustomComponent<CustomCameraModalProps, State> {
+export default class BloisCameraModal extends CustomComponent<CustomCameraModalProps, State> {
 
     cameraRef: Camera | null = null;
 
@@ -172,14 +172,24 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
                             animType={'opacity'}
                             onPress={() => this.close()}
                         />
-                        <BloisPressable
+                        <BloisIconButton
+                            icon={{
+                                type: 'Feather',
+                                name: 'check'
+                            }}
                             style={{
                                 width: styVals.largeHeight,
                                 height: styVals.largeHeight,
                                 borderWidth: styVals.majorBorderWidth,
                                 borderColor: colors.white,
-                                borderRadius: styVals.largeHeight/2
+                                borderRadius: styVals.largeHeight/2,
+                                padding: styVals.mediumPadding*2
                             }}
+                            iconStyle={{
+                                color: colors.white,
+                                opacity: this.state.image ? 1 : 0,
+                            }}
+                            animType={'opacity'}
                             onPress={async () => {
                                 if (!this.state.image) {
                                     if (!this.cameraRef || !this.state.ready || !this.state.permsGranted) return;
@@ -194,19 +204,7 @@ export default class CustomCameraModal extends CustomComponent<CustomCameraModal
                                     this.close()
                                 }
                             }}
-                        >
-                            <Octicons
-                                name='check'
-                                style={{
-                                    width: styVals.iconLargerSize,
-                                    fontSize: styVals.iconLargerSize,
-                                    color: colors.white,
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center',
-                                    opacity: !this.state.image ? 0 : 1
-                                }}
-                            />
-                        </BloisPressable>
+                        />
                         <BloisIconButton
                             icon={{
                                 type: 'Ionicons',

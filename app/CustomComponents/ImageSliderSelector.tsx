@@ -5,7 +5,7 @@ import CustomComponent from "./CustomComponent";
 import CustomImage from "./CustomImage";
 import BloisIconButton from "../BloisComponents/BloisIconButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CustomCameraModal from "./CustomCameraModal";
+import BloisCameraModal from "../BloisComponents/BloisCameraModal";
 import Item from "../HelperFiles/Item";
 
 type ImageInfo = {
@@ -388,7 +388,7 @@ export default class ImageSliderSelector extends CustomComponent<Props, State> {
 
     renderCamera() {
         return (
-            <CustomCameraModal
+            <BloisCameraModal
                 visible={this.state.cameraOpen}
                 onSave={(image) => {
                     this.addImage(image.uri);
