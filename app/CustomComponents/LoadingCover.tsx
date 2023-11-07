@@ -38,6 +38,7 @@ export default class LoadingCover extends CustomComponent<Props, State> {
                         style={{
                             ...textStyles.medium,
                             marginBottom: styVals.mediumPadding,
+                            marginHorizontal: styVals.mediumPadding,
                             color: colors.grey
                         }}
                     >{this.props.errorText}</Text>

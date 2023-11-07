@@ -1,5 +1,5 @@
 import { httpsCallable } from "firebase/functions"
-import { ItemData, dollarIncrease, ItemFilter, ItemInfo, ItemInteraction, percentIncrease, ItemCategories, ItemGenders, ItemFits, ItemConditions, countriesList, DefaultItemData, ItemPriceData, ItemColor, DeliveryMethods } from "../HelperFiles/DataTypes"
+import { ItemData, dollarIncrease, ItemFilter, ItemInfo, ItemInteraction, percentIncrease, ItemCategories, ItemGenders, ItemFits, ItemConditions, countriesList, DefaultItemData, ItemPriceData, ItemColor, DeliveryMethods, Coords } from "../HelperFiles/DataTypes"
 import { sendRequest, functions } from "./Constants"
 import { LocalCache } from "./LocalCache"
 import User from "./User"
@@ -87,7 +87,7 @@ export default abstract class Item {
         return result.concat(cacheResult.validItems)
     }
     // Create a new item
-    public static async create(itemData: ItemData) {
+    public static async create(itemData: ItemData, coords: Coords) {
         // Check item id
         if (itemData.userID !== User.getCurrent().uid) {
             throw new Error("User not permitted to create this item")
@@ -102,7 +102,8 @@ export default abstract class Item {
         // Upload item data
         const newItemID = (await sendRequest('POST', "createItem", {
             itemData: itemData,
-            base64Images: base64Images
+            base64Images: base64Images,
+            coords: coords
         })) as string
         /*// Upload images after item ID is generated
         if (itemData.images.length > 0) {
@@ -113,7 +114,7 @@ export default abstract class Item {
         return newItemID
     }
     // Update an item's information
-    public static async update(itemData: Partial<ItemData>) {
+    public static async update(itemData: Partial<ItemData>, coords?: Coords) {
         if (!itemData.itemID) {
             throw new Error('No item ID in updated item data')
         }
@@ -150,7 +151,8 @@ export default abstract class Item {
         }
         // Update item
         await sendRequest('POST', "updateItem", {
-            itemData: itemData
+            itemData: itemData,
+            coords: coords
         })
         // Reload this item in cache
         LocalCache.forceReloadItem(itemData.itemID)

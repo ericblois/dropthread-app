@@ -69,7 +69,7 @@ export default class BloisScrollable extends Component<
                 }}
             >
                 <TouchableWithoutFeedback>
-                    <View>
+                    <View onStartShouldSetResponder={() => true}>
                         {this.props.children}
                     </View>
                 </TouchableWithoutFeedback>

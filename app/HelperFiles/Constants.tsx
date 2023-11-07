@@ -7,7 +7,7 @@ import { CustomImageButton } from './CompIndex';
 import { icons } from './StyleSheet';
 import * as Device from 'expo-device';
 import Config from 'react-native-config';
-import { Coords } from './DataTypes';
+import { Coords, ReverseGeocodeResult } from './DataTypes';
 import { hereApiKey } from './config';
 
 const localhost = Device.isDevice ? '192.168.40.35' : 'localhost'
@@ -57,42 +57,7 @@ export const reverseGeocode = async (coords: Coords) => {
     // Send request
     const url = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${coords.lat}%2C${coords.long}&lang=en-US&apiKey=${hereApiKey}`
     const res = await fetch(url)
-    const resJson = await res.json() as {
-      items: {
-        title: string,
-        id: string,
-        resultType: string,
-        houseNumberType: string,
-        address: {
-          label: string,
-          countryCode: string,
-          countryName: string,
-          state: string,
-          county: string,
-          city: string,
-          district: string,
-          street: string,
-          postalCode: string,
-          houseNumber: string
-        },
-        position: {
-          lat: number,
-          lng: number
-        },
-        access: 
-          {
-            lat: number,
-            lng: number
-          }[],
-        distance: number,
-        mapView: {
-          west: number,
-          south: number,
-          east: number,
-          north: number
-        }
-      }[]
-    }
+    const resJson = await res.json() as {items: ReverseGeocodeResult[]}
     //Check if request was successful
     if (resJson && resJson.items && resJson.items.length > 0) {
       return resJson.items[0]

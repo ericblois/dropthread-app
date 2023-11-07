@@ -57,6 +57,7 @@ export default class TextButton extends Component<Props, State> {
         if (this.props.subtext) {
             return (
                 <Text
+                    ellipsizeMode={'tail'}
                     {...this.props.subtextProps}
                     style={{
                         ...textStyles.small,

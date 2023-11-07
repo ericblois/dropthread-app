@@ -15,6 +15,8 @@ import {
     BloisTextButton,
 } from "../HelperFiles/CompIndex";
 import {
+    Coords,
+    Country,
     DefaultItemData,
     DeliveryMethods,
     ItemCategories,
@@ -22,6 +24,7 @@ import {
     ItemData,
     ItemFits,
     ItemGenders,
+    Region,
     UserData,
 } from "../HelperFiles/DataTypes";
 import Item from "../HelperFiles/Item";
@@ -58,6 +61,7 @@ type State = {
     itemData?: ItemData;
     itemChanges: Partial<ItemData>;
     imagesLoaded: boolean;
+    coords?: Coords,
     // Signals that all inputs should check their validity
     validityFlag: boolean;
     isLoading: boolean;
@@ -92,7 +96,6 @@ export default class EditItemPage extends CustomComponent<
                       userID: userData.userID,
                       country: userData.country,
                       region: userData.region,
-                      styles: [],
                       colors: [],
                   }
                 : (await Item.getFromIDs([this.props.route.params.itemID]))[0]
@@ -392,8 +395,17 @@ export default class EditItemPage extends CustomComponent<
     renderLocationButton() {
         return (
             <BloisLocationSelector
-                disclaimer={`This item's location will not be visible to others.`}
+                defaultLocation={undefined}
+                disclaimer={`The address shown above is approximate. This item's location will not be visible to others.`}
                 showInitialValidity={this.state.validityFlag}
+                onChangeLocation={(coords, geocodeResult) => {
+                    this.updateItem({
+                        country: geocodeResult?.address.countryName.toLowerCase().split(' ').join('_') as Country,
+                        region: geocodeResult?.address.state.toLowerCase().split(' ').join('_') as Region
+                    }, {
+                        coords: coords
+                    })
+                }}
             />
         );
     }

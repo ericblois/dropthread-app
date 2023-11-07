@@ -80,7 +80,8 @@ export default class StartPage extends CustomComponent<StartProps, State> {
                 if (__DEV__) {
                     User.create({
                         ...DefaultUserData,
-                        email: user
+                        email: user,
+                        expoPushToken: 'example'
                     }, pass)
                     //createUserWithEmailAndPassword(auth, user, pass)
                 }

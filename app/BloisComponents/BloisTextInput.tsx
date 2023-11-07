@@ -173,6 +173,7 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                         textAlign={"left"}
                         textAlignVertical={"center"}
                         autoCorrect={false}
+                        autoComplete={'off'}
                         clearButtonMode={"while-editing"}
                         {...this.props.textInputProps}
                         defaultValue={this.props.defaultValue}

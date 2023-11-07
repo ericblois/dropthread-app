@@ -12,7 +12,7 @@ import * as Icons from "@expo/vector-icons";
 import { Icon, IconProps } from "@expo/vector-icons/build/createIconSet";
 import BloisPressable from "./BloisPressable";
 import { BloisTextButton, CustomModal } from "../HelperFiles/CompIndex";
-import { Coords } from "../HelperFiles/DataTypes";
+import { Coords, ReverseGeocodeResult } from "../HelperFiles/DataTypes";
 import MapView, { Circle, MapMarker, Marker, Overlay, PROVIDER_GOOGLE, Polygon } from "react-native-maps"
 import User from "../HelperFiles/User";
 import { hexToRGBA } from "../HelperFiles/ClientFunctions";
@@ -23,16 +23,16 @@ type BloisLocationSelectorProps = {
     style?: ViewStyle;
     mapStyle?: ViewStyle;
     disclaimer?: string;
-    checkValidity?: (coords: Coords) => boolean,
     indicatorType?: 'shadowSmall' | 'shadow' | 'outline',
     showInitialValidity?: boolean,
-    onChangeLocation?: (coords: Coords) => void,
+    onChangeLocation?: (coords: Coords, geocodeResult?: ReverseGeocodeResult) => void,
 };
 
 type State = {
     showMap: boolean,
     userCoords: Coords,
-    selection?: Coords
+    selection?: Coords,
+    address?: string
 };
 
 export default class BloisLocationSelector extends Component<BloisLocationSelectorProps, State> {
@@ -45,18 +45,14 @@ export default class BloisLocationSelector extends Component<BloisLocationSelect
 
     constructor(props: BloisLocationSelectorProps) {
         super(props)
-        let isValid = false
-        if (props.checkValidity && props.defaultLocation) {
-            isValid = props.checkValidity(props.defaultLocation)
-        }
         this.state = {
             showMap: false,
             userCoords: {lat: 0, long: 0},
-            selection: undefined
+            selection: props.defaultLocation
         }
         User.getLocation().then((coords) => this.setState({userCoords: coords}))
 
-        this.progress = new Animated.Value(props.showInitialValidity ? (isValid ? 1 : 0) : 1)
+        this.progress = new Animated.Value(props.showInitialValidity ? (props.defaultLocation ? 1 : 0) : 1)
         this.animatedStyles = {
             shadowSmall: {
                 ...(shadowStyles.small),
@@ -109,8 +105,8 @@ export default class BloisLocationSelector extends Component<BloisLocationSelect
 
     render() {
         // Check validity of input
-        if (this.props.checkValidity && this.props.showInitialValidity) {
-            if (this.state.selection &&  this.props.checkValidity(this.state.selection)) {
+        if (this.props.showInitialValidity) {
+            if (this.state.selection) {
                 this.animValid()
             } else {
                 this.animInvalid()
@@ -120,13 +116,14 @@ export default class BloisLocationSelector extends Component<BloisLocationSelect
             <>
                 <BloisTextButton
                     text={'Set location'}
-                    subtext={'Not set'}
+                    subtext={this.state.address || 'Not set'}
                     style={{
                         ...(this.animatedStyles[this.props.indicatorType || 'shadowSmall']),
                         justifyContent: 'space-between',
                         paddingVertical: styVals.mediumPadding,
                         ...this.props.style
                     }}
+                    textStyle={{textAlign: 'left'}}
                     subtextStyle={{textAlign: 'left'}}
                     rightChildren={(
                         <Icons.Entypo
@@ -150,9 +147,9 @@ export default class BloisLocationSelector extends Component<BloisLocationSelect
                     visible={this.state.showMap}
                     onClose={() => {
                         this.setState({showMap: false})
-                        if (this.state.selection && this.props.checkValidity?.(this.state.selection)) {
+                        if (this.state.selection) {
                             this.animValid()
-                        } else if (!this.state.selection || !this.props.checkValidity?.(this.state.selection)) {
+                        } else if (!this.state.selection) {
                             this.animInvalid()
                         }
                     }}
@@ -210,9 +207,11 @@ export default class BloisLocationSelector extends Component<BloisLocationSelect
                         }}
                         onPress={async () => {
                             if (this.state.selection) {
-                                const address = await reverseGeocode(this.state.selection)
-                                console.log(address)
-                                this.props.onChangeLocation?.(this.state.selection)
+                                const geocode = await reverseGeocode(this.state.selection)
+                                this.props.onChangeLocation?.(this.state.selection, geocode)
+                                if (geocode?.address.label) {
+                                    this.setState({address: geocode?.address.label, showMap: false})
+                                }
                             }
                         }}
                     />
