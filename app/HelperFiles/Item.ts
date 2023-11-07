@@ -273,6 +273,7 @@ export default abstract class Item {
     public static validate(item: ItemData) {
         for (const key of Object.keys(item)) {
             if (!Item.validateProperty(key as keyof ItemData, item[key as keyof ItemData])) {
+                console.log(key)
                 return false
             }
         }

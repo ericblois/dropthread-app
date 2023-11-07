@@ -12,6 +12,7 @@ import {
     BloisTextInput,
     BloisToggle,
     BloisColorDropdown,
+    BloisTextButton,
 } from "../HelperFiles/CompIndex";
 import {
     DefaultItemData,
@@ -30,10 +31,15 @@ import {
     colors,
     screenWidth,
     styVals,
+    textStyles,
 } from "../HelperFiles/StyleSheet";
 import User from "../HelperFiles/User";
 import BloisScrollable from "../BloisComponents/BloisScrollable";
 import BloisCurrencyInput from "../BloisComponents/BloisCurrencyInput";
+import BloisTextBox from "../BloisComponents/BloisTextBox";
+import { Entypo } from "@expo/vector-icons";
+import { Text } from "react-native";
+import BloisLocationSelector from "../BloisComponents/BloisLocationSelector";
 
 type EditItemNavigationProp = StackNavigationProp<
     ClosetStackParamList,
@@ -52,7 +58,6 @@ type State = {
     itemData?: ItemData;
     itemChanges: Partial<ItemData>;
     imagesLoaded: boolean;
-    priceChangeText: string;
     // Signals that all inputs should check their validity
     validityFlag: boolean;
     isLoading: boolean;
@@ -70,7 +75,6 @@ export default class EditItemPage extends CustomComponent<
             itemData: undefined,
             itemChanges: {},
             imagesLoaded: false,
-            priceChangeText: "",
             validityFlag: false,
             isLoading: true,
             errorMessage: undefined,
@@ -96,11 +100,7 @@ export default class EditItemPage extends CustomComponent<
             this.setState({
                 userData: userData,
                 itemData: itemData,
-                itemChanges: {itemID: itemData.itemID},
-                priceChangeText:
-                    itemData.priceData.minPrice >= 0
-                        ? itemData.priceData.minPrice.toString()
-                        : "",
+                itemChanges: {itemID: itemData.itemID}
             });
         } catch (e) {
             this.handleError(e);
@@ -122,22 +122,23 @@ export default class EditItemPage extends CustomComponent<
             itemChanges: {
                 ...this.state.itemChanges,
                 ...item,
-            },
+            }
         };
         this.setState(stateUpdate, callback);
     }
     // Try to upload this item's data to the server
     async saveItem() {
-        if (Item.validatePartial(this.state.itemChanges)) {
+        const itemData = {
+            ...DefaultItemData,
+            ...this.state.itemData,
+            ...this.state.itemChanges
+        }
+        if (Item.validate(itemData)) {
             try {
                 // Save item
                 if (this.props.route.params.isNew) {
-                    const newItemData = {
-                        ...DefaultItemData,
-                        ...this.state.itemChanges,
-                    };
                     // Create new item
-                    await Item.create(newItemData);
+                    await Item.create(itemData);
                 } else {
                     // Send only changes if not missing any props, otherwise update all props
                     await Item.update(this.state.itemChanges);
@@ -362,22 +363,14 @@ export default class EditItemPage extends CustomComponent<
 
     renderDescription() {
         return (
-            <BloisDropdown
-                items={ItemFits.map((fit) => {
-                    let text =
-                        fit === "proper"
-                            ? "True to size"
-                            : `Fits ${fit}`;
-                    return { text: text, value: fit };
-                })}
-                checkValidity={(selections) => selections.length > 0}
-                showInitialValidity={this.state.validityFlag}
-                label="Fit"
+            <BloisTextBox
+                label={"Description"}
                 defaultValue={
-                    this.state.itemChanges.fit || this.state.itemData!.fit
+                    this.state.itemChanges.description || this.state.itemData?.description
                 }
-                onSelect={(selections) => {
-                    this.updateItem({ fit: selections[0].value });
+                textInputProps={{ maxLength: Item.maxDescriptionLength }}
+                onChangeText={(text) => {
+                    this.updateItem({ description: text });
                 }}
             />
         );
@@ -386,12 +379,21 @@ export default class EditItemPage extends CustomComponent<
     renderVisibilitySwitch() {
         return (
             <BloisToggle
-                text={"Publicly visible"}
-                defaultValue={this.state.itemChanges.isVisible || this.state.itemData?.isVisible}
-                info={{header: 'Public Visibility', body: 'This determines if your item can be seen by other people. Disable this if you are not ready to sell your item yet.'}}
+                text={"Hide item"}
+                defaultValue={this.state.itemChanges.isVisible !== undefined ? !this.state.itemChanges.isVisible : !this.state.itemData?.isVisible}
+                info={{header: 'Hide Item', body: 'This determines if your item can be seen by other people. Enable this if you are not ready to sell your item yet.'}}
                 onToggle={(value) => {
                     this.updateItem({ isVisible: value });
                 }}
+            />
+        );
+    }
+
+    renderLocationButton() {
+        return (
+            <BloisLocationSelector
+                disclaimer={`This item's location will not be visible to others.`}
+                showInitialValidity={this.state.validityFlag}
             />
         );
     }
@@ -414,7 +416,9 @@ export default class EditItemPage extends CustomComponent<
                         {this.renderConditionDropdown()}
                         {this.renderColorDropdown()}
                         {this.renderFitDropdown()}
+                        {this.renderDescription()}
                         {this.renderPriceInput()}
+                        {this.renderLocationButton()}
                         {this.renderVisibilitySwitch()}
                     </BloisScrollable>
                 </>
@@ -459,7 +463,6 @@ export default class EditItemPage extends CustomComponent<
                         },
                         iconStyle: {
                             color:
-                                this.state.itemData &&
                                 Item.validate(currentItemData)
                                     ? colors.darkGrey
                                     : colors.lightestGrey,

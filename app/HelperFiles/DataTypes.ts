@@ -333,7 +333,8 @@ export type ItemInfo = {
   likeTime: number | null,
   favTime: number | null,
   likePrice: number | null,
-  loadTime: number
+  loadTime: number,
+  geoCoords: Coords | null
 }
 
 export type ItemFilter = {
