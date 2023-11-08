@@ -27,6 +27,7 @@ type Props = {
     text: string;
     style?: Animated.AnimatedProps<ViewStyle>;
     textStyle?: TextStyle;
+    textContainerStyle?: ViewStyle,
     animType?: "opacity" | "shadowSmall" | "shadow" | "outline";
     subtext?: string;
     subtextStyle?: TextStyle;
@@ -93,7 +94,7 @@ export default class TextButton extends Component<Props, State> {
                 onPress={this.props.onPress}
             >
                 {this.props.leftChildren}
-                <View style={{ flexDirection: "column" }}>
+                <View style={{ flexDirection: "column", ...this.props.textContainerStyle }}>
                     <Text
                         ellipsizeMode={'tail'}
                         {...this.props.textProps}
@@ -113,22 +114,3 @@ export default class TextButton extends Component<Props, State> {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    textStyle: {
-        ...textStyles.large,
-        color: colors.majorTextColor,
-    },
-    subtextStyle: {
-        ...textStyles.medium,
-        color: colors.mediumTextColor,
-    },
-    iconStyle: {
-        aspectRatio: 1,
-        width: styVals.iconSmallSize,
-        height: styVals.iconSmallSize,
-        tintColor: colors.grey,
-        alignSelf: "center",
-        flexWrap: "wrap",
-    },
-});

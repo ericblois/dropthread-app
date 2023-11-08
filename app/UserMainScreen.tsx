@@ -188,6 +188,9 @@ export default class UserMainScreen extends CustomComponent<
                 <UserMainStack.Screen
                     name={"viewItems"}
                     component={ViewItemsPage}
+                    options={{
+                        animationEnabled: true
+                    }}
                 />
                 <UserMainStack.Screen
                     name={"createOffer"}

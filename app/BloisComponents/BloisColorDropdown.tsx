@@ -311,7 +311,7 @@ export default class BloisColorDropdown extends CustomComponent<
                             color:
                                 this.state.selections.length > 0
                                     ? colors.black
-                                    : colors.grey,
+                                    : colors.lighterGrey,
                             ...this.props.textStyle,
                         }}
                         rightChildren={(
@@ -346,7 +346,7 @@ export default class BloisColorDropdown extends CustomComponent<
                             paddingHorizontal: styVals.mediumPadding,
                             gap: styVals.mediumPadding
                         }}>
-                            {this.state.selections.map((color) => (
+                            {this.state.selections.slice(0, 5).map((color) => (
                                 <View
                                     style={{
                                         ...shadowStyles.small,

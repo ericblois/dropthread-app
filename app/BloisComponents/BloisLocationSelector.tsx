@@ -19,7 +19,10 @@ import { hexToRGBA } from "../HelperFiles/ClientFunctions";
 import { reverseGeocode } from "../HelperFiles/Constants";
 
 type BloisLocationSelectorProps = {
-    defaultLocation?: Coords,
+    defaultLocation?: {
+        coords: Coords,
+        address: string
+    },
     style?: ViewStyle;
     mapStyle?: ViewStyle;
     disclaimer?: string;
@@ -48,7 +51,8 @@ export default class BloisLocationSelector extends Component<BloisLocationSelect
         this.state = {
             showMap: false,
             userCoords: {lat: 0, long: 0},
-            selection: props.defaultLocation
+            selection: props.defaultLocation?.coords,
+            address: props.defaultLocation?.address
         }
         User.getLocation().then((coords) => this.setState({userCoords: coords}))
 
@@ -172,8 +176,8 @@ export default class BloisLocationSelector extends Component<BloisLocationSelect
                                 console.log(region)
                             }}
                             initialRegion={{
-                                latitude: this.props.defaultLocation?.lat || this.state.userCoords.lat,
-                                longitude: this.props.defaultLocation?.long || this.state.userCoords.long,
+                                latitude: this.props.defaultLocation?.coords.lat || this.state.userCoords.lat,
+                                longitude: this.props.defaultLocation?.coords.long || this.state.userCoords.long,
                                 latitudeDelta: 0.02,
                                 longitudeDelta: 0.02
                             }}

@@ -62,6 +62,7 @@ type State = {
     itemChanges: Partial<ItemData>;
     imagesLoaded: boolean;
     coords?: Coords,
+    address?: string,
     // Signals that all inputs should check their validity
     validityFlag: boolean;
     isLoading: boolean;
@@ -89,21 +90,29 @@ export default class EditItemPage extends CustomComponent<
         this.setState({ isLoading: true, errorMessage: undefined });
         try {
             const userData = await User.get();
-            // Check if this is a new item or existing item
-            const itemData = this.props.route.params.isNew
-                ? {
-                      ...DefaultItemData,
-                      userID: userData.userID,
-                      country: userData.country,
-                      region: userData.region,
-                      colors: [],
-                  }
-                : (await Item.getFromIDs([this.props.route.params.itemID]))[0]
-                      .item;
+            let itemData;
+            let coords = undefined
+            let address = undefined
+            if (this.props.route.params.isNew) {
+                itemData = {
+                    ...DefaultItemData,
+                    userID: userData.userID,
+                    country: userData.country,
+                    region: userData.region,
+                    colors: [],
+                }
+            } else {
+                const itemInfo = await Item.getFromIDs([this.props.route.params.itemID])
+                itemData = itemInfo[0].item
+                coords = itemInfo[0].coords
+                address = itemInfo[0].address
+            }
             this.setState({
                 userData: userData,
                 itemData: itemData,
-                itemChanges: {itemID: itemData.itemID}
+                itemChanges: {itemID: itemData.itemID},
+                coords: coords,
+                address: address
             });
         } catch (e) {
             this.handleError(e);
@@ -139,12 +148,12 @@ export default class EditItemPage extends CustomComponent<
         if (Item.validate(itemData)) {
             try {
                 // Save item
-                if (this.props.route.params.isNew) {
+                if (this.props.route.params.isNew && this.state.coords) {
                     // Create new item
-                    await Item.create(itemData);
+                    await Item.create(itemData, this.state.coords);
                 } else {
                     // Send only changes if not missing any props, otherwise update all props
-                    await Item.update(this.state.itemChanges);
+                    await Item.update(this.state.itemChanges, this.state.coords);
                 }
                 // Signal to previous pages in stack to refresh their data
                 this.props.navigation.goBack();
@@ -274,8 +283,8 @@ export default class EditItemPage extends CustomComponent<
                 showInitialValidity={this.state.validityFlag}
                 label="Category"
                 defaultValue={
-                    this.state.itemChanges.category ||
-                    this.state.itemData!.category
+                    [this.state.itemChanges.category ||
+                    this.state.itemData!.category]
                 }
                 onSelect={(selections) => this.updateItem({ category: selections[0].value })}
             />
@@ -296,7 +305,7 @@ export default class EditItemPage extends CustomComponent<
                 showInitialValidity={this.state.validityFlag}
                 label="Gender"
                 defaultValue={
-                    this.state.itemChanges.gender || this.state.itemData!.gender
+                    [this.state.itemChanges.gender || this.state.itemData!.gender]
                 }
                 onSelect={(selections) => {
                     this.updateItem({ gender: selections[0].value });
@@ -316,8 +325,8 @@ export default class EditItemPage extends CustomComponent<
                 showInitialValidity={this.state.validityFlag}
                 label={"Condition"}
                 defaultValue={
-                    this.state.itemChanges.condition ||
-                    this.state.itemData!.condition
+                    [this.state.itemChanges.condition ||
+                    this.state.itemData!.condition]
                 }
                 onSelect={(selections) => {
                     this.updateItem({ condition: selections[0].value });
@@ -355,7 +364,7 @@ export default class EditItemPage extends CustomComponent<
                 showInitialValidity={this.state.validityFlag}
                 label="Fit"
                 defaultValue={
-                    this.state.itemChanges.fit || this.state.itemData!.fit
+                    [this.state.itemChanges.fit || this.state.itemData!.fit]
                 }
                 onSelect={(selections) => {
                     this.updateItem({ fit: selections[0].value });
@@ -395,7 +404,10 @@ export default class EditItemPage extends CustomComponent<
     renderLocationButton() {
         return (
             <BloisLocationSelector
-                defaultLocation={undefined}
+                defaultLocation={this.state.coords && this.state.address ? {
+                    coords: this.state.coords,
+                    address: this.state.address
+                } : undefined}
                 disclaimer={`The address shown above is approximate. This item's location will not be visible to others.`}
                 showInitialValidity={this.state.validityFlag}
                 onChangeLocation={(coords, geocodeResult) => {

@@ -80,9 +80,11 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
                             />
                             {this.props.route.params.addItem && !this.state.addedItems.includes(item.item.itemID) ?
                             <BloisIconButton
-                                name="plus"
-                                type="Feather"
-                                buttonStyle={{
+                                icon={{
+                                  type: 'Feather',
+                                  name: 'plus'
+                                }}
+                                style={{
                                     position: 'absolute',
                                     top: styVals.mediumPadding,
                                     right: styVals.mediumPadding,
@@ -150,12 +152,13 @@ export default class ViewItemsPage extends CustomComponent<ViewItemsProps, State
               </CustomModal>
               {this.renderLoading()}
               <BloisMenuBar
-                buttonProps={[
-                  {
-                    iconSource: icons.chevron,
+                buttons={[{
+                    icon: {
+                        type: "Entypo",
+                        name: "chevron-small-left",
+                    },
                     onPress: () => this.props.navigation.goBack()
-                  },
-                ]}
+                }]}
               
               />
             </BloisPage>

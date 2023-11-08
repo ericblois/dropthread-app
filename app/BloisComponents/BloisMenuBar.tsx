@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TextStyle, View, ViewStyle } from "react-native";
+import { PressableProps, StyleSheet, TextStyle, View, ViewStyle } from "react-native";
 import { colors, menuBarStyles, shadowStyles } from "../HelperFiles/StyleSheet";
 import CustomComponent from "../CustomComponents/CustomComponent";
 import CustomImageButton from "../CustomComponents/CustomImageButton";
@@ -9,7 +9,8 @@ type Props = {
   buttons: {
     icon: IconSelect,
     onPress: () => void,
-    iconStyle?: TextStyle
+    iconStyle?: TextStyle,
+    pressableProps?: PressableProps
   }[]
   menuBarStyle?: ViewStyle,
   buttonStyle?: ViewStyle,
@@ -49,6 +50,7 @@ export default class BloisMenuBar extends CustomComponent<Props, State> {
               iconStyle={{color: colors.darkGrey, ...buttonData.iconStyle}}
               animType={'opacity'}
               onPress={buttonData.onPress}
+              pressableProps={buttonData.pressableProps}
             />
           ))
         }

@@ -203,7 +203,7 @@ export default abstract class Item {
     }
 
     public static maxNameLength = 60
-    public static maxDescriptionLength = 200
+    public static maxDescriptionLength = 500
     public static maxSizeLength = 20
     public static maxSubPrice = 90000
     public static maxFacePrice = 100000

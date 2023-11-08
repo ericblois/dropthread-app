@@ -53,9 +53,11 @@ export default class BloisScrollable extends Component<
                 {...this.props.scrollViewProps}
                 style={{
                     overflow: 'visible',
+                    flex: 1,
                     ...this.props.style,
                 }}
                 contentContainerStyle={{
+                    flexGrow: 1,
                     ...this.props.contentContainerStyle,
                 }}
                 scrollEnabled={this.state.enableScroll}

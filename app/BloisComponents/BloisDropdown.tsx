@@ -21,7 +21,7 @@ type BloisDropdownProps = {
         text: string;
         value: any;
     }[];
-    defaultValue?: any;
+    defaultValue?: any[];
     style?: ViewStyle;
     containerStyle?: ViewStyle,
     textStyle?: TextStyle;
@@ -239,7 +239,7 @@ export default class BloisDropdown extends CustomComponent<
                                         name={isSelected ? 'check-circle' : 'circle'}
                                         style={{
                                             fontSize: styVals.largeTextSize,
-                                            color: isSelected ? colors.valid : colors.lightGrey
+                                            color: isSelected ? colors.valid : colors.lightGrey,
                                         }}
                                     />
                                 )}
@@ -272,7 +272,6 @@ export default class BloisDropdown extends CustomComponent<
         return (
             <View
                 style={{
-                    width: "100%",
                     ...this.props.containerStyle,
                 }}
             >
@@ -290,9 +289,14 @@ export default class BloisDropdown extends CustomComponent<
                         color:
                             this.state.selections.length > 0
                                 ? colors.black
-                                : colors.grey,
+                                : colors.lighterGrey,
                         ...this.props.textStyle,
                     }}
+                    textContainerStyle={{
+                        flex: 1,
+                        alignItems: 'flex-start'
+                    }}
+                    textProps={{numberOfLines: 1}}
                     rightChildren={(
                         <Animated.View
                             style={{

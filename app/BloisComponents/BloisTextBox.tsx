@@ -150,7 +150,7 @@ export default class BloisTextBox extends CustomComponent<BloisTextBoxProps, Sta
                 <Animated.View
                     style={{
                         ...defaultStyles.roundedBox,
-                        height: styVals.largestHeight,
+                        height: styVals.largeHeight*2,
                         alignItems: 'flex-start',
                         justifyContent: 'flex-start',
                         //paddingVertical: 0,

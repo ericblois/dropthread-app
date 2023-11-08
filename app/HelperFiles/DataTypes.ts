@@ -230,6 +230,7 @@ export const ItemCategories = [
   "accessory",
   "jewelry",
   "shoes",
+  "swimwear",
   "other"
 ] as const
 export type ItemCategory = (typeof ItemCategories)[number] | ""
@@ -334,25 +335,23 @@ export type ItemInfo = {
   favTime: number | null,
   likePrice: number | null,
   loadTime: number,
-  geoCoords: Coords | null
+  coords: Coords | null,
+  address: string | null
 }
 
 export type ItemFilter = {
   distanceInKM?: number,
   category?: ItemCategory[],
-  size?: string[],
   condition?: ItemCondition[],
+  colors?: ItemColor[],
   keywords?: string[],
   gender?: ItemGender[],
   priceRange?: number[],
-  country?: Country,
-  region?: Region,
-  deliveryMethods?: DeliveryMethod[],
   limit?: number
 }
 
 export const DefaultItemFilter: ItemFilter = {
-  distanceInKM: 5,
+  distanceInKM: 10,
   limit: 10
 }
 

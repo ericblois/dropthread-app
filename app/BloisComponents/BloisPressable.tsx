@@ -205,7 +205,7 @@ export default class BloisPressable extends CustomComponent<BloisPressableProps,
                             alignItems: "center",
                             justifyContent: "center",
                             borderRadius: this.props.style?.borderRadius,
-                            backgroundColor: this.props.style?.backgroundColor
+                            backgroundColor: this.props.style?.backgroundColor || colors.background
                         }}
                     >
                         <ActivityIndicator size={"small"} />

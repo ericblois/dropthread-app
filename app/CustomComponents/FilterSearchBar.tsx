@@ -578,15 +578,7 @@ export default class FilterSearchBar extends CustomComponent<Props, State> {
                         <BloisTextInput
                             boxStyle={{marginBottom: undefined}}
                             textProps={{
-                                textAlign: "left",
-                                editable: this.state.showSearchBar,
-                                selectTextOnFocus: this.state.showSearchBar,
-                                onSubmitEditing: (e) => {
-                                    if (this.props.onSearchSubmit) {
-                                        this.props.onSearchSubmit(e.nativeEvent.text)
-                                    }
-                                },
-                                returnKeyType: "search"
+                                 
                             }}
                         />
                     </Animated.View>

@@ -1,11 +1,11 @@
 
 import React from "react";
-import { GestureResponderEvent, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { GestureResponderEvent, Keyboard, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 import FastImage from "react-native-fast-image";
 import BloisPressable from "../BloisComponents/BloisPressable";
 import { currencyFormatter } from "../HelperFiles/Constants";
 import { ItemData, ItemInfo } from "../HelperFiles/DataTypes";
-import { colors, shadowStyles, styVals, textStyles, screenUnit, screenWidth, defaultStyles } from "../HelperFiles/StyleSheet";
+import { colors, shadowStyles, styVals, textStyles, screenUnit, screenWidth, defaultStyles, topInset, bottomInset } from "../HelperFiles/StyleSheet";
 import CustomComponent from "./CustomComponent";
 import CustomImage from "./CustomImage";
 import LoadingCover from "./LoadingCover";
@@ -14,10 +14,11 @@ import BloisIconButton from "../BloisComponents/BloisIconButton";
 
 type Props = {
     visible: boolean,
+    style?: ViewStyle,
     disableExitButton?: boolean,
     disableBackgroundDismiss?: boolean,
     blurProps?: BlurViewProps,
-    onClose?: (event: GestureResponderEvent) => void,
+    onClose?: () => void,
 }
 
 type State = {
@@ -42,8 +43,11 @@ export default class CustomModal extends CustomComponent<Props, State> {
                 <View style={{
                     ...defaultStyles.fill,
                     paddingHorizontal: styVals.mediumPadding,
+                    paddingTop: topInset + styVals.mediumPadding,
+                    paddingBottom: bottomInset + styVals.mediumPadding,
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    ...this.props.style,
                 }}
                     onStartShouldSetResponder={() => true}
                 >
@@ -58,7 +62,13 @@ export default class CustomModal extends CustomComponent<Props, State> {
                     {!this.props.disableBackgroundDismiss ? 
                         <Pressable
                             style={defaultStyles.fill}
-                            onPress={this.props.onClose}
+                            onPress={() => {
+                                if (Keyboard.isVisible()) {
+                                    Keyboard.dismiss()
+                                } else {
+                                    this.props.onClose?.()
+                                }
+                            }}
                         />
                     : undefined }
                     {this.props.children}
@@ -73,10 +83,8 @@ export default class CustomModal extends CustomComponent<Props, State> {
                                 width: styVals.iconLargestSize,
                                 marginTop: styVals.mediumPadding
                             }}
-                            onPress={(e) => {
-                                if (this.props.onClose) {
-                                    this.props.onClose(e!)
-                                }
+                            onPress={() => {
+                                this.props.onClose?.()
                             }}
                         />
                     : undefined }

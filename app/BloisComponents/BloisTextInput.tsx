@@ -159,6 +159,7 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                         ...this.props.style
                     }}
                 >
+                    {this.props.children}
                     {this.props.label ?
                         <Text style={{
                             ...textStyles.medium,
@@ -195,7 +196,6 @@ export default class BloisTextInput extends CustomComponent<BloisTextInputProps,
                             this.props.textInputProps?.onEndEditing?.(event)
                         }}
                     />
-                    {this.props.children}
                 </Animated.View>
             </ScrollView>
         )

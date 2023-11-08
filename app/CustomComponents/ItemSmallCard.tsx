@@ -42,6 +42,7 @@ export default class ItemSmallCard extends CustomComponent<Props, State> {
         return (
         <BloisPressable
             style={{...styles.cardContainer, ...this.props.style}}
+            animType={'shadowSmall'}
             onPress={this.props.onPress}
         >
             <View style={{flex: 1, height: '100%', justifyContent: 'space-between'}}>

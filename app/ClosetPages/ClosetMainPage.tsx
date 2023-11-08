@@ -78,15 +78,17 @@ export default class ClosetMainPage extends CustomComponent<
                     bottom:
                         bottomInset +
                         styVals.mediumHeight +
-                        styVals.mediumPadding,
+                        styVals.mediumPadding*2,
                     right: styVals.mediumPadding,
                     width:
-                        styVals.iconLargerSize +
+                        styVals.iconLargestSize +
                         styVals.mediumPadding * 2,
-                    padding: styVals.mediumPadding,
-                    borderRadius: styVals.mediumPadding,
+                    padding: styVals.mediumPadding*1.5,
+                    borderRadius: styVals.iconLargestSize,
+                    borderBottomRightRadius: styVals.mediumPadding,
                     backgroundColor: colors.background,
                 }}
+                iconStyle={{color: colors.valid}}
                 animType={'shadow'}
                 onPress={() => {
                     this.props.navigation.navigate("editItem", {

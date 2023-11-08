@@ -127,7 +127,7 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                     <View>
                         {/* Minimum price */}
                         <Text style={{
-                                ...textStyles.largerst,
+                                ...textStyles.larger,
                                 textAlign: 'right',
                             }}
                             numberOfLines={1}
@@ -201,11 +201,11 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                                 </View>
                                 <BloisTextButton
                                     text={'Send offer'}
-                                    wrapperStyle={{width: '30%'}}
-                                    buttonStyle={{
+                                    style={{
                                         marginBottom: undefined,
                                         flex: 1,
-                                        alignSelf: 'flex-end'
+                                        alignSelf: 'flex-end',
+                                        width: '30%'
                                     }}
                                     textStyle={{
                                         marginRight: styVals.mediumPadding
@@ -295,12 +295,6 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
                         rightIconStyle={{transform: [{scaleX: -1}]}}
                         onPress={() => {this.props.navigation.navigate("itemSwaps", {likedUserIDs: ["B9m6149WWAZoaVOpomSgcy2riyD3"]})}}
                     />
-                    <TextButton
-                        text={"Update location"}
-                        rightIconSource={icons.crosshair}
-                        rightIconStyle={{tintColor: colors.black}}
-                        onPress={() => {}}
-                    />
                     {/* Views / likes */}
                     {this.renderLikes()}
                     {/* Offers */}
@@ -342,24 +336,26 @@ export default class ClosetItemInfoPage extends CustomComponent<ItemInfoProps, S
             {this.renderUI()}
             {this.renderLoading()}
             <BloisMenuBar
-                buttonProps={[
+                buttons={[
                     {
-                        iconSource: icons.chevron,
+                        icon: {
+                            type: "Entypo",
+                            name: "chevron-small-left",
+                        },
                         onPress: () => this.props.navigation.goBack()
                     },
                     {
-                        iconSource: icons.edit,
-                        iconStyle: {
-                            tintColor: this.state.itemInfo === undefined ? colors.lighterGrey : colors.darkGrey
+                        icon: {
+                            type: 'Feather',
+                            name: 'edit'
                         },
-                        buttonProps: {
-                            disabled: this.state.itemInfo === undefined
-                        },
+                        iconStyle: {color: this.state.itemInfo === undefined ? colors.lighterGrey : colors.darkGrey},
+                        pressableProps: {disabled: this.state.itemInfo === undefined},
                         onPress: () => this.props.navigation.navigate("editItem", {
                             itemID: this.state.itemInfo!.item.itemID,
                             isNew: false
                         })
-                    },
+                    }
                 ]}
             
             ></BloisMenuBar>
